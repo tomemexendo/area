@@ -74,10 +74,9 @@ button {
   align-items: center;
 }
 
-.logo-small {
+.logo-small img {
   width: 40px;
   height: 40px;
-  background: white;
   border-radius: 50%;
 }
 
