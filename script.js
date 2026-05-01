@@ -25,34 +25,28 @@ async function login() {
   const { data, error } = await supabase
     .from("users")
     .select("*")
-   const { data, error } = await supabase
-  .from("users")
-  .select("*")
 
-const user = data?.find(u =>
-  normalizeText(u.name) === nome &&
-  u.phone === codigo
-)
+  console.log("USERS:", data)
 
-  console.log("LOGIN RESULT:", data, error)
+  const user = data?.find(u =>
+    normalizeText(u.name) === normalizeText(nome) &&
+    u.phone === codigo
+  )
 
-  if (error || !data) {
+  console.log("USER FOUND:", user)
+
+  if (!user) {
     alert("Usuário não encontrado")
     return
   }
 
-  if (!data.name) {
-    alert("Erro no usuário")
-    return
-  }
-
-  localStorage.setItem("user", JSON.stringify(data))
+  localStorage.setItem("user", JSON.stringify(user))
 
   document.getElementById("login").style.display = "none"
   document.getElementById("app").classList.remove("hidden")
 
-  document.getElementById("userName").innerText = data.name
-  document.getElementById("userName2").innerText = data.name
+  document.getElementById("userName").innerText = user.name
+  document.getElementById("userName2").innerText = user.name
 
   await loadContent()
   renderDashboard()
