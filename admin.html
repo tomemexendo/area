@@ -75,10 +75,39 @@ async function loadContent() {
     .from("content")
     .select("*")
 
+  console.log("CONTENT DATA:", data)
+  console.log("CONTENT ERROR:", error)
+
   if (error) {
-    console.error(error)
+    alert("Erro no Supabase")
     return
   }
+
+  if (!data || data.length === 0) {
+    area.innerHTML = "<p>Nenhum conteúdo encontrado na tabela 'content'</p>"
+    return
+  }
+
+  area.innerHTML = ""
+
+  data.forEach(item => {
+    area.innerHTML += `
+      <div style="margin-bottom:20px;">
+        <strong>${item.type}</strong><br/>
+
+        <input
+          id="input-${item.type}"
+          value="${item.link || ''}"
+          style="width:300px; padding:5px;"
+        />
+
+        <button onclick="saveItem('${item.type}')">
+          Salvar
+        </button>
+      </div>
+    `
+  })
+}
 
   area.innerHTML = ""
 
