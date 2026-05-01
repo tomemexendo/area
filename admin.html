@@ -1,9 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Tô Me Mexendo</title>
+</head>
+
+<body style="font-family: Arial; background:#111; color:white;">
+
+<!-- LOGIN -->
+<div id="loginBox" style="padding:40px; max-width:400px; margin:auto;">
+  <h2>Login Admin</h2>
+
+  <form id="adminForm">
+    <input
+      id="adminPassword"
+      type="password"
+      placeholder="Senha admin"
+      style="padding:10px; width:100%; margin:10px 0;"
+    />
+
+    <button type="submit" style="padding:10px; width:100%;">
+      Entrar
+    </button>
+  </form>
+</div>
+
+<!-- PAINEL -->
+<div id="adminPanel" style="display:none; padding:40px;">
+  <h1>Painel Admin</h1>
+
+  <button onclick="logout()" style="margin-bottom:20px;">
+    Sair
+  </button>
+
+  <div id="contentArea"></div>
+</div>
+
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const supabase = createClient(
   "https://pxpojetrshxvtaznkxkj.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4cG9qZXRyc2h4dnRhem5reGtqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODgxMDYsImV4cCI6MjA5MzE2NDEwNn0.ClFcL_dtAvdBQdrqZUlDi2CnhGEH_wbATrmxjJhpYYs" 
+  "SUA_ANON_KEY_AQUI"
 )
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -38,8 +76,16 @@ window.addEventListener("DOMContentLoaded", () => {
       .from("content")
       .select("*")
 
-    if (error || !data) {
-      console.error(error)
+    console.log("DATA:", data)
+    console.log("ERROR:", error)
+
+    if (error) {
+      alert("Erro ao carregar dados")
+      return
+    }
+
+    if (!data || data.length === 0) {
+      area.innerHTML = "<p>Nenhum conteúdo encontrado</p>"
       return
     }
 
@@ -72,8 +118,11 @@ window.addEventListener("DOMContentLoaded", () => {
       .update({ link: input.value })
       .eq("type", type)
 
-    if (!error) alert("Atualizado!")
-    else alert("Erro ao salvar")
+    if (!error) {
+      alert("Atualizado!")
+    } else {
+      alert("Erro ao salvar")
+    }
   }
 
   window.logout = () => {
@@ -81,9 +130,13 @@ window.addEventListener("DOMContentLoaded", () => {
     location.reload()
   }
 
+  // auto login
   if (sessionStorage.getItem("admin") === "true") {
     enterAdmin()
   }
 
 })
 </script>
+
+</body>
+</html>
