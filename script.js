@@ -128,5 +128,4 @@ const { data, error } = await supabase
   .from("users")
   .select("*")
 
-console.log("USERS:", data)
-console.log("ERROR:", error)
+console.log(data, error)
