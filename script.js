@@ -1,9 +1,12 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
 
-const SUPABASE_URL = "https://pxpojetrshxvtaznkxkj.supabase.co/rest/v1/"
+const SUPABASE_URL = "https://pxpojetrshxvtaznkxkj.supabase.co"
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4cG9qZXRyc2h4dnRhem5reGtqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODgxMDYsImV4cCI6MjA5MzE2NDEwNn0.ClFcL_dtAvdBQdrqZUlDi2CnhGEH_wbATrmxjJhpYYs"
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+let contentData = {}
+
 async function login() {
   const nome = document.getElementById("nome").value.toLowerCase().trim()
   const codigo = document.getElementById("codigo").value
@@ -28,45 +31,92 @@ async function login() {
   document.getElementById("userName").innerText = data.name
   document.getElementById("userName2").innerText = data.name
 
-  loadContent()
+  await loadContent()
+  renderDashboard()
 }
 
 function logout() {
   location.reload()
 }
-async function loadContent() {
-  const { data, error } = await supabase.from("contents").select("*")
 
-  if (error) {
-    console.log(error)
-    return
-  }
-
-  data.forEach(item => {
-    const buttons = document.querySelectorAll("button")
-
-    buttons.forEach(btn => {
-      if (btn.innerText.toLowerCase().includes(item.title?.toLowerCase())) {
-        btn.onclick = () => window.open(item.link, "_blank")
-      }
-    })
-  })
-}
 async function loadContent() {
   const { data, error } = await supabase
-    .from('content')
-    .select('*')
+    .from("content")
+    .select("*")
 
   if (error) {
     console.error(error)
     return
   }
 
-  // transforma em mapa rápido
   const contentMap = {}
+
   data.forEach(item => {
     contentMap[item.type] = item
   })
 
-  return contentMap
+  contentData = contentMap
+}
+
+async function renderDashboard() {
+
+  document.getElementById("diet_60").onclick = () => {
+    if (contentData.diet_60?.link) {
+      window.open(contentData.diet_60.link, "_blank")
+    }
+  }
+
+  document.getElementById("diet_90").onclick = () => {
+    if (contentData.diet_90?.link) {
+      window.open(contentData.diet_90.link, "_blank")
+    }
+  }
+
+  document.getElementById("diet_120").onclick = () => {
+    if (contentData.diet_120?.link) {
+      window.open(contentData.diet_120.link, "_blank")
+    }
+  }
+
+  document.getElementById("diet_plus").onclick = () => {
+    if (contentData.diet_plus?.link) {
+      window.open(contentData.diet_plus.link, "_blank")
+    }
+  }
+
+  document.getElementById("home_workout").onclick = () => {
+    if (contentData.home_workout?.link) {
+      window.open(contentData.home_workout.link, "_blank")
+    }
+  }
+
+  document.getElementById("gym_workout").onclick = () => {
+    if (contentData.gym_workout?.link) {
+      window.open(contentData.gym_workout.link, "_blank")
+    }
+  }
+
+  document.getElementById("challenge").onclick = () => {
+    if (contentData.challenge?.link) {
+      window.open(contentData.challenge.link, "_blank")
+    }
+  }
+
+  document.getElementById("ranking").onclick = () => {
+    if (contentData.ranking?.link) {
+      window.open(contentData.ranking.link, "_blank")
+    }
+  }
+
+  document.getElementById("rotine").onclick = () => {
+    if (contentData.rotine?.link) {
+      window.open(contentData.rotine.link, "_blank")
+    }
+  }
+
+  document.getElementById("whatsapp").onclick = () => {
+    if (contentData.whatsapp?.link) {
+      window.open(contentData.whatsapp.link, "_blank")
+    }
+  }
 }
