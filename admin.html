@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Tô Me Mexendo</title>
+  <style>
+    body { font-family: Arial; background:#1A202C; color:white; padding:20px; }
+    input, button { padding:10px; margin:5px; border-radius:6px; border:none; }
+    input { width:200px; }
+    button { cursor:pointer; }
+    .card { background:#2D3748; padding:20px; margin:10px 0; border-radius:10px; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; }
+  </style>
+</head>
+
+<body>
+
+<h1>🛠️ Painel Admin</h1>
+
+<!-- LOGIN ADMIN -->
+<div id="loginAdmin">
+  <input id="senha" placeholder="Senha admin">
+  <button onclick="loginAdmin()">Entrar</button>
+</div>
+
+<!-- CONTEÚDO -->
+<div id="panel" style="display:none;">
+
+  <h2>👤 Adicionar Aluno</h2>
+  <input id="nome" placeholder="Nome">
+  <input id="phone" placeholder="4 dígitos">
+  <button onclick="addUser()">Adicionar</button>
+
+  <h2>📦 Atualizar Conteúdo</h2>
+
+  <div id="contents"></div>
+
+</div>
+
+<script type="module">
+
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
+
+const supabase = createClient(
+  "SUA_URL",
+  "SUA_ANON_KEY"
+)
+
+// LOGIN ADMIN
+window.loginAdmin = function () {
+  const senha = document.getElementById("senha").value
+
+  if (senha === "admin123") {
+    document.getElementById("loginAdmin").style.display = "none"
+    document.getElementById("panel").style.display = "block"
+    loadContents()
+  } else {
+    alert("Senha errada")
+  }
+}
+
+// ADICIONAR USER
+window.addUser = async function () {
+  const name = document.getElementById("nome").value.toLowerCase()
+  const phone = document.getElementById("phone").value
+
+  await supabase.from("users").insert([{ name, phone }])
+
+  alert("Aluno adicionado!")
+}
+
+// CARREGAR CONTEÚDO
+async function loadContents() {
+  const { data } = await supabase.from("contents").select("*")
+
+  const div = document.getElementById("contents")
+  div.innerHTML = ""
+
+  data.forEach(item => {
+
+    const el = document.createElement("div")
+    el.className = "card"
+
+    el.innerHTML = `
+      <b>${item.title}</b><br>
+      <input value="${item.link}" id="link-${item.id}">
+      <button onclick="updateLink(${item.id})">Salvar</button>
+    `
+
+    div.appendChild(el)
+  })
+}
+
+// ATUALIZAR LINK
+window.updateLink = async function (id) {
+  const input = document.getElementById("link-" + id)
+
+  await supabase
+    .from("contents")
+    .update({ link: input.value })
+    .eq("id", id)
+
+  alert("Atualizado!")
+}
+
+</script>
+
+</body>
+</html>
