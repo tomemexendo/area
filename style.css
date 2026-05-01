@@ -123,7 +123,7 @@ button {
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
-  margin-top: 10px; /*diminui aqui*/
+  margin-top: 10px;
 }
 
 .btn-blue {
@@ -149,7 +149,7 @@ button {
 .section-title {
   font-size: 20px;
   font-weight: bold;
-  margin: 25px 0 10px; /*diminui aqui*/
+  margin: 25px 0 10px;
 }
 
 .container {
