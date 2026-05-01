@@ -1,76 +1,87 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Tô Me Mexendo</title>
-</head>
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-<body style="font-family: Arial; background:#111; color:white;">
+const supabase = createClient(
+  "https://pxpojetrshxvtaznkxkj.supabase.co",
+  "SUA_ANON_KEY"
+)
 
-<!-- LOGIN -->
-<div id="loginBox" style="padding:40px; max-width:400px; margin:auto;">
-  <h2>Login Admin</h2>
-
-  <form id="adminForm">
-    <input 
-      id="adminPassword" 
-      type="password" 
-      placeholder="Senha admin"
-      style="padding:10px; width:100%; margin:10px 0;"
-    />
-
-    <button 
-      type="submit"
-      style="padding:10px; width:100%; cursor:pointer;"
-    >
-      Entrar
-    </button>
-  </form>
-</div>
-
-<!-- PAINEL -->
-<div id="adminPanel" style="display:none; padding:40px;">
-  <h1>Painel Admin</h1>
-
-  <p>Você está logado 👊</p>
-
-  <button onclick="logout()" style="padding:10px;">
-    Sair
-  </button>
-</div>
-
-<script>
+/* LOGIN SIMPLES */
 const form = document.getElementById("adminForm")
 
-form.addEventListener("submit", function(e) {
+form.addEventListener("submit", async (e) => {
   e.preventDefault()
 
-  const password = document.getElementById("adminPassword").value
+  const pass = document.getElementById("adminPassword").value
 
-  console.log("Senha digitada:", password)
-
-  if (password === "admin123") {
-    sessionStorage.setItem("admin_session", "true")
-
-    document.getElementById("loginBox").style.display = "none"
-    document.getElementById("adminPanel").style.display = "block"
-  } else {
+  if (pass !== "admin123") {
     alert("Senha incorreta")
+    return
   }
+
+  sessionStorage.setItem("admin", "true")
+
+  document.getElementById("loginBox").style.display = "none"
+  document.getElementById("adminPanel").style.display = "block"
+
+  await loadContent()
 })
 
-function logout() {
-  sessionStorage.removeItem("admin_session")
+/* CARREGA CONTEÚDOS */
+async function loadContent() {
+  const { data } = await supabase.from("content").select("*")
+
+  const panel = document.getElementById("adminPanel")
+
+  let html = "<h2>Editar conteúdos</h2>"
+
+  data.forEach(item => {
+    html += `
+      <div style="margin-bottom:20px;">
+        <strong>${item.type}</strong><br/>
+
+        <input
+          id="input-${item.type}"
+          value="${item.link}"
+          style="width:300px; padding:5px;"
+        />
+
+        <button onclick="save('${item.type}')">
+          Salvar
+        </button>
+      </div>
+    `
+  })
+
+  panel.innerHTML = panel.innerHTML + html
+}
+
+/* SALVAR ALTERAÇÃO */
+window.save = async (type) => {
+  const input = document.getElementById("input-" + type)
+
+  const { error } = await supabase
+    .from("content")
+    .update({ link: input.value })
+    .eq("type", type)
+
+  if (!error) {
+    alert("Atualizado com sucesso!")
+  } else {
+    alert("Erro ao salvar")
+  }
+}
+
+/* LOGOUT */
+window.logout = () => {
+  sessionStorage.removeItem("admin")
   location.reload()
 }
 
-// auto login
-if (sessionStorage.getItem("admin_session") === "true") {
+/* AUTO LOGIN */
+if (sessionStorage.getItem("admin") === "true") {
   document.getElementById("loginBox").style.display = "none"
   document.getElementById("adminPanel").style.display = "block"
+  loadContent()
 }
 </script>
-
-</body>
-</html>
