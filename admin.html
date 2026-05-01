@@ -1,21 +1,76 @@
-<form id="adminForm">
-  <input id="adminPassword" type="password" placeholder="Senha admin" />
-  <button type="submit">Entrar</button>
-</form>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Tô Me Mexendo</title>
+</head>
+
+<body style="font-family: Arial; background:#111; color:white;">
+
+<!-- LOGIN -->
+<div id="loginBox" style="padding:40px; max-width:400px; margin:auto;">
+  <h2>Login Admin</h2>
+
+  <form id="adminForm">
+    <input 
+      id="adminPassword" 
+      type="password" 
+      placeholder="Senha admin"
+      style="padding:10px; width:100%; margin:10px 0;"
+    />
+
+    <button 
+      type="submit"
+      style="padding:10px; width:100%; cursor:pointer;"
+    >
+      Entrar
+    </button>
+  </form>
+</div>
+
+<!-- PAINEL -->
+<div id="adminPanel" style="display:none; padding:40px;">
+  <h1>Painel Admin</h1>
+
+  <p>Você está logado 👊</p>
+
+  <button onclick="logout()" style="padding:10px;">
+    Sair
+  </button>
+</div>
 
 <script>
-document.getElementById("adminForm").addEventListener("submit", function (e) {
+const form = document.getElementById("adminForm")
+
+form.addEventListener("submit", function(e) {
   e.preventDefault()
 
   const password = document.getElementById("adminPassword").value
 
-  console.log("Login admin:", password)
+  console.log("Senha digitada:", password)
 
   if (password === "admin123") {
     sessionStorage.setItem("admin_session", "true")
-    window.location.href = "admin.html"
+
+    document.getElementById("loginBox").style.display = "none"
+    document.getElementById("adminPanel").style.display = "block"
   } else {
     alert("Senha incorreta")
   }
 })
+
+function logout() {
+  sessionStorage.removeItem("admin_session")
+  location.reload()
+}
+
+// auto login
+if (sessionStorage.getItem("admin_session") === "true") {
+  document.getElementById("loginBox").style.display = "none"
+  document.getElementById("adminPanel").style.display = "block"
+}
 </script>
+
+</body>
+</html>
