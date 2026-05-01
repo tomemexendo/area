@@ -1,0 +1,104 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #1A202C;
+  color: white;
+}
+
+/* LOGIN */
+.container {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.logo {
+  width: 90px;
+  height: 90px;
+  background: white;
+  border-radius: 12px;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.card-login {
+  background: #2D3748;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 320px;
+  margin: auto;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+}
+
+/* APP */
+.hidden { display: none; }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: #1A202C;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.logo-small {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+}
+
+.logout {
+  background: #E53E3E;
+  width: auto;
+  padding: 8px 14px;
+}
+
+/* LAYOUT */
+.layout {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+.col {
+  flex: 1;
+}
+
+/* CARDS */
+.card {
+  background: #2D3748;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.blue { background: #4299E1; }
+.orange { background: #ED8936; }
+.purple { background: #9F7AEA; }
+.green { background: #48BB78; }
+
+.btn {
+  margin: 8px 0;
+}
