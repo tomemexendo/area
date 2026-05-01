@@ -8,15 +8,26 @@ const supabase = createClient(
 
 let loaded = false
 
-function initAdmin() {
-  const form = document.getElementById("adminForm")
-  const loginBox = document.getElementById("loginBox")
-  const panel = document.getElementById("adminPanel")
+function safeGet(id) {
+  const el = document.getElementById(id)
+  if (!el) console.error("Elemento não encontrado:", id)
+  return el
+}
+
+function init() {
+  const form = safeGet("adminForm")
+  const loginBox = safeGet("loginBox")
+  const panel = safeGet("adminPanel")
+
+  if (!form || !loginBox || !panel) {
+    console.error("HTML incompleto")
+    return
+  }
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault()
 
-    const pass = document.getElementById("adminPassword").value
+    const pass = safeGet("adminPassword")?.value
 
     if (pass !== "admin123") {
       alert("Senha incorreta")
@@ -39,38 +50,52 @@ function initAdmin() {
 }
 
 async function loadContent() {
-  if (loaded) return
-  loaded = true
+  try {
+    if (loaded) return
+    loaded = true
 
-  const { data } = await supabase.from("content").select("*")
+    const { data, error } = await supabase
+      .from("content")
+      .select("*")
 
-  const panel = document.getElementById("adminPanel")
+    if (error) {
+      console.error("Supabase error:", error)
+      return
+    }
 
-  let html = "<h2>Editar conteúdos</h2>"
+    const panel = safeGet("adminPanel")
 
-  data.forEach(item => {
-    html += `
-      <div style="margin-bottom:20px;">
-        <strong>${item.type}</strong><br/>
+    let html = "<h2>Editar conteúdos</h2>"
 
-        <input
-          id="input-${item.type}"
-          value="${item.link}"
-          style="width:300px; padding:5px;"
-        />
+    data.forEach(item => {
+      html += `
+        <div style="margin-bottom:20px;">
+          <strong>${item.type}</strong><br/>
 
-        <button onclick="save('${item.type}')">
-          Salvar
-        </button>
-      </div>
-    `
-  })
+          <input
+            id="input-${item.type}"
+            value="${item.link}"
+            style="width:300px; padding:5px;"
+          />
 
-  panel.innerHTML += html
+          <button onclick="saveItem('${item.type}')">
+            Salvar
+          </button>
+        </div>
+      `
+    })
+
+    panel.innerHTML += html
+
+  } catch (err) {
+    console.error("Erro geral:", err)
+  }
 }
 
-window.save = async (type) => {
+window.saveItem = async (type) => {
   const input = document.getElementById("input-" + type)
+
+  if (!input) return alert("Input não encontrado")
 
   const { error } = await supabase
     .from("content")
@@ -80,6 +105,7 @@ window.save = async (type) => {
   if (!error) {
     alert("Atualizado!")
   } else {
+    console.error(error)
     alert("Erro ao salvar")
   }
 }
@@ -89,6 +115,5 @@ window.logout = () => {
   location.reload()
 }
 
-/* 🔥 GARANTE QUE O DOM CARREGOU */
-window.addEventListener("DOMContentLoaded", initAdmin)
+window.addEventListener("DOMContentLoaded", init)
 </script>
