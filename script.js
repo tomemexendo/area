@@ -34,3 +34,21 @@ async function login() {
 function logout() {
   location.reload()
 }
+async function loadContent() {
+  const { data, error } = await supabase.from("contents").select("*")
+
+  if (error) {
+    console.log(error)
+    return
+  }
+
+  data.forEach(item => {
+    const buttons = document.querySelectorAll("button")
+
+    buttons.forEach(btn => {
+      if (btn.innerText.toLowerCase().includes(item.title?.toLowerCase())) {
+        btn.onclick = () => window.open(item.link, "_blank")
+      }
+    })
+  })
+}
