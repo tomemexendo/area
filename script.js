@@ -1,6 +1,3 @@
-console.log("SCRIPT CARREGOU")
-console.log("LOGIN EXISTE?", typeof login)
-
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const SUPABASE_URL = "https://pxpojetrshxvtaznkxkj.supabase.co"
@@ -8,18 +5,22 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-function normalizeText(text) {
+/* ---------------- NORMALIZAÇÃO ---------------- */
+function normalizeText(text = "") {
   return text
+    .toString()
     .toLowerCase()
     .trim()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // remove acento
+    .replace(/[\u0300-\u036f]/g, "")
 }
 
+/* ---------------- ESTADO ---------------- */
 let contentData = {}
 
+/* ---------------- LOGIN ---------------- */
 async function login() {
-  const nome = document.getElementById("nome").value.trim()
+  const nome = normalizeText(document.getElementById("nome").value)
   const codigo = document.getElementById("codigo").value.trim()
 
   const { data, error } = await supabase
@@ -29,13 +30,13 @@ async function login() {
   console.log("USERS:", data)
 
   const user = data?.find(u =>
-    normalizeText(u.name) === normalizeText(nome) &&
-    u.phone === codigo
+    normalizeText(u.name) === nome &&
+    String(u.phone).trim() === codigo
   )
 
   console.log("USER FOUND:", user)
 
-  if (!user) {
+  if (error || !user) {
     alert("Usuário não encontrado")
     return
   }
@@ -52,10 +53,13 @@ async function login() {
   renderDashboard()
 }
 
+/* ---------------- LOGOUT ---------------- */
 function logout() {
+  localStorage.removeItem("user")
   location.reload()
 }
 
+/* ---------------- CONTENT ---------------- */
 async function loadContent() {
   const { data, error } = await supabase
     .from("content")
@@ -63,7 +67,7 @@ async function loadContent() {
 
   if (error) {
     console.error(error)
-    return {}
+    return
   }
 
   const map = {}
@@ -75,6 +79,7 @@ async function loadContent() {
   contentData = map
 }
 
+/* ---------------- DASHBOARD ---------------- */
 function renderDashboard() {
   const bind = (id, key) => {
     const el = document.getElementById(id)
@@ -99,6 +104,6 @@ function renderDashboard() {
   bind("whatsapp", "whatsapp")
 }
 
-/* expor funções */
+/* ---------------- EXPOR FUNÇÕES PRO HTML ---------------- */
 window.login = login
 window.logout = logout
