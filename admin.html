@@ -1,39 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>Admin - Tô Me Mexendo</title>
-</head>
-
-<body style="font-family: Arial; background:#111; color:white;">
-
-<!-- LOGIN -->
-<div id="loginBox" style="padding:40px; max-width:400px; margin:auto;">
-  <h2>Login Admin</h2>
-
-  <form id="adminForm">
-    <input
-      id="adminPassword"
-      type="password"
-      placeholder="Senha admin"
-      style="padding:10px; width:100%; margin:10px 0;"
-    />
-
-    <button type="submit" style="padding:10px; width:100%;">
-      Entrar
-    </button>
-  </form>
-</div>
-
-<!-- PAINEL -->
-<div id="adminPanel" style="display:none; padding:40px;">
-  <h1>Painel Admin</h1>
-
-  <button onclick="logout()">Sair</button>
-
-  <div id="contentArea" style="margin-top:20px;"></div>
-</div>
-
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
@@ -47,14 +11,12 @@ const loginBox = document.getElementById("loginBox")
 const panel = document.getElementById("adminPanel")
 const area = document.getElementById("contentArea")
 
-// 🔐 ENTRAR NO ADMIN
 function enterAdmin() {
   loginBox.style.display = "none"
   panel.style.display = "block"
   loadContent()
 }
 
-// LOGIN
 form.addEventListener("submit", async (e) => {
   e.preventDefault()
 
@@ -69,7 +31,6 @@ form.addEventListener("submit", async (e) => {
   enterAdmin()
 })
 
-// 🔄 CARREGAR CONTEÚDOS DO SUPABASE
 async function loadContent() {
   const { data, error } = await supabase
     .from("content")
@@ -78,15 +39,7 @@ async function loadContent() {
   console.log("CONTENT DATA:", data)
   console.log("CONTENT ERROR:", error)
 
-  if (error) {
-    alert("Erro no Supabase")
-    return
-  }
-
-  if (!data || data.length === 0) {
-    area.innerHTML = "<p>Nenhum conteúdo encontrado na tabela 'content'</p>"
-    return
-  }
+  if (error || !data) return
 
   area.innerHTML = ""
 
@@ -109,28 +62,6 @@ async function loadContent() {
   })
 }
 
-  area.innerHTML = ""
-
-  data.forEach(item => {
-    area.innerHTML += `
-      <div style="margin-bottom:20px;">
-        <strong>${item.type}</strong><br/>
-
-        <input
-          id="input-${item.type}"
-          value="${item.link}"
-          style="width:300px; padding:5px;"
-        />
-
-        <button onclick="saveItem('${item.type}')">
-          Salvar
-        </button>
-      </div>
-    `
-  })
-}
-
-// 💾 SALVAR LINK
 window.saveItem = async (type) => {
   const input = document.getElementById("input-" + type)
 
@@ -139,25 +70,16 @@ window.saveItem = async (type) => {
     .update({ link: input.value })
     .eq("type", type)
 
-  if (!error) {
-    alert("Atualizado!")
-  } else {
-    alert("Erro ao salvar")
-  }
+  if (!error) alert("Atualizado!")
+  else alert("Erro ao salvar")
 }
 
-// 🚪 LOGOUT
 window.logout = () => {
   sessionStorage.removeItem("admin")
   location.reload()
 }
 
-// 🔁 AUTO LOGIN
 if (sessionStorage.getItem("admin") === "true") {
   enterAdmin()
 }
-
 </script>
-
-</body>
-</html>
