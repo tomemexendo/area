@@ -58,7 +58,12 @@ async function loadContent() {
   contentData = contentMap
 }
 
-async function renderDashboard() {
+async function renderDashboard() 
+
+window.login = login
+window.logout = logout
+
+{
 
   document.getElementById("diet_60").onclick = () => {
     if (contentData.diet_60?.link) {
