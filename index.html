@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tô Me Mexendo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="container">
+  
+  <div class="logo"></div>
+
+  <h1>Tô Me Mexendo</h1>
+  <p>Área do Aluno</p>
+
+  <div class="card-login">
+    <h2>Bem-vindo! 👋</h2>
+
+    <label>Seu Primeiro Nome</label>
+    <input id="nome" placeholder="Ex: Maria">
+
+    <label>4 Últimos Dígitos do WhatsApp</label>
+    <input id="codigo" placeholder="0000" maxlength="4">
+
+    <button onclick="login()">Entrar 🚀</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo-small"></div>
+      <div>
+        <strong>Tô Me Mexendo</strong>
+        <p>Bem-vindo, <span id="userName"></span>!</p>
+      </div>
+    </div>
+
+    <button class="logout" onclick="logout()">Sair</button>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <div class="layout">
+
+    <!-- COLUNA ESQUERDA -->
+    <div class="col">
+
+      <div class="card blue">
+        <h2>Bem-vindo(a), <span id="userName2"></span> 👋</h2>
+        <p>Aqui você tem acesso aos treinos, dieta, desafio do mês e ranking.</p>
+      </div>
+
+      <h3>🍎 DIETA</h3>
+
+      <button class="btn blue">Até 60kg</button>
+      <button class="btn blue">60 - 90kg</button>
+      <button class="btn blue">90 - 120kg</button>
+      <button class="btn blue">Acima de 120kg</button>
+
+      <h3>🏠 TREINO PARA CASA</h3>
+      <button class="btn orange">Acessar Treino para Casa</button>
+
+      <h3>🏋️ TREINO PARA ACADEMIA</h3>
+      <button class="btn orange">Acessar Treino para Academia</button>
+
+    </div>
+
+    <!-- COLUNA DIREITA -->
+    <div class="col">
+
+      <h3>🎯 DESAFIO DO MÊS</h3>
+      <button class="btn blue">Acessar Desafio</button>
+
+      <h3>🏆 PONTOS E PRÊMIOS</h3>
+      <button class="btn blue">Ver Ranking</button>
+
+      <h3>📋 SUA ROTINA</h3>
+      <button class="btn purple">Como encaixar nos horários</button>
+
+      <div class="card help">
+        <h2>💬 Precisa de Ajuda?</h2>
+        <p>Fale com a equipe no WhatsApp sempre que precisar.</p>
+        <button class="btn green">Falar no WhatsApp</button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
