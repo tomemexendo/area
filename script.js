@@ -4,20 +4,31 @@ const SUPABASE_URL = "https://pxpojetrshxvtaznkxkj.supabase.co/rest/v1/"
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4cG9qZXRyc2h4dnRhem5reGtqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODgxMDYsImV4cCI6MjA5MzE2NDEwNn0.ClFcL_dtAvdBQdrqZUlDi2CnhGEH_wbATrmxjJhpYYs"
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-function login() {
-  const nome = document.getElementById("nome").value
+async function login() {
+  const nome = document.getElementById("nome").value.toLowerCase().trim()
   const codigo = document.getElementById("codigo").value
 
-  if (!nome || codigo.length !== 4) {
-    alert("Preencha corretamente")
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("name", nome)
+    .eq("phone", codigo)
+    .single()
+
+  if (error || !data) {
+    alert("Usuário não encontrado")
     return
   }
 
-  document.getElementById("login").classList.add("hidden")
+  localStorage.setItem("user", JSON.stringify(data))
+
+  document.getElementById("login").style.display = "none"
   document.getElementById("app").classList.remove("hidden")
 
-  document.getElementById("userName").innerText = nome
-  document.getElementById("userName2").innerText = nome
+  document.getElementById("userName").innerText = data.name
+  document.getElementById("userName2").innerText = data.name
+
+  loadContent()
 }
 
 function logout() {
