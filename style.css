@@ -76,14 +76,12 @@ button {
 }
 
 /* LAYOUT */
-.layout {
+.layout-single {
+  max-width: 500px;
+  margin: 0 auto;
   display: flex;
-  gap: 20px;
-  padding: 20px;
-}
-
-.col {
-  flex: 1;
+  flex-direction: column;
+  gap: 12px;
 }
 
 /* CARDS */
