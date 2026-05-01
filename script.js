@@ -11,12 +11,12 @@ async function login() {
   const nome = document.getElementById("nome").value.toLowerCase().trim()
   const codigo = document.getElementById("codigo").value
 
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("name", nome)
-    .eq("phone", codigo)
-    .single()
+ const { data, error } = await supabase
+  .from("users")
+  .select("*")
+
+console.log("USERS:", data)
+console.log("ERROR:", error)
 
   if (error || !data) {
     alert("Usuário não encontrado")
