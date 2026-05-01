@@ -52,3 +52,21 @@ async function loadContent() {
     })
   })
 }
+async function loadContent() {
+  const { data, error } = await supabase
+    .from('content')
+    .select('*')
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  // transforma em mapa rápido
+  const contentMap = {}
+  data.forEach(item => {
+    contentMap[item.type] = item
+  })
+
+  return contentMap
+}
