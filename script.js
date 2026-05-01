@@ -123,3 +123,10 @@ async function renderDashboard() {
 /* 🔥 ESSENCIAL: expor funções pro HTML */
 window.login = login
 window.logout = logout
+
+const { data, error } = await supabase
+  .from("users")
+  .select("*")
+
+console.log("USERS:", data)
+console.log("ERROR:", error)
