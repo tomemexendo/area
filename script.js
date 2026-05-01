@@ -8,6 +8,14 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
+function normalizeText(text) {
+  return text
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // remove acento
+}
+
 let contentData = {}
 
 async function login() {
@@ -17,9 +25,14 @@ async function login() {
   const { data, error } = await supabase
     .from("users")
     .select("*")
-    .eq("name", nome)
-    .eq("phone", codigo)
-    .maybeSingle()
+   const { data, error } = await supabase
+  .from("users")
+  .select("*")
+
+const user = data?.find(u =>
+  normalizeText(u.name) === nome &&
+  u.phone === codigo
+)
 
   console.log("LOGIN RESULT:", data, error)
 
