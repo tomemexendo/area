@@ -1,3 +1,35 @@
+<body style="font-family: Arial; background:#111; color:white;">
+
+<!-- LOGIN -->
+<div id="loginBox" style="padding:40px; max-width:400px; margin:auto;">
+  <h2>Login Admin</h2>
+
+  <form id="adminForm">
+    <input
+      id="adminPassword"
+      type="password"
+      placeholder="Senha admin"
+      style="padding:10px; width:100%; margin:10px 0;"
+    />
+
+    <button
+      type="submit"
+      style="padding:10px; width:100%; cursor:pointer;"
+    >
+      Entrar
+    </button>
+  </form>
+</div>
+
+<!-- PAINEL -->
+<div id="adminPanel" style="display:none; padding:40px;">
+  <h1>Painel Admin</h1>
+
+  <button onclick="logout()">Sair</button>
+
+  <div id="contentArea" style="margin-top:20px;"></div>
+</div>
+
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
@@ -6,108 +38,57 @@ const supabase = createClient(
   "SUA_ANON_KEY"
 )
 
-let loaded = false
+const form = document.getElementById("adminForm")
+const loginBox = document.getElementById("loginBox")
+const panel = document.getElementById("adminPanel")
+const area = document.getElementById("contentArea")
 
-function safeGet(id) {
-  const el = document.getElementById(id)
-  if (!el) console.error("Elemento não encontrado:", id)
-  return el
-}
+form.addEventListener("submit", async (e) => {
+  e.preventDefault()
 
-function init() {
-  const form = safeGet("adminForm")
-  const loginBox = safeGet("loginBox")
-  const panel = safeGet("adminPanel")
+  const pass = document.getElementById("adminPassword").value
 
-  if (!form || !loginBox || !panel) {
-    console.error("HTML incompleto")
+  if (pass !== "admin123") {
+    alert("Senha incorreta")
     return
   }
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault()
+  sessionStorage.setItem("admin", "true")
 
-    const pass = safeGet("adminPassword")?.value
+  loginBox.style.display = "none"
+  panel.style.display = "block"
 
-    if (pass !== "admin123") {
-      alert("Senha incorreta")
-      return
-    }
-
-    sessionStorage.setItem("admin", "true")
-
-    loginBox.style.display = "none"
-    panel.style.display = "block"
-
-    await loadContent()
-  })
-
-  if (sessionStorage.getItem("admin") === "true") {
-    loginBox.style.display = "none"
-    panel.style.display = "block"
-    loadContent()
-  }
-}
+  loadContent()
+})
 
 async function loadContent() {
-  try {
-    if (loaded) return
-    loaded = true
+  const { data } = await supabase.from("content").select("*")
 
-    const { data, error } = await supabase
-      .from("content")
-      .select("*")
+  area.innerHTML = ""
 
-    if (error) {
-      console.error("Supabase error:", error)
-      return
-    }
+  data.forEach(item => {
+    area.innerHTML += `
+      <div style="margin-bottom:20px;">
+        <strong>${item.type}</strong><br/>
 
-    const panel = safeGet("adminPanel")
+        <input id="input-${item.type}" value="${item.link}"
+          style="width:300px; padding:5px;" />
 
-    let html = "<h2>Editar conteúdos</h2>"
-
-    data.forEach(item => {
-      html += `
-        <div style="margin-bottom:20px;">
-          <strong>${item.type}</strong><br/>
-
-          <input
-            id="input-${item.type}"
-            value="${item.link}"
-            style="width:300px; padding:5px;"
-          />
-
-          <button onclick="saveItem('${item.type}')">
-            Salvar
-          </button>
-        </div>
-      `
-    })
-
-    panel.innerHTML += html
-
-  } catch (err) {
-    console.error("Erro geral:", err)
-  }
+        <button onclick="save('${item.type}')">Salvar</button>
+      </div>
+    `
+  })
 }
 
-window.saveItem = async (type) => {
+window.save = async (type) => {
   const input = document.getElementById("input-" + type)
 
-  if (!input) return alert("Input não encontrado")
-
-  const { error } = await supabase
+  await supabase
     .from("content")
     .update({ link: input.value })
     .eq("type", type)
 
-  if (!error) {
-    alert("Atualizado!")
-  } else {
-    console.error(error)
-    alert("Erro ao salvar")
-  }
+  alert("Atualizado!")
 }
 
 window.logout = () => {
@@ -115,5 +96,11 @@ window.logout = () => {
   location.reload()
 }
 
-window.addEventListener("DOMContentLoaded", init)
+if (sessionStorage.getItem("admin") === "true") {
+  loginBox.style.display = "none"
+  panel.style.display = "block"
+  loadContent()
+}
 </script>
+
+</body>
