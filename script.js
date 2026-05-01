@@ -1,7 +1,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
 
 const SUPABASE_URL = "https://pxpojetrshxvtaznkxkj.supabase.co"
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4cG9qZXRyc2h4dnRhem5reGtqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODgxMDYsImV4cCI6MjA5MzE2NDEwNn0.ClFcL_dtAvdBQdrqZUlDi2CnhGEH_wbATrmxjJhpYYs"
+const SUPABASE_ANON_KEY = "SUA_CHAVE_AQUI"
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
@@ -46,7 +46,7 @@ async function loadContent() {
 
   if (error) {
     console.error(error)
-    return
+    return {}
   }
 
   const contentMap = {}
@@ -58,13 +58,7 @@ async function loadContent() {
   contentData = contentMap
 }
 
-async function renderDashboard() 
-
-window.login = login
-window.logout = logout
-
-{
-
+async function renderDashboard() {
   document.getElementById("diet_60").onclick = () => {
     if (contentData.diet_60?.link) {
       window.open(contentData.diet_60.link, "_blank")
@@ -125,3 +119,7 @@ window.logout = logout
     }
   }
 }
+
+/* 🔥 ESSENCIAL: expor funções pro HTML */
+window.login = login
+window.logout = logout
