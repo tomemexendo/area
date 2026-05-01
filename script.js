@@ -8,17 +8,15 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 let contentData = {}
 
 async function login() {
-  const nome = document.getElementById("nome").value.toLowerCase().trim()
-  const codigo = document.getElementById("codigo").value.trim()
-
   const { data, error } = await supabase
     .from("users")
     .select("*")
-    .eq("name", nome)
-    .eq("phone", codigo)
-    .maybeSingle()
 
-  console.log("LOGIN RESULT:", data, error)
+  console.log("TODOS OS USERS DO BANCO:")
+  console.table(data)
+
+  console.log("ERROR:", error)
+}
 
   if (error || !data) {
     alert("Usuário não encontrado")
