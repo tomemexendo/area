@@ -33,6 +33,11 @@
     Sair
   </button>
 
+  <div style="margin-bottom:20px;">
+  <button onclick="showContent()">Conteúdos</button>
+  <button onclick="showUsers()">Alunos</button>
+</div>
+
   <div id="contentArea"></div>
 </div>
 
@@ -109,6 +114,99 @@ window.addEventListener("DOMContentLoaded", () => {
       `
     })
   }
+
+    window.showUsers = async () => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+
+  if (error) {
+    alert("Erro ao carregar usuários")
+    return
+  }
+
+  area.innerHTML = `
+    <h2>Alunos</h2>
+
+    <input id="searchUser" placeholder="Buscar nome..." style="padding:5px; margin-bottom:10px;" />
+
+    <div id="userList"></div>
+
+    <h3>Adicionar novo</h3>
+
+    <input id="newName" placeholder="Nome" />
+    <input id="newPhone" placeholder="Senha" />
+
+    <button onclick="addUser()">Adicionar</button>
+  `
+
+  renderUsers(data)
+
+  document.getElementById("searchUser").oninput = (e) => {
+    const term = e.target.value.toLowerCase()
+    const filtered = data.filter(u =>
+      u.name.toLowerCase().includes(term)
+    )
+    renderUsers(filtered)
+  }
+}
+
+  function renderUsers(users) {
+  const list = document.getElementById("userList")
+
+  list.innerHTML = ""
+
+  users.forEach(user => {
+    list.innerHTML += `
+      <div style="margin-bottom:10px;">
+        ${user.name} (${user.phone})
+
+        <button onclick="deleteUser('${user.id}')">
+          ❌
+        </button>
+      </div>
+    `
+  })
+}
+
+  window.addUser = async () => {
+  const name = document.getElementById("newName").value
+  const phone = document.getElementById("newPhone").value
+
+  if (!name || !phone) {
+    alert("Preencha tudo")
+    return
+  }
+
+  const { error } = await supabase
+    .from("users")
+    .insert([{ name, phone }])
+
+  if (!error) {
+    alert("Adicionado!")
+    showUsers()
+  } else {
+    alert("Erro ao adicionar")
+  }
+}
+
+  window.deleteUser = async (id) => {
+  const confirmDelete = confirm("Remover esse aluno?")
+
+  if (!confirmDelete) return
+
+  const { error } = await supabase
+    .from("users")
+    .delete()
+    .eq("id", id)
+
+  if (!error) {
+    alert("Removido!")
+    showUsers()
+  } else {
+    alert("Erro ao remover")
+  }
+}
 
   window.saveItem = async (type) => {
     const input = document.getElementById("input-" + type)
