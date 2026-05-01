@@ -145,7 +145,8 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("searchUser").oninput = (e) => {
     const term = e.target.value.toLowerCase()
     const filtered = data.filter(u =>
-      u.name.toLowerCase().includes(term)
+      u.name.toLowerCase().includes(term) ||
+u.phone.includes(term)
     )
     renderUsers(filtered)
   }
