@@ -147,6 +147,14 @@ button {
 }
 
 .section-title {
+  margin-bottom: 4px;
+}
+
+.btn {
+  margin-top: 4px;
+}
+
+.section-title {
   font-size: 20px;
   font-weight: bold;
   margin: 25px 0 10px;
