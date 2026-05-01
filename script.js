@@ -1,3 +1,6 @@
+console.log("SCRIPT CARREGOU")
+console.log("LOGIN EXISTE?", typeof login)
+
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const SUPABASE_URL = "https://pxpojetrshxvtaznkxkj.supabase.co"
