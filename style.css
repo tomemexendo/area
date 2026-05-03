@@ -147,6 +147,11 @@ button {
 }
 
 .btn-yellow {
+  background: #facc15 !important;
+  color: #000 !important;
+}
+
+.btn-yellow {
   background: var(--yellow);
   color: black;
 }
