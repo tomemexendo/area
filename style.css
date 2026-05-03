@@ -1,3 +1,11 @@
+.header h2 {
+  margin: 0;
+}
+
+.header p {
+  margin: 2px 0 0;
+}
+
 :root {
   --bg: #0b1623;
   --card: #1c2a3a;
