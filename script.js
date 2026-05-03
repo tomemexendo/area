@@ -101,6 +101,7 @@ function renderDashboard() {
   bind("challenge", "challenge")
   bind("ranking", "ranking")
   bind("rotine", "rotine")
+  bind("diario", "diario")
   bind("whatsapp", "whatsapp")
 }
 
