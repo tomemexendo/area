@@ -147,8 +147,8 @@ button {
 }
 
 .btn-yellow {
-  background: #facc15 !important;
-  color: #000 !important;
+  background: var(--yellow) !important;
+  color: white !important;
 }
 
 .btn-red {
