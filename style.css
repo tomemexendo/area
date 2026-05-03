@@ -114,6 +114,8 @@ button {
 .orange { background: #ED8936; }
 .purple { background: #9F7AEA; }
 .green { background: #48BB78; }
+.yellow { background: #FACC15; }
+.red { background: #EF4444; }
 
 .btn {
   width: 100%;
@@ -144,16 +146,6 @@ button {
 .btn-purple {
   background: var(--purple);
   color: white;
-}
-
-.btn-yellow {
-  background: var(--yellow) !important;
-  color: white !important;
-}
-
-.btn-red {
-  background: #ef4444;
-  color: #fff;
 }
 
 .btn {
@@ -191,18 +183,6 @@ button {
   background: linear-gradient(180deg, #3b82f6, #2563eb);
   border-radius: 16px;
   padding: 20px;
-}
-
-.card-blue {
-  background: linear-gradient(180deg, #3b82f6, #2563eb);
-  border-radius: 16px;
-  padding: 20px;
-}
-
-.btn-login {
-  background: var(--orange);
-  color: white;
-  font-weight: bold;
 }
 
 .btn-login {
