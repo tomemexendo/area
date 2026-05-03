@@ -146,6 +146,16 @@ button {
   color: white;
 }
 
+.btn-yellow {
+  background: #facc15;
+  color: #000;
+}
+
+.btn-red {
+  background: #ef4444;
+  color: #fff;
+}
+
 .btn {
   margin-top: 4px;
 }
