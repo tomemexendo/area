@@ -146,9 +146,9 @@ button {
   color: white;
 }
 
-.btn-yellow {
-  background: #facc15;
-  color: #000;
+.btn-purple {
+  background: var(--yellow);
+  color: black;
 }
 
 .btn-red {
