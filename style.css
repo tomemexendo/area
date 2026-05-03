@@ -125,16 +125,16 @@ button {
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
-  margin-top: 1px;
-  margin-bottom: 16px;
+  margin-top: 2px;
+  margin-bottom: 14px;
 }
 
 h3 {
-  margin-bottom: 1px;
+  margin-bottom: 2px;
 }
 
 .btn-group .btn {
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .btn-blue {
