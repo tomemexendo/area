@@ -416,25 +416,33 @@ e.target.value
 
 render(
 
-lista.filter(
-u=>
+lista.filter(u=>{
+
+const busca =
+termo.toLowerCase()
+
+return(
 
 u.nome
 .toLowerCase()
-.includes(
-termo
-)
+.includes(busca)
 
 ||
 
 String(
 u.senha
 )
-.includes(
-termo
-)
+.includes(busca)
+
+||
+
+u.status
+.toLowerCase()
+.includes(busca)
 
 )
+
+})
 
 )
 
