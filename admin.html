@@ -218,6 +218,9 @@ await supabase
 .from("access_logs")
 .select("*")
 
+    console.log("ACCESS DATA:", data)
+console.log("ACCESS ERROR:", error)
+
 if (error) {
 alert("Erro ao carregar acessos")
 return
