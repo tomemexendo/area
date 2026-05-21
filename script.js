@@ -50,6 +50,8 @@ user_name: user.name,
 user_phone: user.phone
 }])
 
+  console.log("Acesso registrado")
+
   document.getElementById("login").style.display = "none"
   document.getElementById("app").classList.remove("hidden")
 
