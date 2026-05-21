@@ -77,15 +77,19 @@ button {
 .header {
   display: flex;
   justify-content: space-between;
-  padding: 15px;
-  background: #1A202C;
   align-items: center;
+
+  padding: 8px 15px;
+
+  background: #1A202C;
+
+  margin-bottom: 8px;
 }
 
 .header-left {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+  display:flex;
+  gap:8px;
+  align-items:center;
 }
 
 .logo-small img {
@@ -177,12 +181,6 @@ h3 {
   padding: 20px;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
 
 .logout {
   background: red;
