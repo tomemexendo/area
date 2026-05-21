@@ -129,6 +129,110 @@ window.addEventListener("DOMContentLoaded", () => {
     return
   }
 
+      window.showAccess = async () => {
+
+  const { data, error } = await supabase
+    .from("access_logs")
+    .select("*")
+
+  if (error) {
+    alert("Erro ao carregar acessos")
+    return
+  }
+
+  const resumo = {}
+
+  data.forEach(item => {
+
+    if (!resumo[item.user_phone]) {
+      resumo[item.user_phone] = {
+        nome: item.user_name,
+        acessos: 0,
+        ultimo: item.created_at
+      }
+    }
+
+    resumo[item.user_phone].acessos++
+
+    if (new Date(item.created_at) >
+        new Date(resumo[item.user_phone].ultimo)) {
+
+      resumo[item.user_phone].ultimo =
+        item.created_at
+    }
+  })
+
+  area.innerHTML = `
+<h2>Acessos</h2>
+
+<input
+id="searchAccess"
+placeholder="Buscar aluno..."
+style="
+padding:8px;
+width:100%;
+margin-bottom:20px;
+"
+/>
+
+<div id="accessList"></div>
+`
+
+ function renderAccess(lista){
+
+const div =
+document.getElementById("accessList")
+
+div.innerHTML = ""
+
+lista
+.sort((a,b)=>b.acessos-a.acessos)
+.forEach(user=>{
+
+div.innerHTML += `
+<div style="
+padding:10px;
+border-bottom:1px solid #333;
+">
+
+<strong>${user.nome}</strong><br>
+
+👀 ${user.acessos} acessos<br>
+
+🕒 ${
+new Date(
+user.ultimo
+).toLocaleString()
+}
+
+</div>
+`
+})
+
+}
+
+const usuarios =
+Object.values(resumo)
+
+renderAccess(usuarios)
+
+document
+.getElementById("searchAccess")
+.oninput = (e)=>{
+
+const termo =
+e.target.value.toLowerCase()
+
+renderAccess(
+usuarios.filter(u=>
+u.nome
+.toLowerCase()
+.includes(termo)
+)
+)
+
+}
+
   area.innerHTML = `
     <h2>Adicionar novo</h2>
     <input id="newName" placeholder="Nome" />
