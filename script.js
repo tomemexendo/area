@@ -43,6 +43,13 @@ async function login() {
 
   localStorage.setItem("user", JSON.stringify(user))
 
+  await supabase
+.from("access_logs")
+.insert([{
+user_name: user.name,
+user_phone: user.phone
+}])
+
   document.getElementById("login").style.display = "none"
   document.getElementById("app").classList.remove("hidden")
 
