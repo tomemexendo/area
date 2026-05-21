@@ -203,3 +203,22 @@ h3 {
   color: white;
   font-weight: bold;
 }
+
+.grid{
+display:grid;
+
+grid-template-columns:
+1fr 1fr;
+
+gap:10px;
+
+margin-top:10px;
+}
+
+.grid .btn{
+margin-top:0;
+}
+
+.grid .btn:nth-child(odd){
+margin-right:0;
+}
