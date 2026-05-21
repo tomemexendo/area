@@ -211,59 +211,116 @@ u.phone.includes(term)
   }
 }
 
-  window.showAccess = async () => {
+window.showAccess = async () => {
 
-const { data, error } =
+const users =
+await supabase
+.from("users")
+.select("*")
+
+const logs =
 await supabase
 .from("access_logs")
 .select("*")
 
-    console.log("ACCESS DATA:", data)
-console.log("ACCESS ERROR:", error)
-
-if (error) {
+if(users.error || logs.error){
 alert("Erro ao carregar acessos")
 return
 }
 
-const resumo = {}
+const lista=[]
 
-data.forEach(item => {
+users.data.forEach(user=>{
 
-if (!resumo[item.user_phone]) {
+const acessos =
+logs.data.filter(
+a=>
+String(a.user_phone)
+===
+String(user.phone)
+)
 
-resumo[item.user_phone] = {
-nome: item.user_name,
-acessos: 0,
-ultimo: item.created_at
+let ultimo = null
+
+if(acessos.length){
+
+ultimo =
+acessos
+.sort(
+(a,b)=>
+new Date(b.created_at)
+-
+new Date(a.created_at)
+)[0]
+.created_at
+
+}
+
+let status="⚫ Nunca entrou"
+
+if(ultimo){
+
+const dias = Math.floor(
+(
+new Date()
+-
+new Date(ultimo)
+)
+/
+86400000
+)
+
+if(dias<=7){
+
+status=
+"🟢 Ativo"
+
+}
+
+else if(dias<=30){
+
+status=
+"🟡 Sumido"
+
+}
+
+else{
+
+status=
+"🔴 Inativo"
+
 }
 
 }
 
-resumo[item.user_phone].acessos++
+lista.push({
 
-if (
-new Date(item.created_at) >
-new Date(resumo[item.user_phone].ultimo)
-) {
+nome:
+user.name,
 
-resumo[item.user_phone].ultimo =
-item.created_at
+senha:
+user.phone,
 
-}
+acessos:
+acessos.length,
+
+ultimo,
+
+status
 
 })
 
-const usuarios =
-Object.values(resumo)
+})
 
-area.innerHTML = `
+area.innerHTML=`
 
 <h2>Acessos</h2>
 
 <input
 id="searchAccess"
-placeholder="Buscar aluno..."
+placeholder="
+Buscar nome ou senha
+"
 style="
 padding:8px;
 width:100%;
@@ -275,33 +332,36 @@ margin-bottom:20px;
 
 `
 
-function render(lista){
+function render(listaFinal){
 
 const div =
-document.getElementById(
+document
+.getElementById(
 "accessList"
 )
 
-div.innerHTML = ""
+div.innerHTML=""
 
-lista
-.sort(
-(a,b)=>
-b.acessos-a.acessos
-)
+listaFinal.forEach(user=>{
 
-.forEach(user=>{
+div.innerHTML+=`
 
-div.innerHTML += `
-
-<div style="
+<div
+style="
 padding:12px;
 border-bottom:
 1px solid #333;
-">
+"
+
+>
 
 <strong>
+
 ${user.nome}
+(
+${user.senha}
+)
+
 </strong>
 
 <br>
@@ -313,11 +373,26 @@ acessos
 <br>
 
 🕒
+
 ${
+user.ultimo
+?
+
 new Date(
 user.ultimo
-).toLocaleString()
+)
+.toLocaleString()
+
+:
+
+"Nunca"
+
 }
+
+<br>
+
+📌
+${user.status}
 
 </div>
 
@@ -327,7 +402,7 @@ user.ultimo
 
 }
 
-render(usuarios)
+render(lista)
 
 document
 .getElementById(
@@ -341,11 +416,23 @@ e.target.value
 
 render(
 
-usuarios.filter(u=>
+lista.filter(
+u=>
 
 u.nome
 .toLowerCase()
-.includes(termo)
+.includes(
+termo
+)
+
+||
+
+String(
+u.senha
+)
+.includes(
+termo
+)
 
 )
 
@@ -354,7 +441,6 @@ u.nome
 }
 
 }
-
   window.saveItem = async (type) => {
     const input = document.getElementById("input-" + type)
 
