@@ -224,7 +224,10 @@ margin-right:0;
 .welcome-card{
 
 background:
-rgba(20,35,60,0.95);
+rgba(255,255,255,0.88);
+
+color:
+#111827;
 
 padding:
 8px 16px;
@@ -237,11 +240,16 @@ margin-bottom:
 
 border:
 1px solid
-rgba(80,140,255,0.15);
+rgba(255,255,255,0.35);
 
 border-radius:
 14px;
 
+}
+
+.welcome-card h2,
+.welcome-card p{
+color:#111827;
 }
 
 .welcome-card h2{
