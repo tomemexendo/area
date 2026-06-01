@@ -123,13 +123,36 @@ if (pushBtn) {
 /* ---------------- EXPOR FUNÇÕES PRO HTML ---------------- */
 async function enablePush() {
   try {
-    // dispara o prompt do OneSignal (opt-in voluntário)
-    await OneSignal.showSlidedownPrompt()
+    console.log("BOTÃO CLICADO")
 
-    console.log("Prompt de push exibido")
+    const permission = await OneSignal.Notifications.requestPermission()
+
+    console.log("PERMISSÃO:", permission)
+
+    const playerId = await OneSignal.User.PushSubscription.id
+
+    console.log("PLAYER ID:", playerId)
+
+    const user = JSON.parse(localStorage.getItem("user"))
+
+    if (!user || !playerId) {
+      console.log("Faltando user ou playerId")
+      return
+    }
+
+    await fetch("/api/link-push", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: user.id,
+        player_id: playerId
+      })
+    })
+
+    alert("Notificações ativadas 🔔")
 
   } catch (err) {
-    console.error("Erro ao ativar push:", err)
+    console.error("ERRO AO ATIVAR PUSH:", err)
   }
 }
 window.login = login
