@@ -43,7 +43,13 @@ async function login() {
 
   localStorage.setItem("user", JSON.stringify(user))
 
-  OneSignal.login(user.id)
+try {
+  if (window.OneSignal && user?.id) {
+    OneSignal.login(user.id)
+  }
+} catch (e) {
+  console.log("OneSignal erro:", e)
+}
 
   await supabase
 .from("access_logs")
