@@ -161,3 +161,10 @@ async function enablePush() {
 }
 window.login = login
 window.logout = logout
+
+function showBlockedMessage() {
+  const msg = document.getElementById("pushBlockedMsg")
+  if (msg) {
+    msg.classList.remove("hidden")
+  }
+}
