@@ -147,11 +147,21 @@ async function enablePush() {
       // 🔥 SALVA LOCALMENTE POR ENQUANTO
       localStorage.setItem("onesignal_player_id", playerId)
 
-      alert("Incentivo ativado 🔔")
+      alert("INCENTIVO ATIVADO 🔔")
 
     }, 1500)
 
   } catch (err) {
     console.error("Erro push:", err)
+  }
+}
+
+window.login = login
+window.logout = logout
+
+function showBlockedMessage() {
+  const msg = document.getElementById("pushBlockedMsg")
+  if (msg) {
+    msg.classList.remove("hidden")
   }
 }
