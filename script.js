@@ -43,6 +43,8 @@ async function login() {
 
   localStorage.setItem("user", JSON.stringify(user))
 
+  OneSignal.login(user.id)
+
   await supabase
 .from("access_logs")
 .insert([{
