@@ -60,6 +60,7 @@ user_phone: user.phone
 
   await loadContent()
   renderDashboard()
+  
 }
 
 /* ---------------- LOGOUT ---------------- */
@@ -112,8 +113,24 @@ function renderDashboard() {
   bind("rotine", "rotine")
   bind("diario", "diario")
   bind("whatsapp", "whatsapp")
+  
+  const pushBtn = document.getElementById("enablePush")
+if (pushBtn) {
+  pushBtn.onclick = enablePush
+}
 }
 
 /* ---------------- EXPOR FUNÇÕES PRO HTML ---------------- */
+async function enablePush() {
+  try {
+    // dispara o prompt do OneSignal (opt-in voluntário)
+    await OneSignal.showSlidedownPrompt()
+
+    console.log("Prompt de push exibido")
+
+  } catch (err) {
+    console.error("Erro ao ativar push:", err)
+  }
+}
 window.login = login
 window.logout = logout
