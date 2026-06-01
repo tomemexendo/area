@@ -129,10 +129,12 @@ async function enablePush() {
 
     const permission = await OneSignal.Notifications.requestPermission()
 
-    if (!permission) {
-      console.log("Permissão negada")
-      return
-    }
+console.log("PERMISSÃO:", permission)
+
+if (permission === "denied" || Notification.permission === "denied") {
+  showBlockedMessage()
+  return
+}
 
     // espera um pequeno tempo pro OneSignal registrar
     setTimeout(async () => {
