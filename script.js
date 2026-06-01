@@ -138,6 +138,7 @@ async function enablePush() {
       const playerId = OneSignal.User.PushSubscription.id
 
       console.log("PLAYER ID:", playerId)
+      
 
       if (!playerId) {
         console.log("Ainda não gerou playerId")
