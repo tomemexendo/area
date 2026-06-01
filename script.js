@@ -127,44 +127,31 @@ async function enablePush() {
 
     const permission = await OneSignal.Notifications.requestPermission()
 
-    console.log("PERMISSÃO:", permission)
-
-    // ❌ BLOQUEADO
-    if (permission === false) {
-      showBlockedMessage()
+    if (!permission) {
+      console.log("Permissão negada")
       return
     }
 
-    const playerId = OneSignal.User.PushSubscription.id
+    // espera um pequeno tempo pro OneSignal registrar
+    setTimeout(async () => {
 
-    console.log("PLAYER ID:", playerId)
+      const playerId = OneSignal.User.PushSubscription.id
 
-    const user = JSON.parse(localStorage.getItem("user"))
+      console.log("PLAYER ID:", playerId)
 
-    if (!user || !playerId) return
+      if (!playerId) {
+        console.log("Ainda não gerou playerId")
+        return
+      }
 
-    await fetch("/api/link-push", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user_id: user.id,
-        player_id: playerId
-      })
-    })
+      // 🔥 SALVA LOCALMENTE POR ENQUANTO
+      localStorage.setItem("onesignal_player_id", playerId)
 
-    alert("Notificações ativadas 🔔")
+      alert("Incentivo ativado 🔔")
+
+    }, 1500)
 
   } catch (err) {
-    console.error("ERRO AO ATIVAR PUSH:", err)
-    showBlockedMessage()
-  }
-}
-window.login = login
-window.logout = logout
-
-function showBlockedMessage() {
-  const msg = document.getElementById("pushBlockedMsg")
-  if (msg) {
-    msg.classList.remove("hidden")
+    console.error("Erro push:", err)
   }
 }
