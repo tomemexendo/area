@@ -135,22 +135,43 @@ async function enablePush() {
     // espera um pequeno tempo pro OneSignal registrar
     setTimeout(async () => {
 
-      const playerId = OneSignal.User.PushSubscription.id
+  const playerId = OneSignal.User.PushSubscription.id
 
-      console.log("PLAYER ID:", playerId)
-      
+  console.log("PLAYER ID:", playerId)
 
-      if (!playerId) {
-        console.log("Ainda não gerou playerId")
-        return
-      }
+  if (!playerId) {
+    console.log("Ainda não gerou playerId")
+    return
+  }
 
-      // 🔥 SALVA LOCALMENTE POR ENQUANTO
-      localStorage.setItem("onesignal_player_id", playerId)
+  // salva local
+  localStorage.setItem("onesignal_player_id", playerId)
 
-      alert("INCENTIVO ATIVADO 🔔")
+  const user = JSON.parse(localStorage.getItem("user"))
 
-    }, 1500)
+  if (!user) {
+    console.log("Usuário não encontrado")
+    return
+  }
+
+  // 🔥 SALVA NO SUPABASE
+  const { error } = await supabase
+    .from("user_devices")
+    .upsert({
+      user_id: user.id,
+      onesignal_player_id: playerId,
+      status: "active",
+      updated_at: new Date()
+    })
+
+  if (error) {
+    console.log("Erro Supabase:", error)
+    return
+  }
+
+  alert("INCENTIVO ATIVADO 🔔")
+
+}, 1500)
 
   } catch (err) {
     console.error("Erro push:", err)
