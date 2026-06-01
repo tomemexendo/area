@@ -129,16 +129,19 @@ async function enablePush() {
 
     console.log("PERMISSÃO:", permission)
 
-    const playerId = await OneSignal.User.PushSubscription.id
+    // ❌ BLOQUEADO
+    if (permission === false) {
+      showBlockedMessage()
+      return
+    }
+
+    const playerId = OneSignal.User.PushSubscription.id
 
     console.log("PLAYER ID:", playerId)
 
     const user = JSON.parse(localStorage.getItem("user"))
 
-    if (!user || !playerId) {
-      console.log("Faltando user ou playerId")
-      return
-    }
+    if (!user || !playerId) return
 
     await fetch("/api/link-push", {
       method: "POST",
@@ -153,6 +156,7 @@ async function enablePush() {
 
   } catch (err) {
     console.error("ERRO AO ATIVAR PUSH:", err)
+    showBlockedMessage()
   }
 }
 window.login = login
