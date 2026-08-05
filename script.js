@@ -29,9 +29,7 @@ async function syncOneSignal(user) {
     const playerId = OneSignal.User.PushSubscription.id
     const notificationsEnabled = OneSignal.User.PushSubscription.optedIn
 
-    console.log("SYNC PLAYER:", playerId)
-    console.log("SYNC NOTIFICAÇÃO:", notificationsEnabled)
-
+  
     if (!playerId) return
 
     const { error } = await supabase
