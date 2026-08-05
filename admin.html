@@ -228,6 +228,9 @@ console.log("LOGS:", logs)
 console.log("TOTAL USERS:", users.data?.length)
 console.log("TOTAL LOGS:", logs.data?.length)
 
+  console.log("PRIMEIRO:", logs.data[0])
+console.log("ÚLTIMO:", logs.data[logs.data.length - 1])
+
 if(users.error || logs.error){
 alert("Erro ao carregar acessos")
 return
