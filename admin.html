@@ -238,20 +238,12 @@ const lista=[]
 users.data.forEach(user=>{
 
 const acessos =
-logs.data.filter(a => {
-
-if(user.name === "Tainan"){
-console.log(
-"Comparando:",
-a.user_phone,
-user.phone,
-a.user_phone == user.phone
+logs.data.filter(
+a=>
+String(a.user_phone)
+===
+String(user.phone)
 )
-}
-
-return String(a.user_phone) === String(user.phone)
-
-})
 
 let ultimo = null
 
