@@ -171,12 +171,13 @@ console.log("NOTIFICAÇÕES ATIVAS:", notificationsEnabled)
   // 🔥 SALVA NO SUPABASE
   const { error } = await supabase
     .from("user_devices")
-    .upsert({
-      user_id: user.id,
-      onesignal_player_id: playerId,
-      status: "active",
-      updated_at: new Date()
-    })
+   .upsert({
+  user_id: user.id,
+  onesignal_player_id: playerId,
+  status: "active",
+  notifications_enabled: notificationsEnabled,
+  updated_at: new Date()
+})
 
   if (error) {
     console.log("Erro Supabase:", error)
