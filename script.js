@@ -147,6 +147,10 @@ if (permission === "denied" || Notification.permission === "denied") {
 
   const playerId = OneSignal.User.PushSubscription.id
 
+      const notificationsEnabled = OneSignal.User.PushSubscription.optedIn
+
+console.log("NOTIFICAÇÕES ATIVAS:", notificationsEnabled)
+
   console.log("PLAYER ID:", playerId)
 
   if (!playerId) {
