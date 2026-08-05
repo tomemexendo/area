@@ -225,6 +225,11 @@ await supabase
 .order("created_at", { ascending: false })
 .limit(5000)
 
+  const devices =
+await supabase
+.from("user_devices")
+.select("*")
+
   console.log("USERS:", users)
 console.log("LOGS:", logs)
 console.log("TOTAL USERS:", users.data?.length)
@@ -232,7 +237,7 @@ console.log("TOTAL LOGS:", logs.data?.length)
 
 
 
-if(users.error || logs.error){
+if(users.error || logs.error || devices.error){
 alert("Erro ao carregar acessos")
 return
 }
@@ -241,6 +246,11 @@ const lista=[]
 
 users.data.forEach(user=>{
 
+  const device =
+devices.data.find(
+d => d.user_id === user.id
+)
+  
 const acessos =
 logs.data.filter(
 a=>
@@ -302,6 +312,20 @@ status=
 
 }
 
+  let notificacao = "⚪ Nunca configurou"
+
+if(device){
+
+if(device.notifications_enabled === true){
+  notificacao = "🔔 Ativa"
+}
+
+if(device.notifications_enabled === false){
+  notificacao = "🔕 Desativada"
+}
+
+}
+
 lista.push({
 
 nome:
@@ -315,7 +339,9 @@ acessos.length,
 
 ultimo,
 
-status
+status,
+
+notificacao
 
 })
 
@@ -402,6 +428,11 @@ user.ultimo
 
 📌
 ${user.status}
+
+<br>
+
+🔔
+${user.notificacao}
 
 </div>
 
