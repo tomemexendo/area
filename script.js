@@ -45,7 +45,7 @@ async function login() {
 
 try {
   if (window.OneSignal && user?.id) {
-    OneSignal.login(user.id)
+    OneSignal.login(String(user.id))
   }
 } catch (e) {
   console.log("OneSignal erro:", e)
