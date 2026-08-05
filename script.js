@@ -79,17 +79,19 @@ async function login() {
   localStorage.setItem("user", JSON.stringify(user))
 
 try {
+
   if (window.OneSignal && user?.id) {
 
-    await OneSignal.login(String(user.id))
+  OneSignal.login(String(user.id))
 
-    setTimeout(() => {
-      syncOneSignal(user)
-    }, 1500)
+syncNotifications(user)
 
   }
+
 } catch (e) {
+
   console.log("OneSignal erro:", e)
+
 }
 
   await supabase
@@ -170,6 +172,68 @@ if (pushBtn) {
 }
 
 /* ---------------- EXPOR FUNÇÕES PRO HTML ---------------- */
+
+async function syncNotifications(user){
+
+  try {
+
+    if (!window.OneSignal || !user?.id) {
+      return
+    }
+
+  let playerId = null
+let tentativas = 0
+
+while (!playerId && tentativas < 5) {
+
+  playerId = OneSignal.User.PushSubscription.id
+
+  if (!playerId) {
+    await new Promise(resolve => setTimeout(resolve, 500))
+  }
+
+  tentativas++
+
+}
+
+
+const notificationsEnabled =
+  OneSignal.User.PushSubscription.optedIn
+
+
+console.log("SYNC PLAYER:", playerId)
+console.log("SYNC NOTIFICAÇÃO:", notificationsEnabled)
+
+
+if (!playerId) {
+  return
+}
+
+
+    const { error } = await supabase
+      .from("user_devices")
+      .upsert({
+        user_id: user.id,
+        onesignal_player_id: playerId,
+        status: "active",
+        notifications_enabled: notificationsEnabled,
+        updated_at: new Date()
+      })
+
+
+    if(error){
+      console.log("Erro sync:", error)
+    }
+
+
+  } catch(err){
+
+    console.log("Erro sincronização:", err)
+
+  }
+
+}
+
 async function enablePush() {
   try {
     console.log("BOTÃO CLICADO")
