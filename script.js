@@ -18,6 +18,41 @@ function normalizeText(text = "") {
 /* ---------------- ESTADO ---------------- */
 let contentData = {}
 
+
+
+async function syncOneSignal(user) {
+
+  try {
+
+    if (!window.OneSignal) return
+
+    const playerId = OneSignal.User.PushSubscription.id
+    const notificationsEnabled = OneSignal.User.PushSubscription.optedIn
+
+    console.log("SYNC PLAYER:", playerId)
+    console.log("SYNC NOTIFICAÇÃO:", notificationsEnabled)
+
+    if (!playerId) return
+
+    const { error } = await supabase
+      .from("user_devices")
+      .upsert({
+        user_id: user.id,
+        onesignal_player_id: playerId,
+        status: "active",
+        notifications_enabled: notificationsEnabled,
+        updated_at: new Date()
+      })
+
+    if (error) {
+      console.log("Erro sync OneSignal:", error)
+    }
+
+  } catch (e) {
+    console.log("Erro sync:", e)
+  }
+
+}
 /* ---------------- LOGIN ---------------- */
 async function login() {
   const nome = normalizeText(document.getElementById("nome").value)
@@ -45,7 +80,13 @@ async function login() {
 
 try {
   if (window.OneSignal && user?.id) {
-    OneSignal.login(String(user.id))
+
+    await OneSignal.login(String(user.id))
+
+    setTimeout(() => {
+      syncOneSignal(user)
+    }, 1500)
+
   }
 } catch (e) {
   console.log("OneSignal erro:", e)
