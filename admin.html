@@ -250,9 +250,9 @@ const lista=[]
 
 users.data.forEach(user=>{
 
-  const device =
+const device =
 devices.data.find(
-d => d.user_id === user.id
+d => String(d.user_id) === String(user.id)
 )
   
 const acessos =
