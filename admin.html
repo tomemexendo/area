@@ -120,14 +120,9 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
     window.showUsers = async () => {
- const { data, error } = await supabase
+const { data, error } = await supabase
     .from("users")
-    .select(`
-      *,
-      user_devices (
-        notifications_enabled
-      )
-    `)
+    .select("*")
 
   if (error) {
     alert("Erro ao carregar usuários")
@@ -165,42 +160,13 @@ u.phone.includes(term)
   list.innerHTML = ""
 
   users.forEach(user => {
-
-    let notificacao = "⚪ Nunca configurou"
-
-    const device = user.user_devices?.[0]
-
-    if (device) {
-
-      if (device.notifications_enabled === true) {
-        notificacao = "🔔 Ativa"
-      }
-
-      if (device.notifications_enabled === false) {
-        notificacao = "🔕 Desativada"
-      }
-
-    }
-
     list.innerHTML += `
-      <div style="
-        margin-bottom:10px;
-        padding:10px;
-        border-bottom:1px solid #333;
-      ">
-
-        <strong>
-          ${user.name} (${user.phone})
-        </strong>
-
-        <br>
-
-        ${notificacao}
+      <div style="margin-bottom:10px;">
+        ${user.name} (${user.phone})
 
         <button onclick="deleteUser('${user.id}')">
           ❌
         </button>
-
       </div>
     `
   })
