@@ -229,6 +229,7 @@ await supabase
 await supabase
 .from("user_devices")
 .select("*")
+  console.log("DEVICES:", devices)
 
   console.log("USERS:", users)
 console.log("LOGS:", logs)
