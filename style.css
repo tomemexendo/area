@@ -72,7 +72,9 @@ button {
 }
 
 /* APP */
-.hidden { display: none; }
+.hidden {
+  display: none !important;
+}
 
 .header {
   display: flex;
