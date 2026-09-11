@@ -7,166 +7,574 @@
   <link rel="stylesheet" href="style.css">
 
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "71ce07fb-c2a1-49f5-b4ba-34222414eb87",
+
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+
+    OneSignalDeferred.push(async function(OneSignal) {
+
+      await OneSignal.init({
+        appId: "71ce07fb-c2a1-49f5-b4ba-34222414eb87",
+      });
+
     });
-  });
-</script>
-  
+  </script>
+
 </head>
 
 <body>
 
+<!-- ========================= -->
 <!-- LOGIN -->
+<!-- ========================= -->
+
 <div id="login" class="container">
-  
-<div class="logo">
-  <img src="logo.png" alt="Logo">
-</div>
+
+  <div class="logo">
+    <img src="logo.png" alt="Logo">
+  </div>
 
   <h1>Tô Me Mexendo</h1>
   <p>Área do Aluno</p>
 
   <div class="card-login">
+
     <h2>Bem-vindo! 👋</h2>
 
     <label>Seu Primeiro Nome</label>
-    <input id="nome" placeholder="Ex: Maria">
+
+    <input
+      id="nome"
+      placeholder="Ex: Maria"
+    >
 
     <label>4 Últimos Dígitos do WhatsApp</label>
-    <input id="codigo" type="password" placeholder="0000" maxlength="4">
 
-    <button class="btn-login" onclick="login()">Entrar</button>
+    <input
+      id="codigo"
+      type="password"
+      placeholder="0000"
+      maxlength="4"
+    >
+
+    <button
+      class="btn-login"
+      onclick="login()"
+    >
+      Entrar
+    </button>
+
   </div>
+
 </div>
 
+
+<!-- ========================= -->
 <!-- APP -->
+<!-- ========================= -->
+
 <div id="app" class="hidden">
 
+
   <!-- HEADER -->
+
   <div class="header">
+
     <div class="header-left">
+
       <div class="logo-small">
-  <img src="logo.png">
-</div>
+        <img src="logo.png">
+      </div>
+
       <div>
+
         <h2>Tô Me Mexendo</h2>
-        <p>Área do(a) <span id="userName"></span> 👊🏻</p>
+
+        <p>
+          Área do(a)
+          <span id="userName"></span>
+          👊🏻
+        </p>
+
       </div>
-    </div>
-
-    <button class="logout" onclick="logout()">Sair</button>
-  </div>
-
-  <!-- CONTEÚDO -->
- <div class="layout-single">
-
-      <div class="card welcome-card">
-        <h2>Bem-vindo(a), <span id="userName2"></span> 👋</h2>
-        <p>Aqui você tem acesso aos treinos, dieta, desafio do mês e suporte individual.</p>
-      </div>
-
-  
-  <h3>🔔 QUER INCENTIVO DIARIAMENTE? 📢 </h3>
-
-  <button id="enablePush" class="btn red">
-    CLIQUE PARA ATIVAR AS NOTIFICAÇÕES
-  </button>
-   
-
-   <div id="pushBlockedMsg" class="card help hidden">
-  <h2>🔔 Notificações bloqueadas</h2>
-
-  <p>
-    Seu navegador bloqueou as notificações.
-    Para ativar:
-  </p>
-
-  <p>
-    1. Clique no 🔒 ao lado da URL<br>
-    2. Vá em “Notificações”<br>
-    3. Mude para “Permitir”<br>
-  </p>
-</div>
-
-   <h3>✍🏻 PREENCHA SEU DIÁRIO EM 10SEG</h3>
-      <button id="diario" class="btn blue">FEEDBACK NA HORA E ACUMULE PONTOS</button>
-
-<h3>💪 SEU TREINO</h3>
-
-<div class="grid">
-
-<button
-id="home_workout"
-class="btn orange"
->
-
-🏠 TREINO<br>
-PARA CASA
-
-</button>
-
-<button
-id="gym_workout"
-class="btn orange"
->
-
-🏋️ TREINO<br>
-ACADEMIA
-
-</button>
-
-</div>
-   
-            <h3>🍎 SUA DIETA CALCULADA</h3>
-
-  <div class="grid">
-
-<button id="diet_60" class="btn green">
-Até 60kgs<br>
-(peso atual)
-</button>
-
-<button id="diet_90" class="btn green">
-60 a 90kgs<br>
-(peso atual)
-</button>
-
-<button id="diet_120" class="btn green">
-90 a 120kgs<br>
-(peso atual)
-</button>
-
-<button id="diet_plus" class="btn green">
-+ de 120kgs<br>
-(peso atual)
-</button>
-
-</div>
-
-
-      
-      <h3>🏆 DESAFIOS E PRÊMIOS</h3>
-      <button id="ranking" class="btn purple">VEJA SEUS PONTOS E O RANKING GERAL</button>
-
-      <h3>📋 SUA ROTINA TÔ ME MEXENDO</h3>
-      <button id="rotine" class="btn blue">COMO ENCAIXAR NOS SEUS HORÁRIOS</button>
-
-
-
-      <div class="card help">
-        <h2>💬 Precisa de Ajuda?</h2>
-        <p>Caso precise de ajustes, clique no link abaixo. O acompanhamento é de forma INDIVIDUALIZADA.</p>
-        <button id="whatsapp" class="btn green">Falar no WhatsApp</button>
 
     </div>
 
+    <button
+      class="logout"
+      onclick="logout()"
+    >
+      Sair
+    </button>
+
   </div>
+
+
+  <!-- ========================= -->
+  <!-- HOME -->
+  <!-- ========================= -->
+
+  <div
+    id="homeSection"
+    class="layout-single"
+  >
+
+    <div class="card welcome-card">
+
+      <h2>
+        Bem-vindo(a),
+        <span id="userName2"></span>
+        👋
+      </h2>
+
+      <p>
+        Aqui você encontra tudo para seguir o
+        Tô Me Mexendo de forma simples.
+      </p>
+
+    </div>
+
+
+    <!-- NOTIFICAÇÕES -->
+
+    <h3>
+      🔔 QUER INCENTIVO DIARIAMENTE? 📢
+    </h3>
+
+    <button
+      id="enablePush"
+      class="btn red"
+    >
+      CLIQUE PARA ATIVAR AS NOTIFICAÇÕES
+    </button>
+
+
+    <div
+      id="pushBlockedMsg"
+      class="card help hidden"
+    >
+
+      <h2>
+        🔔 Notificações bloqueadas
+      </h2>
+
+      <p>
+        Seu navegador bloqueou as notificações.
+        Para ativar:
+      </p>
+
+      <p>
+        1. Clique no 🔒 ao lado da URL<br>
+        2. Vá em “Notificações”<br>
+        3. Mude para “Permitir”
+      </p>
+
+    </div>
+
+
+    <!-- CATEGORIAS -->
+
+    <h3>
+      👇 O QUE VOCÊ QUER ACESSAR?
+    </h3>
+
+
+    <div class="grid">
+
+
+      <button
+        id="menu_dieta"
+        class="btn green"
+      >
+
+        🍎<br>
+        DIETA
+
+      </button>
+
+
+      <button
+        id="menu_treino"
+        class="btn orange"
+      >
+
+        💪<br>
+        TREINO
+
+      </button>
+
+
+      <button
+        id="menu_desafio"
+        class="btn purple"
+      >
+
+        🏆<br>
+        DESAFIO
+
+      </button>
+
+
+      <button
+        id="menu_extras"
+        class="btn blue"
+      >
+
+        📚<br>
+        EXTRAS
+
+      </button>
+
+
+    </div>
+
+
+  </div>
+
+
+
+  <!-- ========================= -->
+  <!-- DIETA -->
+  <!-- ========================= -->
+
+  <div
+    id="dietaSection"
+    class="layout-single hidden"
+  >
+
+    <button
+      id="backFromDieta"
+      class="btn blue"
+    >
+      ← VOLTAR
+    </button>
+
+    <h2>
+      🍎 SUA DIETA
+    </h2>
+
+
+    <h3>
+      🍽️ DIETA CALCULADA
+    </h3>
+
+    <div class="grid">
+
+      <button
+        id="diet_60"
+        class="btn green"
+      >
+        Até 60kgs<br>
+        (peso atual)
+      </button>
+
+      <button
+        id="diet_90"
+        class="btn green"
+      >
+        60 a 90kgs<br>
+        (peso atual)
+      </button>
+
+      <button
+        id="diet_120"
+        class="btn green"
+      >
+        90 a 120kgs<br>
+        (peso atual)
+      </button>
+
+      <button
+        id="diet_plus"
+        class="btn green"
+      >
+        + de 120kgs<br>
+        (peso atual)
+      </button>
+
+    </div>
+
+
+    <h3>
+      🥗 OPÇÕES DE REFEIÇÕES
+    </h3>
+
+    <button
+      id="meal_options"
+      class="btn green"
+    >
+      VER OPÇÕES DE REFEIÇÕES
+    </button>
+
+
+    <h3>
+      🧠 DIFICULDADE NA DIETA
+    </h3>
+
+    <button
+      id="diet_help"
+      class="btn blue"
+    >
+      TENHO DIFICULDADE COM A DIETA
+    </button>
+
+
+  </div>
+
+
+
+  <!-- ========================= -->
+  <!-- TREINO -->
+  <!-- ========================= -->
+
+  <div
+    id="treinoSection"
+    class="layout-single hidden"
+  >
+
+    <button
+      id="backFromTreino"
+      class="btn blue"
+    >
+      ← VOLTAR
+    </button>
+
+
+    <h2>
+      💪 SEU TREINO
+    </h2>
+
+
+    <h3>
+      🏠 TREINO EM CASA
+    </h3>
+
+    <button
+      id="home_workout"
+      class="btn orange"
+    >
+      🏠 TREINO PARA CASA
+    </button>
+
+
+    <h3>
+      🏋️ TREINO NA ACADEMIA
+    </h3>
+
+    <button
+      id="gym_workout"
+      class="btn orange"
+    >
+      🏋️ TREINO PARA ACADEMIA
+    </button>
+
+
+    <h3>
+      ⏱️ TREINOS RÁPIDOS
+    </h3>
+
+    <button
+      id="quick_workouts"
+      class="btn orange"
+    >
+      TREINOS DE 5 MINUTOS
+    </button>
+
+
+    <h3>
+      🎥 AULAS EXTRAS
+    </h3>
+
+    <button
+      id="extra_classes"
+      class="btn orange"
+    >
+      ZUMBA, ALONGAMENTO E MAIS
+    </button>
+
+
+    <h3>
+      🧠 DIFICULDADE NO TREINO
+    </h3>
+
+    <button
+      id="workout_help"
+      class="btn blue"
+    >
+      TENHO DIFICULDADE COM O TREINO
+    </button>
+
+
+  </div>
+
+
+
+  <!-- ========================= -->
+  <!-- DESAFIO -->
+  <!-- ========================= -->
+
+  <div
+    id="desafioSection"
+    class="layout-single hidden"
+  >
+
+    <button
+      id="backFromDesafio"
+      class="btn blue"
+    >
+      ← VOLTAR
+    </button>
+
+
+    <h2>
+      🏆 DESAFIO
+    </h2>
+
+
+    <h3>
+      🎯 DESAFIO DO MOMENTO
+    </h3>
+
+    <button
+      id="challenge"
+      class="btn purple"
+    >
+      ACESSAR O DESAFIO
+    </button>
+
+
+    <h3>
+      🏆 RANKING
+    </h3>
+
+    <button
+      id="ranking"
+      class="btn purple"
+    >
+      VEJA SEUS PONTOS E O RANKING GERAL
+    </button>
+
+
+    <h3>
+      ✍🏻 DIÁRIO
+    </h3>
+
+    <button
+      id="diario"
+      class="btn blue"
+    >
+      FEEDBACK NA HORA E ACUMULE PONTOS
+    </button>
+
+
+    <h3>
+      🎯 METAS
+    </h3>
+
+    <button
+      id="goals"
+      class="btn purple"
+    >
+      VEJA SUAS METAS
+    </button>
+
+
+  </div>
+
+
+
+  <!-- ========================= -->
+  <!-- EXTRAS -->
+  <!-- ========================= -->
+
+  <div
+    id="extrasSection"
+    class="layout-single hidden"
+  >
+
+    <button
+      id="backFromExtras"
+      class="btn blue"
+    >
+      ← VOLTAR
+    </button>
+
+
+    <h2>
+      📚 EXTRAS
+    </h2>
+
+
+    <h3>
+      ⏰ SUA ROTINA
+    </h3>
+
+    <button
+      id="rotine"
+      class="btn blue"
+    >
+      COMO ENCAIXAR O TÔ ME MEXENDO NA SUA ROTINA
+    </button>
+
+
+    <h3>
+      💡 MATERIAIS DE APOIO
+    </h3>
+
+    <button
+      id="support_material"
+      class="btn blue"
+    >
+      ACESSAR MATERIAIS
+    </button>
+
+
+    <h3>
+      📱 VIRE INFLUENCER TÔ ME MEXENDO
+    </h3>
+
+    <button
+      id="influencer"
+      class="btn blue"
+    >
+      QUERO SER INFLUENCER
+    </button>
+
+
+    <div class="card help">
+
+      <h2>
+        💬 Precisa de Ajuda?
+      </h2>
+
+      <p>
+        Caso precise de ajustes, clique no
+        link abaixo. O acompanhamento é de
+        forma INDIVIDUALIZADA.
+      </p>
+
+      <button
+        id="whatsapp"
+        class="btn green"
+      >
+        Falar no WhatsApp
+      </button>
+
+    </div>
+
+
+  </div>
+
+
 </div>
 
-<script type="module" src="script.js"></script>
+
+<!-- SCRIPT PRINCIPAL -->
+
+<script
+  type="module"
+  src="script.js"
+></script>
+
 </body>
 </html>
