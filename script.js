@@ -108,7 +108,8 @@ user_phone: user.phone
   document.getElementById("userName2").innerText = user.name
 
   await loadContent()
-  renderDashboard()
+renderDashboard()
+setupNavigation()
   
 }
 
@@ -167,6 +168,84 @@ function renderDashboard() {
 if (pushBtn) {
   pushBtn.onclick = enablePush
 }
+}
+
+/* ---------------- NAVEGAÇÃO ---------------- */
+
+function setupNavigation() {
+
+  const sections = [
+    "homeSection",
+    "dietaSection",
+    "treinoSection",
+    "desafioSection",
+    "extrasSection"
+  ]
+
+  function showSection(sectionId) {
+
+    sections.forEach(id => {
+
+      const section = document.getElementById(id)
+
+      if (!section) return
+
+      if (id === sectionId) {
+        section.classList.remove("hidden")
+      } else {
+        section.classList.add("hidden")
+      }
+
+    })
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    })
+  }
+
+
+  /* MENU */
+
+  document.getElementById("menu_dieta")?.addEventListener("click", () => {
+    showSection("dietaSection")
+  })
+
+  document.getElementById("menu_treino")?.addEventListener("click", () => {
+    showSection("treinoSection")
+  })
+
+  document.getElementById("menu_desafio")?.addEventListener("click", () => {
+    showSection("desafioSection")
+  })
+
+  document.getElementById("menu_extras")?.addEventListener("click", () => {
+    showSection("extrasSection")
+  })
+
+
+  /* VOLTAR */
+
+  document.getElementById("backFromDieta")?.addEventListener("click", () => {
+    showSection("homeSection")
+  })
+
+  document.getElementById("backFromTreino")?.addEventListener("click", () => {
+    showSection("homeSection")
+  })
+
+  document.getElementById("backFromDesafio")?.addEventListener("click", () => {
+    showSection("homeSection")
+  })
+
+  document.getElementById("backFromExtras")?.addEventListener("click", () => {
+    showSection("homeSection")
+  })
+
+
+  /* COMEÇA NA HOME */
+
+  showSection("homeSection")
 }
 
 /* ---------------- EXPOR FUNÇÕES PRO HTML ---------------- */
