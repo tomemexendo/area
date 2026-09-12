@@ -443,57 +443,27 @@ input::placeholder {
 ========================================================= */
 
 .welcome-card {
-  background:
-    linear-gradient(
-      135deg,
-      #ffffff,
-      #eef6ff
-    );
-
-  color:
-    #111827;
-
-  padding:
-    17px 18px;
-
-  margin:
-    0 0 4px;
-
-  border-radius:
-    18px;
-
-  border:
-    none;
-
-  box-shadow:
-    0 8px 25px rgba(0,0,0,0.18);
+  background: linear-gradient(135deg, #173a5e, #102a43);
+  color: #ffffff;
+  padding: 17px 18px;
+  margin: 0 0 4px;
+  border-radius: 18px;
+  border: 1px solid rgba(59,130,246,0.18);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.22);
 }
 
 .welcome-card h2 {
-  color:
-    #111827;
-
-  font-size:
-    20px;
-
-  margin:
-    0 0 5px;
+  color: #ffffff;
+  font-size: 20px;
+  margin: 0 0 5px;
 }
 
 .welcome-card p {
-  color:
-    #475569;
-
-  margin:
-    0;
-
-  line-height:
-    1.4;
-
-  font-size:
-    14px;
+  color: #cbd5e1;
+  margin: 0;
+  line-height: 1.4;
+  font-size: 14px;
 }
-
 
 /* =========================================================
    TÍTULOS DE SEÇÃO
