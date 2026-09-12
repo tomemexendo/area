@@ -940,16 +940,3 @@ input::placeholder {
 .header p span {
   color: #ffffff !important;
 }
-
-
-/* =========================================================
-   AJUSTE DE CONTRASTE — TÍTULOS DO APP
-========================================================= */
-
-.layout-single h2 {
-  color: #ffffff;
-}
-
-.layout-single h3 {
-  color: #e2e8f0;
-}
