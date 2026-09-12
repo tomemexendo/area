@@ -1391,3 +1391,251 @@ input::placeholder {
   color: rgba(255,255,255,0.88);
   line-height: 1.25;
 }
+
+/* ========================================================= */
+/* NOVO DESIGN DA TELA DE LOGIN */
+/* ========================================================= */
+
+#login {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 18px 40px;
+
+  background:
+    radial-gradient(circle at 50% 0%, #173a58 0%, transparent 38%),
+    linear-gradient(160deg, #06111d 0%, #0b1c2d 55%, #081421 100%);
+
+  color: #fff;
+}
+
+
+/* LOGO */
+
+#login .logo {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 30px;
+
+  background: rgba(255,255,255,.96);
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.35),
+    0 0 0 5px rgba(255,255,255,.05);
+
+  overflow: hidden;
+}
+
+#login .logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* TÍTULO */
+
+#login > h1 {
+  margin: 0;
+
+  font-size: 32px;
+  line-height: 1.1;
+  font-weight: 900;
+
+  text-align: center;
+  letter-spacing: -0.8px;
+
+  color: #fff;
+}
+
+#login > p {
+  margin: 7px 0 25px;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  color: #aebdcb;
+}
+
+
+/* CARD DE LOGIN */
+
+#login .card-login {
+  width: 100%;
+  max-width: 430px;
+
+  padding: 26px 24px 24px;
+
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(31,52,70,.98),
+      rgba(17,37,54,.98)
+    );
+
+  border: 1px solid rgba(255,255,255,.08);
+
+  box-shadow:
+    0 18px 45px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+
+/* TÍTULO DO CARD */
+
+#login .card-login h2 {
+  margin: 0 0 22px;
+
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 800;
+
+  text-align: center;
+
+  color: #fff;
+}
+
+
+/* LABELS */
+
+#login .card-login label {
+  display: block;
+
+  margin: 0 0 8px;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  color: #dbe5ed;
+}
+
+
+/* CAMPOS */
+
+#login .card-login input {
+  width: 100%;
+  height: 56px;
+
+  margin: 0 0 18px;
+  padding: 0 16px;
+
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 14px;
+
+  outline: none;
+
+  background: #081927;
+  color: #fff;
+
+  font-size: 16px;
+
+  box-shadow:
+    inset 0 2px 7px rgba(0,0,0,.18);
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
+
+#login .card-login input::placeholder {
+  color: #8495a6;
+}
+
+#login .card-login input:focus {
+  border-color: #22c55e;
+
+  background: #0a1d2d;
+
+  box-shadow:
+    0 0 0 3px rgba(34,197,94,.12),
+    inset 0 2px 7px rgba(0,0,0,.18);
+}
+
+
+/* BOTÃO ENTRAR */
+
+#login .btn-login {
+  width: 100%;
+  height: 58px;
+
+  margin-top: 3px;
+
+  border: none;
+  border-radius: 15px;
+
+  background:
+    linear-gradient(135deg, #34d399, #16a34a);
+
+  color: #fff;
+
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: .2px;
+
+  box-shadow:
+    0 8px 20px rgba(22,163,74,.28);
+
+  transition:
+    transform .15s ease,
+    filter .15s ease,
+    box-shadow .15s ease;
+}
+
+#login .btn-login:hover {
+  filter: brightness(1.06);
+
+  box-shadow:
+    0 10px 25px rgba(22,163,74,.35);
+}
+
+#login .btn-login:active {
+  transform: scale(.98);
+}
+
+
+/* CELULARES MENORES */
+
+@media (max-width: 420px) {
+
+  #login {
+    padding: 24px 15px 30px;
+  }
+
+  #login .logo {
+    width: 105px;
+    height: 105px;
+    border-radius: 27px;
+    margin-bottom: 14px;
+  }
+
+  #login > h1 {
+    font-size: 29px;
+  }
+
+  #login > p {
+    margin-bottom: 21px;
+  }
+
+  #login .card-login {
+    padding: 23px 19px 21px;
+    border-radius: 21px;
+  }
+
+  #login .card-login h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+}
