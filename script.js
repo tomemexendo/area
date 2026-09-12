@@ -283,6 +283,7 @@ function renderDashboard() {
   /* DESAFIO */
   /* ========================= */
 
+  bind("explication", "explication")
   bind("challenge", "challenge")
   bind("ranking", "ranking")
   bind("metas", "metas")
