@@ -892,3 +892,64 @@ input::placeholder {
   }
 
 }
+
+```css
+/* =========================================================
+   AJUSTE DE CONTRASTE — LOGIN
+========================================================= */
+
+.card-login {
+  color: #ffffff;
+}
+
+.card-login h2 {
+  color: #ffffff !important;
+}
+
+.card-login label {
+  color: #f1f5f9 !important;
+}
+
+.card-login input {
+  background: #0c1b2a;
+  color: #ffffff !important;
+}
+
+.card-login input::placeholder {
+  color: #cbd5e1 !important;
+  opacity: 1;
+}
+
+
+/* =========================================================
+   AJUSTE DE CONTRASTE — HEADER DO APP
+========================================================= */
+
+.header {
+  color: #ffffff;
+}
+
+.header h2 {
+  color: #ffffff !important;
+}
+
+.header p {
+  color: #cbd5e1 !important;
+}
+
+.header p span {
+  color: #ffffff !important;
+}
+
+
+/* =========================================================
+   AJUSTE DE CONTRASTE — TÍTULOS DO APP
+========================================================= */
+
+.layout-single h2 {
+  color: #ffffff;
+}
+
+.layout-single h3 {
+  color: #e2e8f0;
+}
