@@ -1,4 +1,3 @@
-```javascript
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const SUPABASE_URL = "https://pxpojetrshxvtaznkxkj.supabase.co"
@@ -753,4 +752,3 @@ function showBlockedMessage() {
 
 window.login = login
 window.logout = logout
-```
