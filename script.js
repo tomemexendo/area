@@ -263,7 +263,7 @@ function renderDashboard() {
 
   bind("binge_eating", "binge_eating")
 
-  bind("diet_help", "support")
+  bind("diet_help", "whatsapp")
 
 
   /* ========================= */
@@ -275,7 +275,7 @@ function renderDashboard() {
   bind("quick_workouts", "quick_workouts")
   bind("extra_classes", "extra_classes")
 
-  bind("workout_help", "support")
+  bind("workout_help", "whatsapp")
 
 
   /* ========================= */
@@ -294,7 +294,7 @@ function renderDashboard() {
   bind("incentive_group", "incentive_group")
   bind("notice_group", "notice_group")
   bind("influencer", "influencer")
-  bind("support", "support")
+  bind("support", "whatsapp")
   bind("sac", "sac")
 
 
@@ -303,7 +303,7 @@ function renderDashboard() {
   /* ========================= */
 
   bind("home_diario", "diario")
-  bind("home_whatsapp", "support")
+  bind("home_whatsapp", "whatsapp")
 
 
   /* ========================= */
