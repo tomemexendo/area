@@ -1048,3 +1048,181 @@ input::placeholder {
   }
 
 }
+
+/* =========================================================
+   ACESSO RÁPIDO
+========================================================= */
+
+.quick-access {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 9px;
+
+  margin-top: 2px;
+}
+
+
+.quick-card {
+  width: 100%;
+
+  min-height: 68px;
+
+  display: flex;
+
+  align-items: center;
+
+  text-align: left;
+
+  padding: 11px 13px;
+
+  border-radius: 16px;
+
+  color: #ffffff;
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.18);
+
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+
+
+.quick-card:hover {
+  filter: brightness(1.08);
+
+  transform: translateY(-1px);
+}
+
+
+.quick-card:active {
+  transform: scale(0.98);
+}
+
+
+/* ÍCONE */
+
+.quick-icon {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+
+  background:
+    rgba(255,255,255,0.16);
+
+  border-radius: 12px;
+
+  margin-right: 11px;
+}
+
+
+/* TEXTO */
+
+.quick-content {
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+
+.quick-content strong {
+  font-size: 14px;
+
+  line-height: 1.2;
+
+  color: #ffffff;
+}
+
+
+.quick-content small {
+  font-size: 11px;
+
+  line-height: 1.25;
+
+  color:
+    rgba(255,255,255,0.82);
+}
+
+
+/* SETA */
+
+.quick-arrow {
+  font-size: 27px;
+
+  font-weight: 300;
+
+  line-height: 1;
+
+  margin-left: 8px;
+
+  color:
+    rgba(255,255,255,0.75);
+}
+
+
+/* CORES */
+
+.quick-blue {
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #2563eb
+    );
+}
+
+
+.quick-green {
+  background:
+    linear-gradient(
+      135deg,
+      #34d399,
+      #16a34a
+    );
+}
+
+
+/* CELULARES PEQUENOS */
+
+@media (max-width: 380px) {
+
+  .quick-card {
+    min-height: 64px;
+
+    padding: 9px 11px;
+  }
+
+  .quick-icon {
+    width: 38px;
+    height: 38px;
+
+    font-size: 20px;
+
+    margin-right: 9px;
+  }
+
+  .quick-content strong {
+    font-size: 13px;
+  }
+
+  .quick-content small {
+    font-size: 10px;
+  }
+
+}
