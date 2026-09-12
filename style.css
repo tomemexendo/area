@@ -1206,3 +1206,27 @@ input::placeholder {
 .quick-purple {
   background: linear-gradient(135deg, #a78bfa, #7c3aed);
 }
+
+/* =========================================================
+   CORES DA HOME — PALETA FINAL
+========================================================= */
+
+.treino-dark {
+  background: linear-gradient(135deg, #374151, #111827);
+}
+
+.desafio-dark {
+  background: linear-gradient(135deg, #4b5563, #0f172a);
+}
+
+.extras-green {
+  background: linear-gradient(135deg, #22c55e, #166534);
+}
+
+.quick-purple {
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+}
+
+.quick-red {
+  background: linear-gradient(135deg, #f87171, #b91c1c);
+}
