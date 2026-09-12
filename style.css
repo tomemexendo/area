@@ -678,17 +678,15 @@ input::placeholder {
 ========================================================= */
 
 #enablePush {
-  min-height:
-    58px;
-
-  margin:
-    0 0 5px;
-
-  font-size:
-    14px;
-
-  box-shadow:
-    0 8px 22px rgba(239,68,68,0.22);
+  min-height: 58px;
+  margin: 0 0 5px;
+  font-size: 14px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(249,115,22,0.25);
 }
 
 
