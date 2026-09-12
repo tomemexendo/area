@@ -163,6 +163,7 @@ function renderDashboard() {
   bind("rotine", "rotine")
   bind("diario", "diario")
   bind("whatsapp", "whatsapp")
+  bind("refeicoes", "refeicoes")
   
   const pushBtn = document.getElementById("enablePush")
 if (pushBtn) {
