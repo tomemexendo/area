@@ -1,264 +1,894 @@
-.header h2 {
-  margin: 0;
-}
-
-.header p {
-  margin: 2px 0 0;
-}
+```css
+/* =========================================================
+   TÔ ME MEXENDO
+   ESTILO GERAL
+========================================================= */
 
 :root {
-  --bg: #0b1623;
-  --card: #1c2a3a;
+  --bg: #081421;
+  --bg-soft: #0d1d2d;
+  --card: #142638;
+  --card-light: #1a3044;
+
   --blue: #3b82f6;
   --blue-dark: #2563eb;
+
   --orange: #f97316;
+  --orange-dark: #ea580c;
+
   --green: #22c55e;
-  --purple: linear-gradient(90deg, #7c3aed, #a855f7);
+  --green-dark: #16a34a;
+
+  --purple: #8b5cf6;
+  --purple-dark: #7c3aed;
+
+  --red: #ef4444;
+  --red-dark: #dc2626;
+
   --text: #ffffff;
   --text-soft: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  --radius: 16px;
+  --shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  background:
+    radial-gradient(
+      circle at top,
+      #102b43 0%,
+      var(--bg) 45%
+    );
+
   color: var(--text);
-  font-family: Arial, sans-serif;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  min-height: 100vh;
 }
 
-/* LOGIN */
-.container {
-  text-align: center;
-  padding: 40px 20px;
-}
 
-.logo {
-  width: 100px;
-  margin: 0 auto 20px;
-}
+/* =========================================================
+   ELEMENTOS GERAIS
+========================================================= */
 
-.logo img {
-  width: 100%;
-  border-radius: 12px;
-}
-
-.card-login {
-  background: #2D3748;
-  padding: 20px;
-  border-radius: 12px;
-  max-width: 320px;
-  margin: auto;
-}
-
-.btn-login {
-  background: #6b7280; /* cinza bonito */
-  color: white;
-  font-weight: bold;
-}
-
+button,
 input {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 8px;
-  border: none;
+  font-family: inherit;
 }
 
 button {
-  width: 100%;
-  padding: 12px;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
-  color: white;
 }
 
-/* APP */
+button:active {
+  transform: scale(0.98);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 15px;
+  line-height: 1.3;
+
+  margin:
+    12px 2px 2px;
+}
+
+
+/* =========================================================
+   OCULTO
+========================================================= */
+
 .hidden {
   display: none !important;
 }
 
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+.container {
+  width: 100%;
+  max-width: 420px;
+
+  margin: 0 auto;
+
+  padding:
+    45px 20px 30px;
+
+  text-align: center;
+}
+
+
+/* LOGO LOGIN */
+
+.logo {
+  width: 105px;
+  height: 105px;
+
+  margin:
+    0 auto 18px;
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: 24px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+
+/* TÍTULO LOGIN */
+
+.container > h1 {
+  font-size: 30px;
+
+  margin:
+    0 0 5px;
+
+  letter-spacing: -0.5px;
+}
+
+.container > p {
+  color: var(--text-soft);
+
+  margin:
+    0 0 25px;
+
+  font-size: 15px;
+}
+
+
+/* CARD LOGIN */
+
+.card-login {
+  background:
+    rgba(20, 38, 56, 0.95);
+
+  padding: 25px 20px;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.35);
+
+  border:
+    1px solid rgba(255,255,255,0.06);
+
+  text-align: left;
+}
+
+.card-login h2 {
+  text-align: center;
+
+  margin:
+    0 0 22px;
+}
+
+.card-login label {
+  display: block;
+
+  font-size: 13px;
+
+  font-weight: bold;
+
+  color: var(--text-soft);
+
+  margin:
+    0 0 6px;
+}
+
+
+/* INPUTS */
+
+input {
+  width: 100%;
+
+  padding:
+    14px 13px;
+
+  margin:
+    0 0 15px;
+
+  border-radius: 12px;
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  background: #0c1b2a;
+
+  color: white;
+
+  outline: none;
+
+  font-size: 16px;
+}
+
+input:focus {
+  border-color: var(--blue);
+
+  box-shadow:
+    0 0 0 3px rgba(59,130,246,0.15);
+}
+
+input::placeholder {
+  color: #64748b;
+}
+
+
+/* BOTÃO LOGIN */
+
+.btn-login {
+  width: 100%;
+
+  padding:
+    15px;
+
+  margin-top: 5px;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--orange),
+      var(--orange-dark)
+    );
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: bold;
+
+  box-shadow:
+    0 7px 18px rgba(249,115,22,0.25);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
   display: flex;
+
   justify-content: space-between;
   align-items: center;
 
-  padding: 8px 15px;
+  padding:
+    10px 14px;
 
-  background: #1A202C;
+  background:
+    rgba(8,20,33,0.94);
 
-  margin-bottom: 8px;
+  backdrop-filter: blur(12px);
+
+  border-bottom:
+    1px solid rgba(255,255,255,0.06);
+
+  margin-bottom:
+    14px;
 }
 
 .header-left {
-  display:flex;
-  gap:8px;
-  align-items:center;
+  display: flex;
+
+  gap: 10px;
+
+  align-items: center;
+}
+
+
+/* LOGO HEADER */
+
+.logo-small {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
 }
 
 .logo-small img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.25);
 }
+
+
+/* TEXTO HEADER */
+
+.header h2 {
+  margin: 0;
+
+  font-size: 17px;
+}
+
+.header p {
+  margin:
+    3px 0 0;
+
+  font-size: 12px;
+
+  color: var(--text-soft);
+}
+
+
+/* SAIR */
 
 .logout {
-  background: #E53E3E;
   width: auto;
-  padding: 8px 14px;
+
+  padding:
+    8px 12px;
+
+  border-radius: 10px;
+
+  background:
+    rgba(239,68,68,0.15);
+
+  border:
+    1px solid rgba(239,68,68,0.3);
+
+  color:
+    #fca5a5;
+
+  font-size: 12px;
+
+  font-weight: bold;
 }
 
-/* LAYOUT */
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
 .layout-single {
-  max-width: 500px;
-  margin: 0 auto;
+  width: 100%;
+
+  max-width: 520px;
+
+  margin:
+    0 auto;
+
+  padding:
+    0 14px 30px;
+
   display: flex;
+
   flex-direction: column;
-  gap: 12px;
+
+  gap: 10px;
 }
 
-/* CARDS */
+
+/* =========================================================
+   CARD
+========================================================= */
+
 .card {
-  background: var(--card);
-  padding: 20px;
-  border-radius: 16px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  background:
+    linear-gradient(
+      145deg,
+      var(--card-light),
+      var(--card)
+    );
+
+  padding:
+    18px;
+
+  border-radius:
+    var(--radius);
+
+  margin-bottom:
+    12px;
+
+  box-shadow:
+    var(--shadow);
+
+  border:
+    1px solid rgba(255,255,255,0.05);
 }
 
-.blue { background: #4299E1; }
-.orange { background: #ED8936; }
-.purple { background: #9F7AEA; }
-.green { background: #48BB78; }
-.yellow { background: #FACC15; }
-.red { background: #EF4444; }
+
+/* =========================================================
+   WELCOME CARD
+========================================================= */
+
+.welcome-card {
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff,
+      #eef6ff
+    );
+
+  color:
+    #111827;
+
+  padding:
+    17px 18px;
+
+  margin:
+    0 0 4px;
+
+  border-radius:
+    18px;
+
+  border:
+    none;
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,0.18);
+}
+
+.welcome-card h2 {
+  color:
+    #111827;
+
+  font-size:
+    20px;
+
+  margin:
+    0 0 5px;
+}
+
+.welcome-card p {
+  color:
+    #475569;
+
+  margin:
+    0;
+
+  line-height:
+    1.4;
+
+  font-size:
+    14px;
+}
+
+
+/* =========================================================
+   TÍTULOS DE SEÇÃO
+========================================================= */
+
+.layout-single > h2 {
+  margin:
+    5px 0 4px;
+
+  font-size:
+    23px;
+
+  letter-spacing:
+    -0.3px;
+}
+
+.layout-single > h3 {
+  margin:
+    10px 2px 1px;
+
+  color:
+    var(--text-soft);
+
+  font-size:
+    14px;
+
+  letter-spacing:
+    0.2px;
+}
+
+
+/* =========================================================
+   GRID DA HOME
+========================================================= */
+
+.grid {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:
+    10px;
+
+  margin:
+    2px 0 4px;
+}
+
+.grid .btn {
+  margin:
+    0;
+}
+
+
+/* =========================================================
+   BOTÕES
+========================================================= */
 
 .btn {
   width: 100%;
-  padding: 16px;
-  border-radius: 12px;
-  border: none;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 0px;
-  margin-bottom: 14px;
+
+  min-height:
+    54px;
+
+  padding:
+    14px 12px;
+
+  border-radius:
+    14px;
+
+  border:
+    1px solid rgba(255,255,255,0.06);
+
+  color:
+    white;
+
+  font-size:
+    15px;
+
+  font-weight:
+    bold;
+
+  line-height:
+    1.25;
+
+  cursor:
+    pointer;
+
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease,
+    box-shadow 0.15s ease;
+
+  box-shadow:
+    0 5px 14px rgba(0,0,0,0.16);
 }
 
-h3 {
-  margin-bottom: 0px;
+.btn:hover {
+  filter:
+    brightness(1.08);
+
+  box-shadow:
+    0 7px 18px rgba(0,0,0,0.22);
 }
 
-.btn-group .btn {
-  margin-bottom: 6px;
+
+/* =========================================================
+   CORES DOS BOTÕES
+========================================================= */
+
+.blue {
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #2563eb
+    );
 }
+
+.orange {
+  background:
+    linear-gradient(
+      135deg,
+      #fb923c,
+      #ea580c
+    );
+}
+
+.green {
+  background:
+    linear-gradient(
+      135deg,
+      #34d399,
+      #16a34a
+    );
+}
+
+.purple {
+  background:
+    linear-gradient(
+      135deg,
+      #a78bfa,
+      #7c3aed
+    );
+}
+
+.yellow {
+  background:
+    linear-gradient(
+      135deg,
+      #fde047,
+      #eab308
+    );
+
+  color:
+    #422006;
+}
+
+.red {
+  background:
+    linear-gradient(
+      135deg,
+      #f87171,
+      #dc2626
+    );
+}
+
+
+/* =========================================================
+   BOTÕES ALTERNATIVOS
+========================================================= */
 
 .btn-blue {
-  background: linear-gradient(180deg, var(--blue), var(--blue-dark));
-  color: white;
+  background:
+    linear-gradient(
+      180deg,
+      var(--blue),
+      var(--blue-dark)
+    );
 }
 
 .btn-orange {
-  background: var(--orange);
-  color: white;
+  background:
+    linear-gradient(
+      180deg,
+      var(--orange),
+      var(--orange-dark)
+    );
 }
 
 .btn-green {
-  background: var(--green);
-  color: white;
+  background:
+    linear-gradient(
+      180deg,
+      var(--green),
+      var(--green-dark)
+    );
 }
 
 .btn-purple {
-  background: var(--purple);
-  color: white;
-}
-
-.section-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin: 25px 0 10px;
-}
-
-.container {
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
+  background:
+    linear-gradient(
+      180deg,
+      var(--purple),
+      var(--purple-dark)
+    );
 }
 
 
-.logout {
-  background: red;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  color: white;
+/* =========================================================
+   NOTIFICAÇÕES
+========================================================= */
+
+#enablePush {
+  min-height:
+    58px;
+
+  margin:
+    0 0 5px;
+
+  font-size:
+    14px;
+
+  box-shadow:
+    0 8px 22px rgba(239,68,68,0.22);
 }
+
+
+/* =========================================================
+   BLOQUEIO DE NOTIFICAÇÕES
+========================================================= */
+
+#pushBlockedMsg {
+  background:
+    #29191b;
+
+  border:
+    1px solid rgba(239,68,68,0.25);
+
+  color:
+    #fecaca;
+
+  margin:
+    0 0 8px;
+}
+
+#pushBlockedMsg h2 {
+  font-size:
+    18px;
+}
+
+#pushBlockedMsg p {
+  font-size:
+    14px;
+
+  line-height:
+    1.5;
+
+  color:
+    #fca5a5;
+}
+
+
+/* =========================================================
+   VOLTAR
+========================================================= */
+
+#backFromDieta,
+#backFromTreino,
+#backFromDesafio,
+#backFromExtras {
+  min-height:
+    45px;
+
+  padding:
+    11px;
+
+  font-size:
+    14px;
+
+  background:
+    rgba(59,130,246,0.12);
+
+  color:
+    #93c5fd;
+
+  border:
+    1px solid rgba(59,130,246,0.25);
+
+  box-shadow:
+    none;
+}
+
+
+/* =========================================================
+   GRUPOS DE BOTÕES
+========================================================= */
+
+.btn-group .btn {
+  margin-bottom:
+    6px;
+}
+
+
+/* =========================================================
+   CARD AZUL
+========================================================= */
 
 .card-blue {
-  background: linear-gradient(180deg, #3b82f6, #2563eb);
-  border-radius: 16px;
-  padding: 20px;
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #2563eb
+    );
+
+  border-radius:
+    18px;
+
+  padding:
+    20px;
+
+  box-shadow:
+    0 8px 25px rgba(37,99,235,0.25);
 }
 
-.btn-login {
-  background: var(--orange);
-  color: white;
-  font-weight: bold;
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+.section-title {
+  font-size:
+    20px;
+
+  font-weight:
+    bold;
+
+  margin:
+    25px 0 10px;
 }
 
-.grid{
-display:grid;
 
-grid-template-columns:
-1fr 1fr;
+/* =========================================================
+   RESPONSIVO
+========================================================= */
 
-gap:10px;
+@media (max-width: 380px) {
 
-margin-top:0px;
-}
+  .layout-single {
+    padding:
+      0 11px 25px;
+  }
 
-.grid .btn{
-margin-top:0;
-}
+  .grid {
+    gap:
+      8px;
+  }
 
-.grid .btn:nth-child(odd){
-margin-right:0;
-}
+  .btn {
+    font-size:
+      14px;
 
-.welcome-card{
+    min-height:
+      52px;
 
-background:
-rgba(255,255,255,0.88);
-  
-color:
-#111827;
+    padding:
+      12px 8px;
+  }
 
-padding:
-8px 16px;
-
-margin-top:
-2px;
-
-margin-bottom:
-4px;
-
-border:
-1px solid
-rgba(255,255,255,0.35);
-
-border-radius:
-14px;
+  .container {
+    padding:
+      35px 15px 25px;
+  }
 
 }
 
-.welcome-card h2,
-.welcome-card p{
-color:#111827;
-}
 
-.welcome-card h2{
-margin:0 0 4px 0;
-}
+/* =========================================================
+   DESKTOP
+========================================================= */
 
-.welcome-card p{
-margin:0;
-line-height:1.2;
+@media (min-width: 700px) {
+
+  .layout-single {
+    max-width:
+      560px;
+  }
+
+  .header {
+    padding-left:
+      24px;
+
+    padding-right:
+      24px;
+  }
+
 }
