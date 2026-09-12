@@ -1396,21 +1396,7 @@ input::placeholder {
 /* NOVO DESIGN DA TELA DE LOGIN */
 /* ========================================================= */
 
-#login {
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 28px 18px 40px;
 
-  background:
-    radial-gradient(circle at 50% 0%, #173a58 0%, transparent 38%),
-    linear-gradient(160deg, #06111d 0%, #0b1c2d 55%, #081421 100%);
-
-  color: #fff;
-}
 
 
 /* LOGO */
