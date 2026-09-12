@@ -285,6 +285,7 @@ function renderDashboard() {
 
   bind("challenge", "challenge")
   bind("ranking", "ranking")
+  bind("metas", "metas")
   bind("diario", "diario")
 
 
