@@ -262,6 +262,7 @@ function renderDashboard() {
   bind("dinner", "dinner")
 
   bind("binge_eating", "binge_eating")
+  bind("rotine","rotine")
 
   bind("diet_help", "whatsapp")
 
