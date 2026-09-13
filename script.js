@@ -284,10 +284,12 @@ function renderDashboard() {
   /* ========================= */
 
   bind("explication", "explication")
+  bind("incentive_group", "incentive_group")
   bind("challenge", "challenge")
   bind("ranking", "ranking")
   bind("metas", "metas")
   bind("diario", "diario")
+  bind("support2", "whatsapp")
 
 
   /* ========================= */
