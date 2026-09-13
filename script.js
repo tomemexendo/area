@@ -284,7 +284,7 @@ function renderDashboard() {
   /* ========================= */
 
   bind("explication", "explication")
-  bind("incentive_group", "incentive_group")
+  bind("incentive_group2", "incentive_group")
   bind("challenge", "challenge")
   bind("ranking", "ranking")
   bind("metas", "metas")
