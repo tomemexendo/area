@@ -719,7 +719,7 @@ const PLANILHA_AULAS_CSV_URL = "https://docs.google.com/spreadsheets/d/1Zl8fF-3F
 
 const ICONES_MODALIDADES = {
   "GLOBAL": "🔥", "SEM IMPACTO": "👟", "HIIT": "⚡", "PERNA+GLUTEO": "🍑",
-  "SUPERIORES": "💪", "GAP": "🎯", "CARDIO": "❤️‍🔥", "RITBOX": "🥊",
+  "SUPERIORES": "💪", "GAP": "🦵", "CARDIO": "❤️‍🔥", "RITBOX": "👊",
   "ABDÔMEN": "🧱", "ALONGAMENTO": "🧘‍♀️", "PILATES": "🌿", "ZUMBA": "💃",
   "FITDANCE": "🎶", "VACUUM": "🌬️", "YOGA": "🕉️", "STEP": "🪜",
   "GLOBAL MOVE": "🏃‍♀️", "SUPRA MOVE": "🚀", "BALLET FIT": "🩰"
