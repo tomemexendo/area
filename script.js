@@ -805,11 +805,28 @@ async function carregarPlanilhaAulas() {
   try {
     const res = await fetch(PLANILHA_AULAS_CSV_URL);
     const csv = await res.text();
+
+    // Se o Google devolveu HTML (planilha restrita), avisa na tela
+    if (csv.trim().startsWith("<!DOCTYPE") || csv.trim().startsWith("<html")) {
+      container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#dc2626;">A planilha ainda está restrita. Mude o compartilhamento para "Qualquer pessoa com o link".</p>`;
+      return;
+    }
+
     const linhas = csv.split(/\r?\n/).map(l =>
       l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, "").trim())
     );
 
-    const cabecalho = linhas[1] || [];
+    // Encontra automaticamente a linha onde começa "GLOBAL"
+    const linhaCabecalhoIdx = linhas.findIndex(l =>
+      l.some(cel => cel.toUpperCase() === "GLOBAL")
+    );
+
+    if (linhaCabecalhoIdx === -1) {
+      container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#dc2626;">Não encontrei a coluna GLOBAL na aba BASE_APP.</p>`;
+      return;
+    }
+
+    const cabecalho = linhas[linhaCabecalhoIdx];
     const resultado = [];
 
     for (let col = 0; col < cabecalho.length; col += 2) {
@@ -817,7 +834,7 @@ async function carregarPlanilhaAulas() {
       if (!nome) continue;
 
       const aulas = [];
-      for (let row = 2; row < linhas.length; row++) {
+      for (let row = linhaCabecalhoIdx + 1; row < linhas.length; row++) {
         const codigo = linhas[row][col] || "";
         const link = linhas[row][col + 1] || "";
         if (codigo && link.startsWith("http")) {
@@ -831,9 +848,11 @@ async function carregarPlanilhaAulas() {
         aulas
       });
     }
+
     modalidadesData = resultado;
   } catch (err) {
-    container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:red;">Erro ao carregar planilha. Verifique se o compartilhamento está como "Qualquer pessoa com o link pode ver".</p>`;
+    console.error("Erro planilha:", err);
+    container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#dc2626;">Erro de conexão ao carregar aulas.</p>`;
   }
 }
 
