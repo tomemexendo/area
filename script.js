@@ -274,7 +274,7 @@ function renderDashboard() {
   bind("home_workout", "home_workout")
   bind("gym_workout", "gym_workout")
   bind("quick_workouts", "quick_workouts")
-  bind("extra_classes", "extra_classes")
+
 
   bind("workout_help", "whatsapp")
 
@@ -338,7 +338,8 @@ function setupNavigation() {
     "dietaSection",
     "treinoSection",
     "desafioSection",
-    "extrasSection"
+    "extrasSection",
+    "aulasBibliotecaSection"
 
   ]
 
@@ -377,6 +378,29 @@ function setupNavigation() {
       behavior: "smooth"
 
     })
+
+    document.getElementById("extra_classes")?.addEventListener("click", async () => {
+    showSection("aulasBibliotecaSection");
+    await carregarPlanilhaAulas();
+    renderizarModalidades();
+  });
+
+  document.getElementById("backFromBiblioteca")?.addEventListener("click", () => {
+    document.getElementById("searchAulasInput").value = "";
+    if (modalidadeSelecionada) {
+      renderizarModalidades();
+    } else {
+      showSection("treinoSection");
+    }
+  });
+
+  document.getElementById("searchAulasInput")?.addEventListener("input", (e) => {
+    if (modalidadeSelecionada) {
+      renderizarListaAulas(e.target.value);
+    } else {
+      renderizarModalidades(e.target.value);
+    }
+  });
 
   }
 
@@ -757,3 +781,120 @@ function showBlockedMessage() {
 
 window.login = login
 window.logout = logout
+
+
+
+const PLANILHA_AULAS_CSV_URL = "https://docs.google.com/spreadsheets/d/1Zl8fF-3FM-ONv4wEVUmAYPqynrouOX5AoOKwTws6cBo/gviz/tq?tqx=out:csv&sheet=BASE_APP";
+
+const ICONES_MODALIDADES = {
+  "GLOBAL": "🔥", "SEM IMPACTO": "👟", "HIIT": "⚡", "PERNA+GLUTEO": "🍑",
+  "SUPERIORES": "💪", "GAP": "🎯", "CARDIO": "❤️‍🔥", "RITBOX": "🥊",
+  "ABDÔMEN": "🧱", "ALONGAMENTO": "🧘‍♀️", "PILATES": "🌿", "ZUMBA": "💃",
+  "FITDANCE": "🎶", "VACUUM": "🌬️", "YOGA": "🕉️", "STEP": "🪜",
+  "GLOBAL MOVE": "🏃‍♀️", "SUPRA MOVE": "🚀", "BALLET FIT": "🩰"
+};
+
+let modalidadesData = [];
+let modalidadeSelecionada = null;
+
+async function carregarPlanilhaAulas() {
+  if (modalidadesData.length > 0) return;
+  const container = document.getElementById("modalidadesContainer");
+  container.innerHTML = `<p style="grid-column:1/-1; text-align:center;">Carregando aulas...</p>`;
+
+  try {
+    const res = await fetch(PLANILHA_AULAS_CSV_URL);
+    const csv = await res.text();
+    const linhas = csv.split(/\r?\n/).map(l =>
+      l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, "").trim())
+    );
+
+    const cabecalho = linhas[1] || [];
+    const resultado = [];
+
+    for (let col = 0; col < cabecalho.length; col += 2) {
+      const nome = cabecalho[col];
+      if (!nome) continue;
+
+      const aulas = [];
+      for (let row = 2; row < linhas.length; row++) {
+        const codigo = linhas[row][col] || "";
+        const link = linhas[row][col + 1] || "";
+        if (codigo && link.startsWith("http")) {
+          aulas.push({ codigo, link });
+        }
+      }
+
+      resultado.push({
+        nome,
+        icone: ICONES_MODALIDADES[nome.toUpperCase()] || "🏋️‍♀️",
+        aulas
+      });
+    }
+    modalidadesData = resultado;
+  } catch (err) {
+    container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:red;">Erro ao carregar planilha. Verifique se o compartilhamento está como "Qualquer pessoa com o link pode ver".</p>`;
+  }
+}
+
+function renderizarModalidades(filtro = "") {
+  modalidadeSelecionada = null;
+  document.getElementById("bibliotecaMainTitle").innerText = "💃🏻🧘🏻 AULAS EXTRAS";
+  document.getElementById("backFromBiblioteca").innerText = "← VOLTAR";
+  const search = document.getElementById("searchAulasInput");
+  search.placeholder = "Buscar modalidade (ex: HIIT, Pilates, Zumba)...";
+
+  const modContainer = document.getElementById("modalidadesContainer");
+  const aulasContainer = document.getElementById("aulasListaContainer");
+  modContainer.classList.remove("hidden");
+  aulasContainer.classList.add("hidden");
+
+  const filtradas = modalidadesData.filter(m =>
+    normalizeText(m.nome).includes(normalizeText(filtro))
+  );
+
+  modContainer.innerHTML = filtradas.map(m => `
+    <button class="modalidade-card" onclick="abrirModalidade('${m.nome}')">
+      <span class="modalidade-icon">${m.icone}</span>
+      <span class="modalidade-nome">${m.nome}</span>
+      <span class="modalidade-count">${m.aulas.length} aulas</span>
+    </button>
+  `).join("");
+}
+
+function abrirModalidade(nome) {
+  const mod = modalidadesData.find(m => m.nome === nome);
+  if (!mod) return;
+  modalidadeSelecionada = mod;
+  document.getElementById("bibliotecaMainTitle").innerText = `${mod.icone} ${mod.nome}`;
+  document.getElementById("backFromBiblioteca").innerText = "← VOLTAR PARA MODALIDADES";
+  const search = document.getElementById("searchAulasInput");
+  search.value = "";
+  search.placeholder = `Buscar aula em ${mod.nome}...`;
+
+  document.getElementById("modalidadesContainer").classList.add("hidden");
+  document.getElementById("aulasListaContainer").classList.remove("hidden");
+  renderizarListaAulas();
+}
+
+function renderizarListaAulas(filtro = "") {
+  if (!modalidadeSelecionada) return;
+  const aulasContainer = document.getElementById("aulasListaContainer");
+  const filtradas = modalidadeSelecionada.aulas.filter(a =>
+    normalizeText(a.codigo).includes(normalizeText(filtro))
+  );
+
+  aulasContainer.innerHTML = filtradas.length
+    ? filtradas.map(a => `
+        <div class="aula-row">
+          <div class="aula-row-info">
+            <span class="aula-row-code">Aula ${a.codigo}</span>
+            <span class="aula-row-mod">${modalidadeSelecionada.nome}</span>
+          </div>
+          <a href="${a.link}" target="_blank" rel="noopener noreferrer" class="btn-assistir-aula">▶ ASSISTIR</a>
+        </div>
+      `).join("")
+    : `<p style="text-align:center;">Nenhuma aula com link cadastrado nesta modalidade ainda.</p>`;
+}
+
+window.abrirModalidade = abrirModalidade;
