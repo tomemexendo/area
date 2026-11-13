@@ -12,14 +12,11 @@
     window.OneSignalDeferred = window.OneSignalDeferred || [];
 
     OneSignalDeferred.push(async function(OneSignal) {
-
       await OneSignal.init({
         appId: "71ce07fb-c2a1-49f5-b4ba-34222414eb87",
       });
-
     });
   </script>
-
 </head>
 
 <body>
@@ -68,7 +65,6 @@
 
   <p>Siga @tomemexendo</p>
 
-
 </div>
 
 
@@ -78,7 +74,6 @@
 
 <div id="app" class="hidden">
 
-
   <!-- HEADER -->
 
   <div class="header">
@@ -86,19 +81,16 @@
     <div class="header-left">
 
       <div class="logo-small">
-        <img src="logo.png">
+        <img src="logo.png" alt="Logo">
       </div>
 
       <div>
-
         <h2>Tô Me Mexendo</h2>
-
         <p>
           Área do(a)
           <span id="userName"></span>
           👊🏻
         </p>
-
       </div>
 
     </div>
@@ -123,7 +115,6 @@
   >
 
     <div class="card welcome-card">
-
       <h2>
         Bem-vindo(a),
         <span id="userName2"></span>
@@ -133,7 +124,6 @@
       <p>
         Treino, Dieta, Incentivo e Acompanhamento: tudo que você precisa está aqui!
       </p>
-
     </div>
 
 
@@ -143,29 +133,26 @@
       🔔 QUER INCENTIVO DURANTE O DIA? 📢
     </h3>
 
-   <button id="enablePush" class="btn orange notification-card">
+    <button id="enablePush" class="btn orange notification-card">
+      <span class="notification-icon">
+        ✓
+      </span>
 
-  <span class="notification-icon">
-    ✓
-  </span>
+      <span class="notification-content">
+        <strong>ATIVAR NOTIFICAÇÕES</strong>
+        <small>Vou te lembrar de cuidar de você na correria ⏰️</small>
+      </span>
 
-  <span class="notification-content">
-    <strong>ATIVAR NOTIFICAÇÕES</strong>
-    <small>Vou te lembrar de cuidar de você na correria ⏰️</small>
-  </span>
-
-  <span class="notification-arrow">
-    ›
-  </span>
-
-</button>
+      <span class="notification-arrow">
+        ›
+      </span>
+    </button>
 
 
     <div
       id="pushBlockedMsg"
       class="card help hidden"
     >
-
       <h2>
         🔔 Notificações bloqueadas
       </h2>
@@ -180,484 +167,472 @@
         2. Vá em “Notificações”<br>
         3. Mude para “Permitir”
       </p>
+    </div>
+
+    <!-- ========================= -->
+    <!-- CATEGORIAS -->
+    <!-- ========================= -->
+
+    <h3>
+      👇 ACESSE TUDO POR AQUI
+    </h3>
+
+    <div class="grid">
+
+      <button
+        id="menu_dieta"
+        class="btn extras-green home-category"
+      >
+        <span class="category-icon">🍎</span>
+
+        <span class="category-title">
+          SUA DIETA
+        </span>
+
+        <span class="category-description">
+          Calculada e fácil de seguir
+        </span>
+      </button>
+
+
+      <button
+        id="menu_treino"
+        class="btn treino-dark home-category"
+      >
+        <span class="category-icon">💪</span>
+
+        <span class="category-title">
+          SEU TREINO
+        </span>
+
+        <span class="category-description">
+          Rápido e eficiente<br>
+          pra casa ou academia
+        </span>
+      </button>
+
+
+      <button
+        id="menu_desafio"
+        class="btn desafio-dark home-category"
+      >
+        <span class="category-icon">🏆</span>
+
+        <span class="category-title">
+          DESAFIO 14 DIAS
+        </span>
+
+        <span class="category-description">
+          Incentivo e prêmios para resgatar sua motivação
+        </span>
+      </button>
+
+
+      <button
+        id="menu_extras"
+        class="btn extras-green home-category"
+      >
+        <span class="category-icon">📚</span>
+
+        <span class="category-title">
+          EXTRAS
+        </span>
+
+        <span class="category-description">
+          Grupo de interação, avisos, e mais...
+        </span>
+      </button>
 
     </div>
 
-<!-- ========================= -->
-<!-- CATEGORIAS -->
-<!-- ========================= -->
 
-<h3>
-  👇 ACESSE TUDO POR AQUI
-</h3>
+    <!-- ========================= -->
+    <!-- ACESSO RÁPIDO -->
+    <!-- ========================= -->
 
-<div class="grid">
+    <h3>
+      ⚡ ACESSO RÁPIDO
+    </h3>
 
-  <button
-    id="menu_dieta"
-        class="btn extras-green home-category"
-  >
-    <span class="category-icon">🍎</span>
+    <div class="quick-access">
 
-    <span class="category-title">
-      SUA DIETA
-    </span>
+      <button
+        id="home_diario"
+        class="quick-card quick-purple"
+      >
+        <span class="quick-icon">
+          ✍🏻
+        </span>
 
-    <span class="category-description">
-      Calculada e fácil de seguir
-    </span>
-  </button>
+        <span class="quick-content">
+          <strong>
+            PREENCHER MEU DIÁRIO
+          </strong>
 
+          <small>
+            Registre sua rotina e acumule pontos
+          </small>
+        </span>
 
-  <button
-    id="menu_treino"
-    class="btn treino-dark home-category"
-  >
-    <span class="category-icon">💪</span>
-
-    <span class="category-title">
-      SEU TREINO
-    </span>
-
-    <span class="category-description">
-      Rápido e eficiente<br>
-      pra casa ou academia
-    </span>
-  </button>
+        <span class="quick-arrow">
+          ›
+        </span>
+      </button>
 
 
-  <button
-    id="menu_desafio"
-    class="btn desafio-dark home-category"
-  >
-    <span class="category-icon">🏆</span>
+      <button
+        id="home_whatsapp"
+        class="quick-card quick-red"
+      >
+        <span class="quick-icon">
+          💬
+        </span>
 
-    <span class="category-title">
-      DESAFIO 14 DIAS
-    </span>
+        <span class="quick-content">
+          <strong>
+            PRECISO DE AJUDA
+          </strong>
 
-    <span class="category-description">
-      Incentivo e prêmios para resgatar sua motivação
-    </span>
-  </button>
+          <small>
+            Traga suas dúvidas e dificuldades
+          </small>
+        </span>
 
+        <span class="quick-arrow">
+          ›
+        </span>
+      </button>
 
-  <button
-    id="menu_extras"
-    class="btn extras-green home-category"
-  >
-    <span class="category-icon">📚</span>
-
-    <span class="category-title">
-      EXTRAS
-    </span>
-
-    <span class="category-description">
-      Grupo de interação, avisos, e mais...
-    </span>
-  </button>
-
-</div>
-
-
-<!-- ========================= -->
-<!-- ACESSO RÁPIDO -->
-<!-- ========================= -->
-
-<h3>
-  ⚡ ACESSO RÁPIDO
-</h3>
-
-<div class="quick-access">
-
-  <button
-    id="home_diario"
-    class="quick-card quick-purple"
-  >
-
-    <span class="quick-icon">
-      ✍🏻
-    </span>
-
-    <span class="quick-content">
-
-      <strong>
-        PREENCHER MEU DIÁRIO
-      </strong>
-
-      <small>
-        Registre sua rotina e acumule pontos
-      </small>
-
-    </span>
-
-    <span class="quick-arrow">
-      ›
-    </span>
-
-  </button>
-
-
-  <button
-    id="home_whatsapp"
-    class="quick-card quick-red"
-  >
-
-    <span class="quick-icon">
-      💬
-    </span>
-
-    <span class="quick-content">
-
-      <strong>
-        PRECISO DE AJUDA
-      </strong>
-
-      <small>
-        Traga suas dúvidas e dificuldades
-      </small>
-
-    </span>
-
-    <span class="quick-arrow">
-      ›
-    </span>
-
-  </button>
-
-</div>
-
+    </div>
 
   </div>
-
 
 
   <!-- ========================= -->
   <!-- DIETA -->
   <!-- ========================= -->
 
-<div
-  id="dietaSection"
-  class="layout-single hidden"
->
-
-  <button
-    id="backFromDieta"
-    class="btn blue"
+  <div
+    id="dietaSection"
+    class="layout-single hidden"
   >
-    ← VOLTAR
-  </button>
 
+    <button
+      id="backFromDieta"
+      class="btn blue"
+    >
+      ← VOLTAR
+    </button>
 
-  <h2>
-    🍎 SUA DIETA AQUI
-  </h2>
+    <h2>
+      🍎 SUA DIETA AQUI
+    </h2>
 
+    <!-- SEU PLANO -->
 
-  <!-- ========================= -->
-  <!-- SEU PLANO -->
-  <!-- ========================= -->
+    <div class="internal-section dark-section">
 
-  <div class="internal-section dark-section">
+      <h3>
+        <span class="section-icon">🍽️</span>
+        CARDÁPIO CALCULADO
+      </h3>
 
-    <h3>
-      <span class="section-icon">🍽️</span>
-      CARDÁPIO CALCULADO
-    </h3>
+      <p class="section-description">
+        Escolha a opção de acordo com seu peso atual
+      </p>
 
-    <p class="section-description">
-      Escolha a opção de acordo com seu peso atual
-    </p>
+      <div class="grid">
 
-    <div class="grid">
+        <button
+          id="diet_60"
+          class="btn green"
+        >
+          Até 60kgs<br>
+          <small>(peso atual)</small>
+        </button>
+
+        <button
+          id="diet_90"
+          class="btn green"
+        >
+          60 a 90kgs<br>
+          <small>(peso atual)</small>
+        </button>
+
+        <button
+          id="diet_120"
+          class="btn green"
+        >
+          90 a 120kgs<br>
+          <small>(peso atual)</small>
+        </button>
+
+        <button
+          id="diet_plus"
+          class="btn green"
+        >
+          + de 120kgs<br>
+          <small>(peso atual)</small>
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- + OPÇÕES DE REFEIÇÕES -->
+
+    <div class="internal-section dark-section">
+
+      <h3>
+        <span class="section-icon">🥗</span>
+        + OPÇÕES DE REFEIÇÕES
+      </h3>
+
+      <p class="section-description">
+        Opções práticas para variar sua alimentação
+      </p>
 
       <button
-        id="diet_60"
+        id="breakfast"
         class="btn green"
       >
-        Até 60kgs<br>
-        <small>(peso atual)</small>
+        ☕ CAFÉ DA MANHÃ
       </button>
 
       <button
-        id="diet_90"
+        id="lunch"
         class="btn green"
       >
-        60 a 90kgs<br>
-        <small>(peso atual)</small>
+        🍛 ALMOÇO
       </button>
 
       <button
-        id="diet_120"
+        id="dessert"
         class="btn green"
       >
-        90 a 120kgs<br>
-        <small>(peso atual)</small>
+        🍫 SOBREMESA
       </button>
 
       <button
-        id="diet_plus"
+        id="afternoon_snack"
         class="btn green"
       >
-        + de 120kgs<br>
-        <small>(peso atual)</small>
+        🥪 LANCHE DA TARDE
+      </button>
+
+      <button
+        id="dinner"
+        class="btn green"
+      >
+        🍽️ JANTAR
       </button>
 
     </div>
 
-  </div>
+    <!-- APOIO -->
 
+    <div class="internal-section dark-section">
 
-  <!-- ========================= -->
-  <!-- + OPÇÕES DE REFEIÇÕES -->
-  <!-- ========================= -->
+      <h3>
+        <span class="section-icon">🧠</span>
+        MATERIAL COMPLEMENTAR
+      </h3>
 
-  <div class="internal-section dark-section">
+      <p class="section-description">
+        Conteúdo para ajudar você a seguir o plano
+      </p>
 
-    <h3>
-      <span class="section-icon">🥗</span>
-      + OPÇÕES DE REFEIÇÕES
-    </h3>
+      <button
+        id="binge_eating"
+        class="btn green"
+      >
+        🍕 AULA SOBRE COMPULSÃO ALIMENTAR
+      </button>
 
-    <p class="section-description">
-      Opções práticas para variar sua alimentação
-    </p>
+      <button
+        id="rotine"
+        class="btn green"
+      >
+        🗓 COMO ENCAIXAR NA ROTINA
+      </button>
 
-    <button
-      id="breakfast"
-      class="btn green"
-    >
-      ☕ CAFÉ DA MANHÃ
-    </button>
+    </div>
 
-    <button
-      id="lunch"
-      class="btn green"
-    >
-      🍛 ALMOÇO
-    </button>
-
-    <button
-      id="dessert"
-      class="btn green"
-    >
-      🍫 SOBREMESA
-    </button>
+    <!-- SUPORTE -->
 
     <button
-      id="afternoon_snack"
-      class="btn green"
+      id="diet_help"
+      class="btn support-red"
     >
-      🥪 LANCHE DA TARDE
-    </button>
-
-    <button
-      id="dinner"
-      class="btn green"
-    >
-      🍽️ JANTAR
+      <strong>⚠️ DIFICULDADE NA DIETA?</strong>
+      <small>CLIQUE AQUI E CHAME NO SUPORTE</small>
     </button>
 
   </div>
-
-
-  <!-- ========================= -->
-  <!-- APOIO -->
-  <!-- ========================= -->
-
-  <div class="internal-section dark-section">
-
-    <h3>
-      <span class="section-icon">🧠</span>
-      MATERIAL COMPLEMENTAR
-    </h3>
-
-    <p class="section-description">
-      Conteúdo para ajudar você a seguir o plano
-    </p>
-
-    <button
-      id="binge_eating"
-      class="btn green"
-    >
-      🍕 AULA SOBRE COMPULSÃO ALIMENTAR
-    </button>
-
-    <button
-      id="rotine"
-      class="btn green"
-    >
-      🗓 COMO ENCAIXAR NA ROTINA
-    </button>
-
-  </div>
-
-
-  <!-- ========================= -->
-  <!-- SUPORTE -->
-  <!-- ========================= -->
-
-  <button
-    id="diet_help"
-    class="btn support-red"
-  >
-    <strong>⚠️ DIFICULDADE NA DIETA?</strong>
-    <small>CLIQUE AQUI E CHAME NO SUPORTE</small>
-  </button>
-
-
-</div>
 
 
   <!-- ========================= -->
   <!-- TREINO -->
   <!-- ========================= -->
 
- <div
-  id="treinoSection"
-  class="layout-single hidden"
->
-
-  <button
-    id="backFromTreino"
-    class="btn blue"
+  <div
+    id="treinoSection"
+    class="layout-single hidden"
   >
-    ← VOLTAR
-  </button>
-
-  <h2>
-    💪 SEU TREINO AQUI
-  </h2>
-
-
-  <!-- TREINO EM CASA -->
-
-  <div class="internal-section dark-section">
-
-    <h3>
-      <span class="section-icon">🏠</span>
-      TREINO EM CASA
-    </h3>
-
-    <p class="section-description">
-      Programação semanal para você treinar em casa
-    </p>
 
     <button
-      id="home_workout"
-      class="btn green"
+      id="backFromTreino"
+      class="btn blue"
     >
-      ACESSE AQUI
+      ← VOLTAR
+    </button>
 
-      <span class="quick-arrow">
-      ›
-      </span>
-    
+    <h2>
+      💪 SEU TREINO AQUI
+    </h2>
+
+    <!-- TREINO EM CASA -->
+
+    <div class="internal-section dark-section">
+
+      <h3>
+        <span class="section-icon">🏠</span>
+        TREINO EM CASA
+      </h3>
+
+      <p class="section-description">
+        Programação semanal para você treinar em casa
+      </p>
+
+      <button
+        id="home_workout"
+        class="btn green"
+      >
+        ACESSE AQUI
+        <span class="quick-arrow">›</span>
+      </button>
+
+    </div>
+
+    <!-- ACADEMIA -->
+
+    <div class="internal-section dark-section">
+
+      <h3>
+        <span class="section-icon">🏋️</span>
+        TREINO NA ACADEMIA
+      </h3>
+
+      <p class="section-description">
+        Programação mensal para seus treinos na academia
+      </p>
+
+      <button
+        id="gym_workout"
+        class="btn green"
+      >
+        ACESSE AQUI
+        <span class="quick-arrow">›</span>
+      </button>
+
+    </div>
+
+    <!-- TREINOS RÁPIDOS -->
+
+    <div class="internal-section dark-section">
+
+      <h3>
+        <span class="section-icon">⏱️</span>
+        TREINOS DE 5 MIN
+      </h3>
+
+      <p class="section-description">
+        Treinos de apenas 5 minutos para encaixar na correria
+      </p>
+
+      <button
+        id="quick_workouts"
+        class="btn green"
+      >
+        ACESSE AQUI
+        <span class="quick-arrow">›</span>
+      </button>
+
+    </div>
+
+    <!-- AULAS EXTRAS -->
+
+    <div class="internal-section dark-section">
+
+      <h3>
+        <span class="section-icon">💃🏻🧘🏻</span>
+        AULAS EXTRAS
+      </h3>
+
+      <p class="section-description">
+        Conteúdos extras para deixar sua rotina mais ativa
+      </p>
+
+      <button
+        id="extra_classes"
+        class="btn green"
+      >
+        DANÇA, ALONGAMENTO E MAIS
+        <span class="quick-arrow">›</span>
+      </button>
+
+    </div>
+
+    <!-- SUPORTE -->
+
+    <button
+      id="workout_help"
+      class="btn support-red"
+    >
+      <strong>⚠️ DIFICULDADE NO TREINO?</strong>
+      <small>CLIQUE AQUI E CHAME NO SUPORTE</small>
     </button>
 
   </div>
 
 
-  <!-- ACADEMIA -->
+  <!-- ========================= -->
+  <!-- BIBLIOTECA DE AULAS (PLANILHA) -->
+  <!-- ========================= -->
 
-  <div class="internal-section dark-section">
-
-    <h3>
-      <span class="section-icon">🏋️</span>
-      TREINO NA ACADEMIA
-    </h3>
-
-    <p class="section-description">
-      Programação mensal para seus treinos na academia
-    </p>
-
-    <button
-      id="gym_workout"
-      class="btn green"
-    >
-      ACESSE AQUI
-
-      <span class="quick-arrow">
-      ›
-      </span>
-      
-    </button>
-
-  </div>
-
-
-  <!-- TREINOS RÁPIDOS -->
-
-  <div class="internal-section dark-section">
-
-    <h3>
-      <span class="section-icon">⏱️</span>
-      TREINOS DE 5 MIN
-    </h3>
-
-    <p class="section-description">
-      Treinos de apenas 5 minutos para encaixar na correria
-    </p>
-
-    <button
-      id="quick_workouts"
-      class="btn green"
-    >
-      ACESSE AQUI
-
-      <span class="quick-arrow">
-      ›
-      </span>
-      
-    </button>
-
-  </div>
-
-
-  <!-- AULAS EXTRAS -->
-
-  <div class="internal-section dark-section">
-
-    <h3>
-      <span class="section-icon">💃🏻🧘🏻</span>
-      AULAS EXTRAS
-    </h3>
-
-    <p class="section-description">
-      Conteúdos extras para deixar sua rotina mais ativa
-    </p>
-
-    <button
-      id="extra_classes"
-      class="btn green"
-    >
-      DANÇA, ALONGAMENTO E MAIS
-
-      <span class="quick-arrow">
-      ›
-      </span>
-      
-    </button>
-
-  </div>
-
-
-  <!-- SUPORTE -->
-
-  <button
-    id="workout_help"
-    class="btn support-red"
+  <div
+    id="aulasBibliotecaSection"
+    class="layout-single hidden"
   >
-    <strong>⚠️ DIFICULDADE NO TREINO?</strong>
-    <small>CLIQUE AQUI E CHAME NO SUPORTE</small>
-  </button>
+
+    <button
+      id="backFromBiblioteca"
+      class="btn blue"
+    >
+      ← VOLTAR PARA TREINOS
+    </button>
+
+    <h2 id="bibliotecaMainTitle">
+      💃🏻🧘🏻 BIBLIOTECA DE AULAS
+    </h2>
+
+    <input
+      type="text"
+      id="searchAulasInput"
+      class="search-aulas-input"
+      placeholder="Buscar modalidade (ex: HIIT, Pilates, Zumba)..."
+    >
+
+    <!-- Grade de Modalidades -->
+    <div id="modalidadesContainer" class="grid"></div>
+
+    <!-- Lista de Aulas da Modalidade Selecionada -->
+    <div id="aulasListaContainer" class="aulas-list hidden"></div>
+
+  </div>
 
 
-</div>
-
-
-
-     <!-- ========================= -->
+  <!-- ========================= -->
   <!-- DESAFIO -->
   <!-- ========================= -->
 
@@ -677,12 +652,9 @@
       🏆 DESAFIO TÔ ME MEXENDO
     </h2>
 
-
-    <!-- DESAFIO -->
-
     <div class="internal-section dark-section">
 
- <h3>
+      <h3>
         <span class="section-icon">✅</span>
         COMECE POR AQUI
       </h3>
@@ -698,7 +670,7 @@
         🎥 ACESSE AQUI A EXPLICAÇÃO
       </button>
 
-      
+
       <h3 style="margin-top:15px;">
         <span class="section-icon">🏋️‍♀️</span>
         TREINOS DO DESAFIO
@@ -718,7 +690,7 @@
 
       <h3 style="margin-top:15px;">
         <span class="section-icon">🍽️</span>
-       METAS DE REFEIÇÕES
+        METAS DE REFEIÇÕES
       </h3>
 
       <p class="section-description">
@@ -766,7 +738,8 @@
         ✍🏻 PREENCHER SEU DIÁRIO EM 10 SEGUNDOS
       </button>
 
- <h3 style="margin-top:15px;">
+
+      <h3 style="margin-top:15px;">
         <span class="section-icon">🗣</span>
         GRUPO DE INCENTIVO
       </h3>
@@ -775,26 +748,22 @@
         Grupo aberto de interação para te motivar
       </p>
 
-       <button
+      <button
         id="incentive_group2"
         class="btn green"
       >
         🔥 ACESSAR GRUPO DE INCENTIVO
       </button>
 
-      
     </div>
 
-      <button
+    <button
       id="support2"
       class="btn support-red"
     >
       <strong>💬 DÚVIDAS SOBRE O DESAFIO?</strong>
       <small>CLIQUE AQUI E FALE CONOSCO</small>
     </button>
-
-  </div>
-
 
   </div>
 
@@ -818,7 +787,6 @@
     <h2>
       📚 EXTRAS
     </h2>
-
 
     <!-- GRUPOS -->
 
@@ -847,7 +815,7 @@
       </h3>
 
       <p class="section-description">
-       Lembretes diários + avisos de novos desafios
+        Lembretes diários + avisos de novos desafios
       </p>
 
       <button
@@ -858,7 +826,6 @@
       </button>
 
     </div>
-
 
     <!-- INFLUENCER -->
 
@@ -881,8 +848,6 @@
       </button>
 
     </div>
-
-
 
     <!-- SAC -->
 
@@ -918,7 +883,7 @@
 
   </div>
 
-  
+</div>
 
 <!-- SCRIPT PRINCIPAL -->
 
