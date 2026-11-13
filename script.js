@@ -333,166 +333,97 @@ function renderDashboard() {
 function setupNavigation() {
 
   const sections = [
-
     "homeSection",
     "dietaSection",
     "treinoSection",
     "desafioSection",
     "extrasSection",
     "aulasBibliotecaSection"
-
   ]
 
-
   function showSection(sectionId) {
-
     sections.forEach(id => {
-
-      const section =
-        document.getElementById(id)
-
-
+      const section = document.getElementById(id)
       if (!section) return
 
-
       if (id === sectionId) {
-
-        section
-          .classList
-          .remove("hidden")
-
+        section.classList.remove("hidden")
       } else {
-
-        section
-          .classList
-          .add("hidden")
-
+        section.classList.add("hidden")
       }
-
     })
-
 
     window.scrollTo({
-
       top: 0,
       behavior: "smooth"
-
     })
+  }
 
-    document.getElementById("extra_classes")?.addEventListener("click", async () => {
-    showSection("aulasBibliotecaSection");
-    await carregarPlanilhaAulas();
-    renderizarModalidades();
-  });
+  /* MENU PRINCIPAL */
+
+  document.getElementById("menu_dieta")?.addEventListener("click", () => {
+    showSection("dietaSection")
+  })
+
+  document.getElementById("menu_treino")?.addEventListener("click", () => {
+    showSection("treinoSection")
+  })
+
+  document.getElementById("menu_desafio")?.addEventListener("click", () => {
+    showSection("desafioSection")
+  })
+
+  document.getElementById("menu_extras")?.addEventListener("click", () => {
+    showSection("extrasSection")
+  })
+
+  /* AULAS EXTRAS (PLANILHA) */
+
+  document.getElementById("extra_classes")?.addEventListener("click", async () => {
+    showSection("aulasBibliotecaSection")
+    await carregarPlanilhaAulas()
+    renderizarModalidades()
+  })
 
   document.getElementById("backFromBiblioteca")?.addEventListener("click", () => {
-    document.getElementById("searchAulasInput").value = "";
+    document.getElementById("searchAulasInput").value = ""
     if (modalidadeSelecionada) {
-      renderizarModalidades();
+      renderizarModalidades()
     } else {
-      showSection("treinoSection");
+      showSection("treinoSection")
     }
-  });
+  })
 
   document.getElementById("searchAulasInput")?.addEventListener("input", (e) => {
     if (modalidadeSelecionada) {
-      renderizarListaAulas(e.target.value);
+      renderizarListaAulas(e.target.value)
     } else {
-      renderizarModalidades(e.target.value);
+      renderizarModalidades(e.target.value)
     }
-  });
+  })
 
-  }
-
-
-  /* ========================= */
-  /* MENU PRINCIPAL */
-  /* ========================= */
-
-  document
-    .getElementById("menu_dieta")
-    ?.addEventListener("click", () => {
-
-      showSection("dietaSection")
-
-    })
-
-
-  document
-    .getElementById("menu_treino")
-    ?.addEventListener("click", () => {
-
-      showSection("treinoSection")
-
-    })
-
-
-  document
-    .getElementById("menu_desafio")
-    ?.addEventListener("click", () => {
-
-      showSection("desafioSection")
-
-    })
-
-
-  document
-    .getElementById("menu_extras")
-    ?.addEventListener("click", () => {
-
-      showSection("extrasSection")
-
-    })
-
-
-  /* ========================= */
   /* VOLTAR */
-  /* ========================= */
 
-  document
-    .getElementById("backFromDieta")
-    ?.addEventListener("click", () => {
+  document.getElementById("backFromDieta")?.addEventListener("click", () => {
+    showSection("homeSection")
+  })
 
-      showSection("homeSection")
+  document.getElementById("backFromTreino")?.addEventListener("click", () => {
+    showSection("homeSection")
+  })
 
-    })
+  document.getElementById("backFromDesafio")?.addEventListener("click", () => {
+    showSection("homeSection")
+  })
 
+  document.getElementById("backFromExtras")?.addEventListener("click", () => {
+    showSection("homeSection")
+  })
 
-  document
-    .getElementById("backFromTreino")
-    ?.addEventListener("click", () => {
-
-      showSection("homeSection")
-
-    })
-
-
-  document
-    .getElementById("backFromDesafio")
-    ?.addEventListener("click", () => {
-
-      showSection("homeSection")
-
-    })
-
-
-  document
-    .getElementById("backFromExtras")
-    ?.addEventListener("click", () => {
-
-      showSection("homeSection")
-
-    })
-
-
-  /* ========================= */
   /* COMEÇA NA HOME */
-  /* ========================= */
 
   showSection("homeSection")
-
 }
-
 
 /* ---------------- ONE SIGNAL ---------------- */
 
