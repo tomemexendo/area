@@ -1625,3 +1625,100 @@ input::placeholder {
   }
 
 }
+
+
+/* =========================================================
+   BIBLIOTECA DE AULAS EXTRAS (SOMENTE ESTA TELA)
+========================================================= */
+
+.search-aulas-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  margin: 4px 0 8px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a !important;
+  font-size: 14px;
+}
+
+.modalidade-card {
+  min-height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 14px 10px;
+  gap: 5px;
+  border-radius: 16px;
+  background: #142638;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.modalidade-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.modalidade-nome {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.modalidade-count {
+  font-size: 11px;
+  color: #4ade80;
+  background: rgba(34, 197, 94, 0.16);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+.aulas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aula-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #142638;
+  color: #ffffff;
+}
+
+.aula-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.aula-row-code {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.aula-row-mod {
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+.btn-assistir-aula {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #22c55e;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
