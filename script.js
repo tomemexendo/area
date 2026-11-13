@@ -17,22 +17,162 @@ function normalizeText(text = "") {
 }
 
 
-/* ---------------- ESTADO ---------------- */
+/* ---------------- ESTADO E PLANILHA DE AULAS ---------------- */
 
 let contentData = {}
+
+// COLE AQUI O LINK "Publicar na web > CSV" DA ABA BASE_APP
+const PLANILHA_AULAS_CSV_URL = "COLE_AQUI_O_LINK_CSV_DA_ABA_BASE_APP"
+
+const ICONES_MODALIDADES = {
+  "GLOBAL": "🔥",
+  "SEM IMPACTO": "👟",
+  "HIIT": "⚡",
+  "PERNA+GLUTEO": "🍑",
+  "SUPERIORES": "💪",
+  "GAP": "🎯",
+  "CARDIO": "❤️‍🔥",
+  "RITBOX": "🥊",
+  "ABDÔMEN": "🧱",
+  "ALONGAMENTO": "🧘‍♀️",
+  "PILATES": "🌿",
+  "ZUMBA": "💃",
+  "FITDANCE": "🎶",
+  "VACUUM": "🌬️",
+  "YOGA": "🕉️",
+  "STEP": "🪜",
+  "GLOBAL MOVE": "🏃‍♀️",
+  "SUPRA MOVE": "🚀",
+  "BALLET FIT": "🩰"
+}
+
+let modalidadesData = []
+let modalidadeSelecionada = null
+
+async function carregarPlanilhaAulas() {
+  if (modalidadesData.length > 0) return
+
+  const container = document.getElementById("modalidadesContainer")
+  container.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#cbd5e1;">Carregando aulas...</p>`
+
+  try {
+    const res = await fetch(PLANILHA_AULAS_CSV_URL)
+    const csv = await res.text()
+    const linhas = csv.split(/\r?\n/).map(l =>
+      l.split(",").map(c => c.replace(/^"|"$/g, "").trim())
+    )
+
+    // Linha 1 (índice 0) = Título geral; Linha 2 (índice 1) = Nomes das modalidades
+    const cabecalhoModalidades = linhas[1] || []
+    const resultado = []
+
+    for (let col = 0; col < cabecalhoModalidades.length; col += 2) {
+      const nome = cabecalhoModalidades[col]
+      if (!nome) continue
+
+      const aulas = []
+      for (let row = 2; row < linhas.length; row++) {
+        const codigo = linhas[row][col] || ""
+        const link = linhas[row][col + 1] || ""
+        if (codigo && link.startsWith("http")) {
+          aulas.push({ codigo, link })
+        }
+      }
+
+      resultado.push({
+        nome,
+        icone: ICONES_MODALIDADES[nome.toUpperCase()] || "🏋️‍♀️",
+        aulas
+      })
+    }
+
+    modalidadesData = resultado
+  } catch (err) {
+    console.error("Erro ao ler planilha de aulas:", err)
+    container.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#fca5a5;">Erro ao carregar aulas.</p>`
+  }
+}
+
+function renderizarModalidades(filtro = "") {
+  modalidadeSelecionada = null
+  document.getElementById("bibliotecaMainTitle").innerText = "💃🏻🧘🏻 BIBLIOTECA DE AULAS"
+  document.getElementById("backFromBiblioteca").innerText = "← VOLTAR PARA TREINOS"
+
+  const search = document.getElementById("searchAulasInput")
+  search.placeholder = "Buscar modalidade (ex: HIIT, Pilates, Zumba)..."
+
+  const modContainer = document.getElementById("modalidadesContainer")
+  const aulasContainer = document.getElementById("aulasListaContainer")
+
+  modContainer.classList.remove("hidden")
+  aulasContainer.classList.add("hidden")
+
+  const filtradas = modalidadesData.filter(m =>
+    normalizeText(m.nome).includes(normalizeText(filtro))
+  )
+
+  modContainer.innerHTML = filtradas.map(m => `
+    <button class="modalidade-card" onclick="abrirModalidade('${m.nome}')">
+      <span class="modalidade-icon">${m.icone}</span>
+      <span class="modalidade-nome">${m.nome}</span>
+      <span class="modalidade-count">${m.aulas.length} aulas</span>
+    </button>
+  `).join("")
+}
+
+function abrirModalidade(nome) {
+  const mod = modalidadesData.find(m => m.nome === nome)
+  if (!mod) return
+
+  modalidadeSelecionada = mod
+  document.getElementById("bibliotecaMainTitle").innerText = `${mod.icone}${mod.nome}`
+  document.getElementById("backFromBiblioteca").innerText = "← VOLTAR PARA MODALIDADES"
+
+  const search = document.getElementById("searchAulasInput")
+  search.value = ""
+  search.placeholder = `Buscar aula em ${mod.nome} (ex: #69)...`
+
+  document.getElementById("modalidadesContainer").classList.add("hidden")
+  document.getElementById("aulasListaContainer").classList.remove("hidden")
+
+  renderizarListaAulas()
+}
+
+function renderizarListaAulas(filtro = "") {
+  if (!modalidadeSelecionada) return
+
+  const aulasContainer = document.getElementById("aulasListaContainer")
+  const filtradas = modalidadeSelecionada.aulas.filter(a =>
+    normalizeText(a.codigo).includes(normalizeText(filtro))
+  )
+
+  if (filtradas.length === 0) {
+    aulasContainer.innerHTML = `<p style="text-align:center; color:#cbd5e1;">Nenhuma aula encontrada.</p>`
+    return
+  }
+
+  aulasContainer.innerHTML = filtradas.map(a => `
+    <div class="aula-row">
+      <div class="aula-row-info">
+        <span class="aula-row-code">Aula ${a.codigo}</span>
+        <span class="aula-row-mod">${modalidadeSelecionada.nome}</span>
+      </div>
+      <a href="${a.link}" target="_blank" rel="noopener noreferrer" class="btn-assistir-aula">
+        ▶ ASSISTIR
+      </a>
+    </div>
+  `).join("")
+}
 
 
 /* ---------------- ONESIGNAL ---------------- */
 
 async function syncOneSignal(user) {
-
   try {
-
     if (!window.OneSignal) return
 
     const playerId = OneSignal.User.PushSubscription.id
-    const notificationsEnabled =
-      OneSignal.User.PushSubscription.optedIn
+    const notificationsEnabled = OneSignal.User.PushSubscription.optedIn
 
     if (!playerId) return
 
@@ -49,20 +189,15 @@ async function syncOneSignal(user) {
     if (error) {
       console.log("Erro sync OneSignal:", error)
     }
-
   } catch (e) {
-
     console.log("Erro sync:", e)
-
   }
-
 }
 
 
 /* ---------------- LOGIN ---------------- */
 
 async function login() {
-
   const nome = normalizeText(
     document.getElementById("nome").value
   )
@@ -70,57 +205,39 @@ async function login() {
   const codigo =
     document.getElementById("codigo").value.trim()
 
-
   const { data, error } = await supabase
     .from("users")
     .select("*")
 
-
   console.log("USERS:", data)
-
 
   const user = data?.find(u =>
     normalizeText(u.name) === nome &&
     String(u.phone).trim() === codigo
   )
 
-
   console.log("USER FOUND:", user)
 
-
   if (error || !user) {
-
     alert("Usuário não encontrado")
-
     return
-
   }
-
 
   localStorage.setItem(
     "user",
     JSON.stringify(user)
   )
 
-
   /* ONE SIGNAL */
 
   try {
-
     if (window.OneSignal && user?.id) {
-
       OneSignal.login(String(user.id))
-
       syncNotifications(user)
-
     }
-
   } catch (e) {
-
     console.log("OneSignal erro:", e)
-
   }
-
 
   /* REGISTRA ACESSO */
 
@@ -131,9 +248,7 @@ async function login() {
       user_phone: user.phone
     }])
 
-
   console.log("Acesso registrado")
-
 
   /* MOSTRA APP */
 
@@ -144,16 +259,13 @@ async function login() {
     .classList
     .remove("hidden")
 
-
   document
     .getElementById("userName")
     .innerText = user.name
 
-
   document
     .getElementById("userName2")
     .innerText = user.name
-
 
   /* CARREGA CONTEÚDO */
 
@@ -162,93 +274,63 @@ async function login() {
   renderDashboard()
 
   setupNavigation()
-
 }
 
 
 /* ---------------- LOGOUT ---------------- */
 
 function logout() {
-
   localStorage.removeItem("user")
-
   location.reload()
-
 }
 
 
 /* ---------------- CONTENT ---------------- */
 
 async function loadContent() {
-
   const { data, error } = await supabase
     .from("content")
     .select("*")
 
-
   if (error) {
-
     console.error(error)
-
     return
-
   }
-
 
   const map = {}
 
-
   data.forEach(item => {
-
     map[item.type] = item
-
   })
 
-
   contentData = map
-
 }
 
 
 /* ---------------- DASHBOARD ---------------- */
 
 function renderDashboard() {
-
   const bind = (id, key) => {
-
-    const el =
-      document.getElementById(id)
-
+    const el = document.getElementById(id)
 
     if (!el) return
 
-
     el.onclick = () => {
-
       if (contentData[key]?.link) {
-
         window.open(
           contentData[key].link,
           "_blank"
         )
-
       } else {
-
         console.log(
           "Link não configurado:",
           key
         )
-
       }
-
     }
-
   }
 
-
-  /* ========================= */
   /* DIETA */
-  /* ========================= */
 
   bind("diet_60", "diet_60")
   bind("diet_90", "diet_90")
@@ -262,26 +344,19 @@ function renderDashboard() {
   bind("dinner", "dinner")
 
   bind("binge_eating", "binge_eating")
-  bind("rotine","rotine")
+  bind("rotine", "rotine")
 
   bind("diet_help", "whatsapp")
 
-
-  /* ========================= */
   /* TREINO */
-  /* ========================= */
 
   bind("home_workout", "home_workout")
   bind("gym_workout", "gym_workout")
   bind("quick_workouts", "quick_workouts")
-  bind("extra_classes", "extra_classes")
 
   bind("workout_help", "whatsapp")
 
-
-  /* ========================= */
   /* DESAFIO */
-  /* ========================= */
 
   bind("explication", "explication")
   bind("incentive_group2", "incentive_group")
@@ -291,10 +366,7 @@ function renderDashboard() {
   bind("diario", "diario")
   bind("support2", "whatsapp")
 
-
-  /* ========================= */
   /* EXTRAS */
-  /* ========================= */
 
   bind("incentive_group", "incentive_group")
   bind("notice_group", "notice_group")
@@ -302,454 +374,266 @@ function renderDashboard() {
   bind("support", "whatsapp")
   bind("sac", "sac")
 
-
-  /* ========================= */
   /* ACESSO RÁPIDO DA HOME */
-  /* ========================= */
 
   bind("home_diario", "diario")
   bind("home_whatsapp", "whatsapp")
 
-
-  /* ========================= */
   /* NOTIFICAÇÕES */
-  /* ========================= */
 
-  const pushBtn =
-    document.getElementById("enablePush")
-
+  const pushBtn = document.getElementById("enablePush")
 
   if (pushBtn) {
-
     pushBtn.onclick = enablePush
-
   }
-
 }
 
 
 /* ---------------- NAVEGAÇÃO ---------------- */
 
 function setupNavigation() {
-
   const sections = [
-
     "homeSection",
     "dietaSection",
     "treinoSection",
+    "aulasBibliotecaSection",
     "desafioSection",
     "extrasSection"
-
   ]
 
-
   function showSection(sectionId) {
-
     sections.forEach(id => {
-
-      const section =
-        document.getElementById(id)
-
+      const section = document.getElementById(id)
 
       if (!section) return
 
-
       if (id === sectionId) {
-
-        section
-          .classList
-          .remove("hidden")
-
+        section.classList.remove("hidden")
       } else {
-
-        section
-          .classList
-          .add("hidden")
-
+        section.classList.add("hidden")
       }
-
     })
-
 
     window.scrollTo({
-
       top: 0,
       behavior: "smooth"
-
     })
-
   }
 
-
-  /* ========================= */
   /* MENU PRINCIPAL */
-  /* ========================= */
 
   document
     .getElementById("menu_dieta")
     ?.addEventListener("click", () => {
-
       showSection("dietaSection")
-
     })
-
 
   document
     .getElementById("menu_treino")
     ?.addEventListener("click", () => {
-
       showSection("treinoSection")
-
     })
-
 
   document
     .getElementById("menu_desafio")
     ?.addEventListener("click", () => {
-
       showSection("desafioSection")
-
     })
-
 
   document
     .getElementById("menu_extras")
     ?.addEventListener("click", () => {
-
       showSection("extrasSection")
-
     })
 
+  /* BIBLIOTECA DE AULAS (AULAS EXTRAS) */
 
-  /* ========================= */
+  document
+    .getElementById("extra_classes")
+    ?.addEventListener("click", async () => {
+      showSection("aulasBibliotecaSection")
+      await carregarPlanilhaAulas()
+      renderizarModalidades()
+    })
+
+  document
+    .getElementById("backFromBiblioteca")
+    ?.addEventListener("click", () => {
+      document.getElementById("searchAulasInput").value = ""
+      if (modalidadeSelecionada) {
+        renderizarModalidades()
+      } else {
+        showSection("treinoSection")
+      }
+    })
+
+  document
+    .getElementById("searchAulasInput")
+    ?.addEventListener("input", (e) => {
+      if (modalidadeSelecionada) {
+        renderizarListaAulas(e.target.value)
+      } else {
+        renderizarModalidades(e.target.value)
+      }
+    })
+
   /* VOLTAR */
-  /* ========================= */
 
   document
     .getElementById("backFromDieta")
     ?.addEventListener("click", () => {
-
       showSection("homeSection")
-
     })
-
 
   document
     .getElementById("backFromTreino")
     ?.addEventListener("click", () => {
-
       showSection("homeSection")
-
     })
-
 
   document
     .getElementById("backFromDesafio")
     ?.addEventListener("click", () => {
-
       showSection("homeSection")
-
     })
-
 
   document
     .getElementById("backFromExtras")
     ?.addEventListener("click", () => {
-
       showSection("homeSection")
-
     })
 
-
-  /* ========================= */
   /* COMEÇA NA HOME */
-  /* ========================= */
 
   showSection("homeSection")
-
 }
 
 
 /* ---------------- ONE SIGNAL ---------------- */
 
 async function syncNotifications(user) {
-
   try {
-
     if (!window.OneSignal || !user?.id) {
-
       return
-
     }
-
 
     let playerId = null
-
     let tentativas = 0
 
-
     while (!playerId && tentativas < 5) {
-
-      playerId =
-        OneSignal.User.PushSubscription.id
-
+      playerId = OneSignal.User.PushSubscription.id
 
       if (!playerId) {
-
-        await new Promise(
-          resolve => setTimeout(resolve, 500)
-        )
-
+        await new Promise(resolve => setTimeout(resolve, 500))
       }
 
-
       tentativas++
-
     }
 
+    const notificationsEnabled = OneSignal.User.PushSubscription.optedIn
 
-    const notificationsEnabled =
-      OneSignal.User.PushSubscription.optedIn
-
-
-    console.log(
-      "SYNC PLAYER:",
-      playerId
-    )
-
-
-    console.log(
-      "SYNC NOTIFICAÇÃO:",
-      notificationsEnabled
-    )
-
+    console.log("SYNC PLAYER:", playerId)
+    console.log("SYNC NOTIFICAÇÃO:", notificationsEnabled)
 
     if (!playerId) {
-
       return
-
     }
-
 
     const { error } = await supabase
       .from("user_devices")
       .upsert({
-
         user_id: user.id,
-
-        onesignal_player_id:
-          playerId,
-
+        onesignal_player_id: playerId,
         status: "active",
-
-        notifications_enabled:
-          notificationsEnabled,
-
-        updated_at:
-          new Date()
-
+        notifications_enabled: notificationsEnabled,
+        updated_at: new Date()
       })
 
-
     if (error) {
-
-      console.log(
-        "Erro sync:",
-        error
-      )
-
+      console.log("Erro sync:", error)
     }
-
-
   } catch (err) {
-
-    console.log(
-      "Erro sincronização:",
-      err
-    )
-
+    console.log("Erro sincronização:", err)
   }
-
 }
 
 
 /* ---------------- ATIVAR NOTIFICAÇÕES ---------------- */
 
 async function enablePush() {
-
   try {
+    console.log("BOTÃO CLICADO")
 
-    console.log(
-      "BOTÃO CLICADO"
-    )
+    const permission = await OneSignal.Notifications.requestPermission()
 
-
-    const permission =
-      await OneSignal
-        .Notifications
-        .requestPermission()
-
-
-    console.log(
-      "PERMISSÃO:",
-      permission
-    )
-
+    console.log("PERMISSÃO:", permission)
 
     if (
       permission === "denied" ||
       Notification.permission === "denied"
     ) {
-
       showBlockedMessage()
-
       return
-
     }
-
 
     /* espera OneSignal registrar */
 
     setTimeout(async () => {
+      const playerId = OneSignal.User.PushSubscription.id
+      const notificationsEnabled = OneSignal.User.PushSubscription.optedIn
 
-
-      const playerId =
-        OneSignal
-          .User
-          .PushSubscription
-          .id
-
-
-      const notificationsEnabled =
-        OneSignal
-          .User
-          .PushSubscription
-          .optedIn
-
-
-      console.log(
-        "NOTIFICAÇÕES ATIVAS:",
-        notificationsEnabled
-      )
-
-
-      console.log(
-        "PLAYER ID:",
-        playerId
-      )
-
+      console.log("NOTIFICAÇÕES ATIVAS:", notificationsEnabled)
+      console.log("PLAYER ID:", playerId)
 
       if (!playerId) {
-
-        console.log(
-          "Ainda não gerou playerId"
-        )
-
+        console.log("Ainda não gerou playerId")
         return
-
       }
-
 
       /* salva local */
 
-      localStorage.setItem(
-        "onesignal_player_id",
-        playerId
-      )
+      localStorage.setItem("onesignal_player_id", playerId)
 
-
-      const user =
-        JSON.parse(
-          localStorage.getItem("user")
-        )
-
+      const user = JSON.parse(localStorage.getItem("user"))
 
       if (!user) {
-
-        console.log(
-          "Usuário não encontrado"
-        )
-
+        console.log("Usuário não encontrado")
         return
-
       }
-
 
       /* salva no Supabase */
 
-      const { error } =
-        await supabase
-          .from("user_devices")
-          .upsert({
-
-            user_id:
-              user.id,
-
-            onesignal_player_id:
-              playerId,
-
-            status:
-              "active",
-
-            notifications_enabled:
-              notificationsEnabled,
-
-            updated_at:
-              new Date()
-
-          })
-
+      const { error } = await supabase
+        .from("user_devices")
+        .upsert({
+          user_id: user.id,
+          onesignal_player_id: playerId,
+          status: "active",
+          notifications_enabled: notificationsEnabled,
+          updated_at: new Date()
+        })
 
       if (error) {
-
-        console.log(
-          "Erro Supabase:",
-          error
-        )
-
+        console.log("Erro Supabase:", error)
         return
-
       }
 
-
-      alert(
-        "INCENTIVO ATIVADO 🔔"
-      )
-
-
+      alert("INCENTIVO ATIVADO 🔔")
     }, 1500)
-
-
   } catch (err) {
-
-    console.error(
-      "Erro push:",
-      err
-    )
-
+    console.error("Erro push:", err)
   }
-
 }
 
 
 /* ---------------- BLOQUEIO DE NOTIFICAÇÕES ---------------- */
 
 function showBlockedMessage() {
-
-  const msg =
-    document.getElementById(
-      "pushBlockedMsg"
-    )
-
+  const msg = document.getElementById("pushBlockedMsg")
 
   if (msg) {
-
-    msg
-      .classList
-      .remove("hidden")
-
+    msg.classList.remove("hidden")
   }
-
 }
 
 
@@ -757,3 +641,4 @@ function showBlockedMessage() {
 
 window.login = login
 window.logout = logout
+window.abrirModalidade = abrirModalidade
