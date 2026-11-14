@@ -338,7 +338,8 @@ function setupNavigation() {
     "treinoSection",
     "desafioSection",
     "extrasSection",
-    "aulasBibliotecaSection"
+    "aulasBibliotecaSection",
+    "bibliotecaExtrasSection"
   ]
 
   function showSection(sectionId) {
@@ -401,6 +402,21 @@ function setupNavigation() {
       renderizarModalidades(e.target.value)
     }
   })
+
+  document.getElementById("btn_biblioteca_extras")?.addEventListener("click", async () => {
+    showSection("bibliotecaExtrasSection");
+    await carregarPlanilhaExtras();
+    renderizarBibliotecaExtras();
+  });
+
+  document.getElementById("backFromBibliotecaExtras")?.addEventListener("click", () => {
+    document.getElementById("searchBibliotecaExtrasInput").value = "";
+    showSection("extrasSection");
+  });
+
+  document.getElementById("searchBibliotecaExtrasInput")?.addEventListener("input", (e) => {
+    renderizarBibliotecaExtras(e.target.value);
+  });
 
   /* VOLTAR */
 
@@ -848,3 +864,62 @@ function renderizarListaAulas(filtro = "") {
 }
 
 window.abrirModalidade = abrirModalidade;
+
+
+
+const PLANILHA_EXTRAS_CSV_URL = "https://docs.google.com/spreadsheets/d/1Zl8fF-3FM-ONv4wEVUmAYPqynrouOX5AoOKwTws6cBo/gviz/tq?tqx=out:csv&sheet=BIBLIOTECA_EXTRAS";
+
+let bibliotecaExtrasData = [];
+
+async function carregarPlanilhaExtras() {
+  if (bibliotecaExtrasData.length > 0) return;
+  const container = document.getElementById("bibliotecaExtrasListaContainer");
+  container.innerHTML = `<p style="text-align:center;">Carregando conteúdos...</p>`;
+
+  try {
+    const res = await fetch(PLANILHA_EXTRAS_CSV_URL);
+    const csv = await res.text();
+
+    if (csv.trim().startsWith("<!DOCTYPE") || csv.trim().startsWith("<html")) {
+      container.innerHTML = `<p style="text-align:center; color:#dc2626;">A planilha está restrita. Mude o compartilhamento para "Qualquer pessoa com o link".</p>`;
+      return;
+    }
+
+    const linhas = csv.split(/\r?\n/).map(l =>
+      l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, "").trim())
+    );
+
+    const resultado = [];
+    // Começa na linha 1 (pula o cabeçalho NOME / LINK)
+    for (let row = 1; row < linhas.length; row++) {
+      const nome = linhas[row][0] || "";
+      const link = linhas[row][1] || "";
+      if (nome && link.startsWith("http")) {
+        resultado.push({ nome, link });
+      }
+    }
+
+    bibliotecaExtrasData = resultado;
+  } catch (err) {
+    console.error("Erro planilha extras:", err);
+    container.innerHTML = `<p style="text-align:center; color:#dc2626;">Erro ao carregar conteúdos.</p>`;
+  }
+}
+
+function renderizarBibliotecaExtras(filtro = "") {
+  const container = document.getElementById("bibliotecaExtrasListaContainer");
+  const filtrados = bibliotecaExtrasData.filter(item =>
+    normalizeText(item.nome).includes(normalizeText(filtro))
+  );
+
+  container.innerHTML = filtrados.length
+    ? filtrados.map(item => `
+        <div class="aula-row">
+          <div class="aula-row-info">
+            <span class="aula-row-code">${item.nome}</span>
+          </div>
+          <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="btn-assistir-aula">ACESSAR ›</a>
+        </div>
+      `).join("")
+    : `<p style="text-align:center;">Nenhum conteúdo encontrado.</p>`;
+}
