@@ -918,7 +918,7 @@ function renderizarBibliotecaExtras(filtro = "") {
           <div class="aula-row-info">
             <span class="aula-row-code">${item.nome}</span>
           </div>
-          <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="btn-assistir-aula">ACESSAR ▶️</a>
+          <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="btn-assistir-aula">ver vídeo ▶️</a>
         </div>
       `).join("")
     : `<p style="text-align:center;">Nenhum conteúdo encontrado.</p>`;
