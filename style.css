@@ -1738,12 +1738,12 @@ input::placeholder {
   gap: 7px;
   padding: 7px 12px;
   border-radius: 999px;
-  background: rgba(148, 163, 184, 0.22);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: #475569;
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  background: rgba(226, 232, 240, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #0f172a;
+  border: 1px solid rgba(100, 116, 139, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
   text-align: left;
   cursor: pointer;
   transition: opacity 0.2s ease, transform 0.15s ease;
@@ -1761,14 +1761,21 @@ input::placeholder {
 .install-float-text {
   font-size: 9.5px;
   line-height: 1.15;
-  font-weight: 500;
+  font-weight: 600;
   color: inherit;
 }
 
 .install-float-text strong {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   color: inherit;
+}
+
+/* Na tela de login (fundo escuro), mantém translúcido com texto branco nítido */
+body:has(#login:not([style*="display: none"])) .install-float-btn {
+  background: rgba(30, 41, 59, 0.68);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 /* Ajuste automático para ficar transparente com letras claras na tela de login */
