@@ -923,3 +923,52 @@ function renderizarBibliotecaExtras(filtro = "") {
       `).join("")
     : `<p style="text-align:center;">Nenhum conteúdo encontrado.</p>`;
 }
+
+
+
+/* ---------------- INSTALAR APP (IPHONE / ANDROID) ---------------- */
+
+function detectarSistemaOperacional() {
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
+    return "iphone";
+  }
+  return "android";
+}
+
+function selecionarAbaSO(so) {
+  const tabIphone = document.getElementById("tabIphone");
+  const tabAndroid = document.getElementById("tabAndroid");
+  const instIphone = document.getElementById("instrucoesIphone");
+  const instAndroid = document.getElementById("instrucoesAndroid");
+
+  if (so === "iphone") {
+    tabIphone.classList.add("active");
+    tabAndroid.classList.remove("active");
+    instIphone.classList.remove("hidden");
+    instAndroid.classList.add("hidden");
+  } else {
+    tabAndroid.classList.add("active");
+    tabIphone.classList.remove("active");
+    instAndroid.classList.remove("hidden");
+    instIphone.classList.add("hidden");
+  }
+}
+
+function abrirModalInstalarApp() {
+  selecionarAbaSO(detectarSistemaOperacional());
+  document.getElementById("modalInstalarApp")?.classList.remove("hidden");
+}
+
+function fecharModalInstalarApp() {
+  document.getElementById("modalInstalarApp")?.classList.add("hidden");
+}
+
+// Esconde o botão flutuante se a aluna já abriu pelo app instalado na tela inicial
+if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true) {
+  document.getElementById("btnInstalarAppFloat")?.classList.add("hidden");
+}
+
+window.abrirModalInstalarApp = abrirModalInstalarApp;
+window.fecharModalInstalarApp = fecharModalInstalarApp;
+window.selecionarAbaSO = selecionarAbaSO;
