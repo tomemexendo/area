@@ -1735,18 +1735,17 @@ input::placeholder {
   z-index: 90;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 11px;
+  gap: 7px;
+  padding: 7px 12px;
   border-radius: 999px;
-  background: rgba(241, 245, 249, 0.82);
+  background: rgba(148, 163, 184, 0.22);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  color: #334155;
+  color: #475569;
   border: 1px solid rgba(148, 163, 184, 0.35);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   text-align: left;
   cursor: pointer;
-  opacity: 0.88;
   transition: opacity 0.2s ease, transform 0.15s ease;
 }
 
@@ -1755,20 +1754,117 @@ input::placeholder {
 }
 
 .install-float-icon {
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1;
-  color: #16a34a;
 }
 
 .install-float-text {
   font-size: 9.5px;
   line-height: 1.15;
   font-weight: 500;
-  color: #475569;
+  color: inherit;
 }
 
 .install-float-text strong {
   font-size: 10px;
   font-weight: 700;
-  color: #0f172a;
+  color: inherit;
+}
+
+/* Ajuste automático para ficar transparente com letras claras na tela de login */
+body:has(#login:not([style*="display: none"])) .install-float-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* MODAL CENTRALIZADO NO MEIO DA TELA */
+.install-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(8, 20, 33, 0.78);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.install-modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: #142638;
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 22px 18px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.install-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.install-modal-card h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+  color: #ffffff;
+}
+
+.install-modal-sub {
+  margin: 0 0 14px;
+  font-size: 12px;
+  color: #cbd5e1;
+  line-height: 1.35;
+}
+
+.install-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.install-tab {
+  padding: 9px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.install-tab.active {
+  background: #22c55e;
+  color: #ffffff;
+}
+
+.install-steps ol {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #f1f5f9;
+}
+
+.badge-icon {
+  display: inline-block;
+  padding: 0 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
 }
