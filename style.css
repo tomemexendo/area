@@ -1863,3 +1863,9 @@ input::placeholder {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 4px;
 }
+
+
+/* Esconde o botão flutuante quando entrar em Dieta, Treino, Desafio, Extras ou Bibliotecas */
+body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float-btn {
+  display: none !important;
+}
