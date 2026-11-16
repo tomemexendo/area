@@ -1771,12 +1771,6 @@ input::placeholder {
   color: inherit;
 }
 
-/* Na tela de login (fundo escuro), mantém translúcido com texto branco nítido */
-body:has(#login:not([style*="display: none"])) .install-float-btn {
-  background: rgba(30, 41, 59, 0.68);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.28);
-}
 
 
 /* MODAL CENTRALIZADO NO MEIO DA TELA */
