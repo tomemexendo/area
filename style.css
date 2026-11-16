@@ -1778,12 +1778,6 @@ body:has(#login:not([style*="display: none"])) .install-float-btn {
   border-color: rgba(255, 255, 255, 0.28);
 }
 
-/* Ajuste automático para ficar transparente com letras claras na tela de login */
-body:has(#login:not([style*="display: none"])) .install-float-btn {
-  background: rgba(255, 255, 255, 0.12);
-  color: #e2e8f0;
-  border-color: rgba(255, 255, 255, 0.2);
-}
 
 /* MODAL CENTRALIZADO NO MEIO DA TELA */
 .install-modal-overlay {
