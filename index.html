@@ -961,7 +961,44 @@
     <div id="bibliotecaExtrasListaContainer" class="aulas-list"></div>
   </div>
 
-  
+  <!-- BOTÃO FLUTUANTE INSTALAR APP -->
+<button id="btnInstalarAppFloat" class="install-float-btn" onclick="abrirModalInstalarApp()">
+  <span class="install-float-icon">📲</span>
+  <span class="install-float-text">Baixe o app<br><strong>Tô Me Mexendo</strong></span>
+</button>
+
+<!-- MODAL INSTRUÇÕES INSTALAR APP -->
+<div id="modalInstalarApp" class="install-modal-overlay hidden" onclick="fecharModalInstalarApp(event)">
+  <div class="install-modal-card" onclick="event.stopPropagation()">
+    <button class="install-modal-close" onclick="fecharModalInstalarApp()">✕</button>
+
+    <h3>📲 Instale o App Tô Me Mexendo</h3>
+    <p class="install-modal-sub">Acesse direto da tela inicial do seu celular, sem ocupar memória:</p>
+
+    <div class="install-tabs">
+      <button id="tabIphone" class="install-tab" onclick="selecionarAbaSO('iphone')">🍎 iPhone (Safari)</button>
+      <button id="tabAndroid" class="install-tab" onclick="selecionarAbaSO('android')">🤖 Android (Chrome)</button>
+    </div>
+
+    <div id="instrucoesIphone" class="install-steps hidden">
+      <ol>
+        <li>Abra este site pelo navegador <strong>Safari</strong>.</li>
+        <li>Toque no ícone de <strong>Compartilhar</strong> (quadrado com seta para cima <span class="badge-icon">⬆️</span>) na barra inferior.</li>
+        <li>Role para baixo e toque em <strong>“Adicionar à Tela de Início”</strong>.</li>
+        <li>Toque em <strong>Adicionar</strong> no canto superior direito.</li>
+      </ol>
+    </div>
+
+    <div id="instrucoesAndroid" class="install-steps hidden">
+      <ol>
+        <li>Abra este site pelo navegador <strong>Google Chrome</strong>.</li>
+        <li>Toque nos <strong>3 pontinhos (⋮)</strong> no canto superior direito.</li>
+        <li>Toque em <strong>“Adicionar à tela inicial”</strong> ou <strong>“Instalar aplicativo”</strong>.</li>
+        <li>Confirme tocando em <strong>Adicionar / Instalar</strong>.</li>
+      </ol>
+    </div>
+  </div>
+</div>
 
 <!-- SCRIPT PRINCIPAL -->
 
