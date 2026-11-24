@@ -972,23 +972,38 @@
       🪜 ESCADA DA CONSTÂNCIA
     </h2>
 
+    <!-- EXPLICATIVO DA LÓGICA -->
+    <div class="escada-how-box">
+      <strong>💡 Como funciona a Escada?</strong>
+      <p>
+        Você evolui <strong>1 passo a cada 2 semanas</strong>, sem sofrimento. 
+        Cumpra sua meta em pelo menos <strong>11 dos 14 dias</strong> para subir de degrau. 
+        Se não bater, você continua no mesmo degrau até consolidar o hábito!
+      </p>
+    </div>
+
     <div id="escadaConstanciaCard" class="escada-card">
       <div class="escada-header">
         <div>
-          <strong id="escadaDataHoje" class="escada-data-hoje">Hoje: --/--/----</strong>
+          <strong id="escadaDataHoje" class="escada-data-hoje">📅 Hoje: --/--/----</strong>
           <small id="escadaCicloInfo" style="display:block; margin-top:2px;">Ciclo de 14 dias • Dia 1 de 14</small>
         </div>
-        <span id="escadaBadgeNivel" class="escada-badge">Nível 1/6</span>
+        <span id="escadaBadgeNivel" class="escada-badge">Degrau 1/6</span>
       </div>
 
-      <!-- Visual dos 6 degraus -->
+      <!-- Visual gráfico dos 6 degraus -->
       <div id="escadaDegrausVisual" class="escada-degraus"></div>
 
-      <!-- Meta atual e próxima -->
-      <div class="escada-meta-box">
-        <div class="escada-meta-atual-label">SUA META ATUAL:</div>
-        <div id="escadaMetaAtualTexto" class="escada-meta-atual-texto">...</div>
-        <div id="escadaProgressoTexto" class="escada-progresso-texto">...</div>
+      <!-- META ATUAL COM SUPER ÊNFASE -->
+      <div class="escada-meta-destaque">
+        <div class="escada-meta-tag">🎯 SUA META HOJE (DEGRAU ATUAL)</div>
+        <div id="escadaMetaAtualTexto" class="escada-meta-principal">...</div>
+        
+        <div class="escada-faltam-pill" id="escadaFaltamTexto">
+          Faltam 11 dias válidos para subir!
+        </div>
+
+        <div id="escadaProgressoTexto" class="escada-progresso-sub">...</div>
         <div id="escadaProxMetaTexto" class="escada-prox-meta">...</div>
       </div>
 
@@ -998,29 +1013,29 @@
 
         <div class="escada-checklist">
           <label class="escada-check-item">
-            <input type="checkbox" id="chkCafe" class="escada-ref-chk">
+            <input type="checkbox" id="chkCafe" autocomplete="off">
             <span>☕ Café da manhã</span>
           </label>
 
           <label class="escada-check-item">
-            <input type="checkbox" id="chkAlmoco" class="escada-ref-chk">
+            <input type="checkbox" id="chkAlmoco" autocomplete="off">
             <span>🍛 Almoço</span>
           </label>
 
           <label class="escada-check-item">
-            <input type="checkbox" id="chkLanche" class="escada-ref-chk">
+            <input type="checkbox" id="chkLanche" autocomplete="off">
             <span>🥪 Lanche da tarde</span>
           </label>
 
           <label class="escada-check-item">
-            <input type="checkbox" id="chkJantar" class="escada-ref-chk">
+            <input type="checkbox" id="chkJantar" autocomplete="off">
             <span>🍽️ Jantar</span>
           </label>
 
           <div class="escada-divider"></div>
 
           <label class="escada-check-item treino-item">
-            <input type="checkbox" id="escadaTreinouHoje">
+            <input type="checkbox" id="escadaTreinouHoje" autocomplete="off">
             <span>💪 Treino do dia</span>
           </label>
         </div>
@@ -1031,6 +1046,18 @@
       </div>
 
       <p id="escadaFeedbackMsg" class="escada-feedback hidden"></p>
+    </div>
+
+    <!-- MAPA DE TODOS OS 6 NÍVEIS -->
+    <div class="escada-card" style="margin-top: 6px;">
+      <h3 style="margin: 0 0 10px; font-size: 15px; color: #fff;">🗺️ TODOS OS 6 DEGRAUS (12 SEMANAS)</h3>
+      <div id="escadaMapaNiveis" class="escada-mapa-lista"></div>
+    </div>
+
+    <!-- HISTÓRICO DOS ÚLTIMOS DIAS -->
+    <div class="escada-card" style="margin-top: 6px;">
+      <h3 style="margin: 0 0 10px; font-size: 15px; color: #fff;">📅 HISTÓRICO RECENTE</h3>
+      <div id="escadaHistoricoLista" class="escada-historico-lista"></div>
     </div>
   </div>
 
