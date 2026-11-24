@@ -804,7 +804,7 @@ function renderizarEscadaUI(feedback = "") {
   const diasFaltamSubir = Math.max(0, 10 - escadaEstado.dias_validos_ciclo)
 
   document.getElementById("escadaDataHoje").innerText = `📅 Hoje: ${formatarDataBR(hojeStr)}`
-  document.getElementById("escadaCicloInfo").innerText = `Dia ${diaAtualCiclo} de 14 • Restam ${diasRestantesCiclo} dia(s) neste ciclo`
+  document.getElementById("escadaCicloInfo").innerText = `Dia ${diaAtualCiclo} de 14 • Restam ${diasRestantesCiclo} dias neste ciclo`
   document.getElementById("escadaBadgeNivel").innerText = `Degrau ${escadaEstado.nivel_atual}/6`
 
   // 1. Desenha os 6 degraus gráficos
@@ -830,7 +830,7 @@ function renderizarEscadaUI(feedback = "") {
 
   const faltamEl = document.getElementById("escadaFaltamTexto")
   if (diasFaltamSubir > 0) {
-    faltamEl.innerText = `⏳ Faltam ${diasFaltamSubir} dia(s) válido(s) para subir de degrau`
+    faltamEl.innerText = `⏳ Faltam ${diasFaltamSubir} dias válidos para subir de degrau`
   } else {
     faltamEl.innerText = `🔥 Meta de 10 dias atingida! Continue firme até fechar o ciclo`
   }
