@@ -136,57 +136,7 @@
 
     </div>
 
-    <!-- ========================= -->
-    <!-- ESCADA DA CONSTÂNCIA -->
-    <!-- ========================= -->
-    <div id="escadaConstanciaCard" class="escada-card">
-      <div class="escada-header">
-        <div>
-          <h3>🪜 ESCADA DA CONSTÂNCIA</h3>
-          <small id="escadaCicloInfo">Carregando seu progresso...</small>
-        </div>
-        <span id="escadaBadgeNivel" class="escada-badge">Nível 1/6</span>
-      </div>
-
-      <!-- Visual dos 6 degraus -->
-      <div id="escadaDegrausVisual" class="escada-degraus"></div>
-
-      <!-- Meta atual e próxima -->
-      <div class="escada-meta-box">
-        <div class="escada-meta-atual-label">SUA META ATUAL:</div>
-        <div id="escadaMetaAtualTexto" class="escada-meta-atual-texto">...</div>
-        <div id="escadaProgressoTexto" class="escada-progresso-texto">...</div>
-        <div id="escadaProxMetaTexto" class="escada-prox-meta">...</div>
-      </div>
-
-      <!-- Área de check-in do dia -->
-      <div id="escadaCheckinArea" class="escada-checkin-area">
-        <label class="escada-label">Quantas refeições do cardápio você fez hoje?</label>
-        <div class="escada-ref-botoes" id="escadaRefBotoes">
-          <button type="button" class="escada-ref-btn" data-val="0">0</button>
-          <button type="button" class="escada-ref-btn" data-val="1">1</button>
-          <button type="button" class="escada-ref-btn" data-val="2">2</button>
-          <button type="button" class="escada-ref-btn" data-val="3">3</button>
-          <button type="button" class="escada-ref-btn" data-val="4">4</button>
-        </div>
-
-        <label class="escada-treino-check">
-          <input type="checkbox" id="escadaTreinouHoje">
-          <span>💪 Treinei hoje</span>
-        </label>
-
-        <button type="button" id="btnSalvarEscada" class="btn-salvar-escada">
-          REGISTRAR DIA NA ESCADA
-        </button>
-      </div>
-
-      <div id="escadaFeitoHojeMsg" class="escada-feito-msg hidden">
-        ✅ Check-in de hoje registrado! Volte amanhã para continuar subindo.
-      </div>
-
-      <p id="escadaFeedbackMsg" class="escada-feedback hidden"></p>
-    </div>
-
+  
 
     <!-- NOTIFICAÇÕES -->
 
@@ -934,6 +884,24 @@
     </div>
 
 
+    <!-- ESCADA DA CONSTÂNCIA -->
+    <div class="internal-section dark-section">
+      <h3>
+        <span class="section-icon">🪜</span>
+        ESCADA DA CONSTÂNCIA
+      </h3>
+      <p class="section-description">
+        Construa o hábito passo a passo em 12 semanas, sem sofrer
+      </p>
+      <button
+        id="btn_abrir_escada"
+        class="btn green"
+      >
+        🪜 ACESSAR MINHA ESCADA
+      </button>
+    </div>
+    
+
     <!-- BIBLIOTECA DE CONTEÚDOS -->
 
     <div class="internal-section dark-section">
@@ -990,6 +958,81 @@
       <small>CLIQUE AQUI E FALE CONOSCO</small>
     </button>
 
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- TELA: ESCADA DA CONSTÂNCIA -->
+  <!-- ========================= -->
+  <div id="escadaSection" class="layout-single hidden">
+    <button id="backFromEscada" class="btn blue">
+      ← VOLTAR
+    </button>
+
+    <h2>
+      🪜 ESCADA DA CONSTÂNCIA
+    </h2>
+
+    <div id="escadaConstanciaCard" class="escada-card">
+      <div class="escada-header">
+        <div>
+          <strong id="escadaDataHoje" class="escada-data-hoje">Hoje: --/--/----</strong>
+          <small id="escadaCicloInfo" style="display:block; margin-top:2px;">Ciclo de 14 dias • Dia 1 de 14</small>
+        </div>
+        <span id="escadaBadgeNivel" class="escada-badge">Nível 1/6</span>
+      </div>
+
+      <!-- Visual dos 6 degraus -->
+      <div id="escadaDegrausVisual" class="escada-degraus"></div>
+
+      <!-- Meta atual e próxima -->
+      <div class="escada-meta-box">
+        <div class="escada-meta-atual-label">SUA META ATUAL:</div>
+        <div id="escadaMetaAtualTexto" class="escada-meta-atual-texto">...</div>
+        <div id="escadaProgressoTexto" class="escada-progresso-texto">...</div>
+        <div id="escadaProxMetaTexto" class="escada-prox-meta">...</div>
+      </div>
+
+      <!-- Checklist editável durante todo o dia (até 23h59) -->
+      <div class="escada-checkin-area">
+        <label class="escada-label">Marque o que você já cumpriu hoje (editável até 23h59):</label>
+
+        <div class="escada-checklist">
+          <label class="escada-check-item">
+            <input type="checkbox" id="chkCafe" class="escada-ref-chk">
+            <span>☕ Café da manhã</span>
+          </label>
+
+          <label class="escada-check-item">
+            <input type="checkbox" id="chkAlmoco" class="escada-ref-chk">
+            <span>🍛 Almoço</span>
+          </label>
+
+          <label class="escada-check-item">
+            <input type="checkbox" id="chkLanche" class="escada-ref-chk">
+            <span>🥪 Lanche da tarde</span>
+          </label>
+
+          <label class="escada-check-item">
+            <input type="checkbox" id="chkJantar" class="escada-ref-chk">
+            <span>🍽️ Jantar</span>
+          </label>
+
+          <div class="escada-divider"></div>
+
+          <label class="escada-check-item treino-item">
+            <input type="checkbox" id="escadaTreinouHoje">
+            <span>💪 Treino do dia</span>
+          </label>
+        </div>
+
+        <button type="button" id="btnSalvarEscada" class="btn-salvar-escada">
+          SALVAR CHECK-IN DE HOJE
+        </button>
+      </div>
+
+      <p id="escadaFeedbackMsg" class="escada-feedback hidden"></p>
+    </div>
   </div>
 
   <!-- BIBLIOTECA DE CONTEÚDOS EXTRAS -->
