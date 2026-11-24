@@ -322,7 +322,7 @@ function setupNavigation() {
     } else {
       box.classList.add("hidden");
       iframe.removeAttribute("src");
-      btn.innerText = "▶️ VÍDEO EXPLICANDO COMO UTILIZAR A FERRAMENTA";
+      btn.innerText = "▶️ VÍDEO: ENTENDA A ESCADA DA CONSTÂNCIA";
     }
   });
 
