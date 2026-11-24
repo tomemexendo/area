@@ -1097,9 +1097,7 @@ async function carregarEscadaConstancia(user) {
     btnSalvar.onclick = () => salvarCheckinEscada(user);
   }
 
-  renderizarEscadaUI(feedback);
-}
-
+  
 function renderizarEscadaUI(feedback = "") {
   if (!escadaEstado) return;
 
@@ -1206,5 +1204,103 @@ function renderizarEscadaUI(feedback = "") {
   if (feedback) {
     feedbackEl.innerText = feedback;
     feedbackEl.classList.remove("hidden");
+  }
+}
+
+async function salvarCheckinEscada(user) {
+  const hojeStr = getDataHojeISO();
+  if (!escadaEstado) return;
+
+  const infoNivel = ESCADA_NIVEIS[escadaEstado.nivel_atual - 1];
+  const cafe = document.getElementById("chkCafe").checked;
+  const almoco = document.getElementById("chkAlmoco").checked;
+  const lanche = document.getElementById("chkLanche").checked;
+  const jantar = document.getElementById("chkJantar").checked;
+  const treinouHoje = document.getElementById("escadaTreinouHoje").checked;
+
+  const totalRefeicoes = [cafe, almoco, lanche, jantar].filter(Boolean).length;
+  const diaValido = totalRefeicoes >= infoNivel.refeicoesReq;
+  const diaDoCiclo = calcularDiffDias(escadaEstado.data_inicio_ciclo, hojeStr);
+
+  // Verifica se já havia um registro de hoje para recalcular sem duplicar
+  const historicoSemHoje = (escadaEstado.historico_checkins || []).filter(item => item.data !== hojeStr);
+  const registroAnteriorHoje = (escadaEstado.historico_checkins || []).find(item => item.data === hojeStr);
+
+  let diasValidos = escadaEstado.dias_validos_ciclo;
+  if (registroAnteriorHoje?.valido) diasValidos -= 1;
+  if (diaValido) diasValidos += 1;
+
+  let tSem1 = escadaEstado.treinos_semana_1;
+  let tSem2 = escadaEstado.treinos_semana_2;
+
+  if (registroAnteriorHoje?.treino) {
+    if (diaDoCiclo < 7) tSem1 = Math.max(0, tSem1 - 1);
+    else tSem2 = Math.max(0, tSem2 - 1);
+  }
+  if (treinouHoje) {
+    if (diaDoCiclo < 7) tSem1 += 1;
+    else tSem2 += 1;
+  }
+
+  const bateuTreinos = tSem1 >= infoNivel.treinosSemReq && tSem2 >= infoNivel.treinosSemReq;
+
+  let novoNivel = escadaEstado.nivel_atual;
+  let novaDataNivel = escadaEstado.data_inicio_nivel;
+  let novaDataCiclo = escadaEstado.data_inicio_ciclo;
+  let msg = "";
+
+  // Sobe na hora se já atingiu 11+ dias válidos e os treinos semanais a partir do 11º dia
+  if (diasValidos >= 11 && bateuTreinos && diaDoCiclo >= 10) {
+    if (novoNivel < 6) {
+      novoNivel += 1;
+      novaDataNivel = hojeStr;
+      msg = `🎉 Meta batida! Você subiu para o Degrau ${novoNivel}!`;
+    } else {
+      msg = "🏆 Constância Master mantida!";
+    }
+    novaDataCiclo = hojeStr;
+    diasValidos = 0;
+    tSem1 = 0;
+    tSem2 = 0;
+  } else {
+    msg = diaValido
+      ? `✅ Salvo! (${totalRefeicoes}/4 refeições) — Dia válido contado na escada!`
+      : `✅ Salvo! (${totalRefeicoes}/4 refeições) — Você pode atualizar até 23h59 se fizer mais refeições hoje.`;
+  }
+
+  const novoRegistroHoje = {
+    data: hojeStr,
+    cafe,
+    almoco,
+    lanche,
+    jantar,
+    refeicoes: totalRefeicoes,
+    treino: treinouHoje,
+    valido: diaValido
+  };
+
+  const payload = {
+    nivel_atual: novoNivel,
+    data_inicio_nivel: novaDataNivel,
+    data_inicio_ciclo: novaDataCiclo,
+    dias_validos_ciclo: diasValidos,
+    treinos_semana_1: tSem1,
+    treinos_semana_2: tSem2,
+    ultimo_checkin: hojeStr,
+    historico_checkins: [...historicoSemHoje, novoRegistroHoje]
+  };
+
+  const { data, error } = await supabase
+    .from("escada_constancia")
+    .update(payload)
+    .eq("user_id", user.id)
+    .select()
+    .single();
+
+  if (!error && data) {
+    escadaEstado = data;
+    renderizarEscadaUI(msg);
+  } else {
+    alert("Erro ao salvar check-in. Tente novamente.");
   }
 }
