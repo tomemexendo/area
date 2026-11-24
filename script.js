@@ -163,6 +163,8 @@ async function login() {
 
   setupNavigation()
 
+  await carregarEscadaConstancia(user)
+
 }
 
 
@@ -972,3 +974,250 @@ if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.
 window.abrirModalInstalarApp = abrirModalInstalarApp;
 window.fecharModalInstalarApp = fecharModalInstalarApp;
 window.selecionarAbaSO = selecionarAbaSO;
+
+
+/* =========================================================
+   ESCADA DA CONSTÂNCIA (12 SEMANAS / 6 DEGRAUS)
+========================================================= */
+
+const ESCADA_NIVEIS = [
+  { nivel: 1, titulo: "Degrau 1", metaTexto: "1 refeição do cardápio por dia", refeicoesReq: 1, treinosSemReq: 0, proxMeta: "2 refeições do cardápio/dia" },
+  { nivel: 2, titulo: "Degrau 2", metaTexto: "2 refeições do cardápio por dia", refeicoesReq: 2, treinosSemReq: 0, proxMeta: "3 refeições do cardápio/dia" },
+  { nivel: 3, titulo: "Degrau 3", metaTexto: "3 refeições do cardápio por dia", refeicoesReq: 3, treinosSemReq: 0, proxMeta: "4 refeições do cardápio/dia" },
+  { nivel: 4, titulo: "Degrau 4", metaTexto: "4 refeições do cardápio por dia", refeicoesReq: 4, treinosSemReq: 0, proxMeta: "4 refeições/dia + 1 treino/semana" },
+  { nivel: 5, titulo: "Degrau 5", metaTexto: "4 refeições/dia + 1 treino na semana", refeicoesReq: 4, treinosSemReq: 1, proxMeta: "4 refeições/dia + 2 treinos/semana" },
+  { nivel: 6, titulo: "Degrau 6", metaTexto: "4 refeições/dia + 2 treinos na semana", refeicoesReq: 4, treinosSemReq: 2, proxMeta: "Constância Master concluída! 🏆" }
+];
+
+let escadaEstado = null;
+let refeicoesSelecionadasHoje = 0;
+
+function getDataHojeISO() {
+  const agora = new Date();
+  const offset = agora.getTimezoneOffset() * 60000;
+  return new Date(agora - offset).toISOString().split("T")[0];
+}
+
+function calcularDiffDias(dataInicioStr, dataFimStr) {
+  const d1 = new Date(dataInicioStr + "T00:00:00");
+  const d2 = new Date(dataFimStr + "T00:00:00");
+  return Math.floor((d2 - d1) / (1000 * 60 * 60 * 24));
+}
+
+async function carregarEscadaConstancia(user) {
+  if (!user?.id) return;
+  const hojeStr = getDataHojeISO();
+
+  let { data, error } = await supabase
+    .from("escada_constancia")
+    .select("*")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!data && !error) {
+    const novo = {
+      user_id: user.id,
+      nivel_atual: 1,
+      data_inicio_nivel: hojeStr,
+      data_inicio_ciclo: hojeStr,
+      dias_validos_ciclo: 0,
+      treinos_semana_1: 0,
+      treinos_semana_2: 0,
+      historico_checkins: []
+    };
+    const res = await supabase.from("escada_constancia").insert(novo).select().single();
+    data = res.data;
+  }
+
+  if (!data) return;
+
+  let mudou = false;
+  let feedback = "";
+
+  // 1. Regra dos 90 dias (3 meses estagnada no mesmo nível -> desce 1 degrau)
+  const diasNoNivel = calcularDiffDias(data.data_inicio_nivel, hojeStr);
+  if (diasNoNivel >= 90 && data.nivel_atual > 1) {
+    data.nivel_atual -= 1;
+    data.data_inicio_nivel = hojeStr;
+    data.data_inicio_ciclo = hojeStr;
+    data.dias_validos_ciclo = 0;
+    data.treinos_semana_1 = 0;
+    data.treinos_semana_2 = 0;
+    feedback = "Voltamos 1 degrau para você retomar no seu ritmo com leveza! 💜";
+    mudou = true;
+  }
+
+  // 2. Fechamento do ciclo de 14 dias
+  const diasNoCiclo = calcularDiffDias(data.data_inicio_ciclo, hojeStr);
+  const infoNivel = ESCADA_NIVEIS[data.nivel_atual - 1];
+  const bateuTreinos =
+    data.treinos_semana_1 >= infoNivel.treinosSemReq &&
+    data.treinos_semana_2 >= infoNivel.treinosSemReq;
+
+  if (diasNoCiclo >= 14) {
+    if (data.dias_validos_ciclo >= 11 && bateuTreinos) {
+      if (data.nivel_atual < 6) {
+        data.nivel_atual += 1;
+        data.data_inicio_nivel = hojeStr;
+        feedback = `🎉 Parabéns! Você subiu para o Degrau ${data.nivel_atual}!`;
+      } else {
+        feedback = "🏆 Você manteve a Constância Master por mais 2 semanas!";
+      }
+    } else {
+      feedback = "Você manteve seu degrau! Vamos repetir essas 2 semanas para consolidar.";
+    }
+    data.data_inicio_ciclo = hojeStr;
+    data.dias_validos_ciclo = 0;
+    data.treinos_semana_1 = 0;
+    data.treinos_semana_2 = 0;
+    mudou = true;
+  }
+
+  if (mudou) {
+    await supabase.from("escada_constancia").update(data).eq("user_id", user.id);
+  }
+
+  escadaEstado = data;
+  configurarBotoesEscada(user);
+  renderizarEscadaUI(feedback);
+}
+
+function configurarBotoesEscada(user) {
+  const botoesRef = document.querySelectorAll(".escada-ref-btn");
+  botoesRef.forEach(btn => {
+    btn.onclick = () => {
+      botoesRef.forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      refeicoesSelecionadasHoje = Number(btn.dataset.val);
+    };
+  });
+
+  const btnSalvar = document.getElementById("btnSalvarEscada");
+  if (btnSalvar) {
+    btnSalvar.onclick = () => salvarCheckinEscada(user);
+  }
+}
+
+function renderizarEscadaUI(feedback = "") {
+  if (!escadaEstado) return;
+
+  const hojeStr = getDataHojeISO();
+  const infoNivel = ESCADA_NIVEIS[escadaEstado.nivel_atual - 1];
+  const diaAtualCiclo = Math.min(14, calcularDiffDias(escadaEstado.data_inicio_ciclo, hojeStr) + 1);
+
+  document.getElementById("escadaCicloInfo").innerText = `Ciclo de 14 dias • Dia ${diaAtualCiclo} de 14`;
+  document.getElementById("escadaBadgeNivel").innerText = `Nível ${escadaEstado.nivel_atual}/6`;
+
+  // Desenha os 6 degraus
+  const degrausContainer = document.getElementById("escadaDegrausVisual");
+  degrausContainer.innerHTML = ESCADA_NIVEIS.map(item => {
+    const isAtual = item.nivel === escadaEstado.nivel_atual;
+    const isConcluido = item.nivel < escadaEstado.nivel_atual;
+    const classe = isAtual ? "atual" : isConcluido ? "concluido" : "futuro";
+    const altura = item.nivel * 13 + 14;
+
+    return `
+      <div class="escada-degrau-col">
+        ${isAtual ? `<span class="escada-voce-tag">VOCÊ</span>` : ""}
+        <div class="escada-degrau-bar ${classe}" style="height:${altura}px;">
+          ${item.nivel}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  // Textos de meta
+  document.getElementById("escadaMetaAtualTexto").innerText = infoNivel.metaTexto;
+
+  let progTexto = `Progresso: ${escadaEstado.dias_validos_ciclo}/11 dias válidos para subir`;
+  if (infoNivel.treinosSemReq > 0) {
+    progTexto += ` • Treinos: Sem 1 (${escadaEstado.treinos_semana_1}/${infoNivel.treinosSemReq}) | Sem 2 (${escadaEstado.treinos_semana_2}/${infoNivel.treinosSemReq})`;
+  }
+  document.getElementById("escadaProgressoTexto").innerText = progTexto;
+  document.getElementById("escadaProxMetaTexto").innerHTML = `Próxima meta: <strong>${infoNivel.proxMeta}</strong>`;
+
+  // Verifica se já preencheu hoje
+  const jaFezHoje = escadaEstado.ultimo_checkin === hojeStr;
+  document.getElementById("escadaCheckinArea").classList.toggle("hidden", jaFezHoje);
+  document.getElementById("escadaFeitoHojeMsg").classList.toggle("hidden", !jaFezHoje);
+
+  const feedbackEl = document.getElementById("escadaFeedbackMsg");
+  if (feedback) {
+    feedbackEl.innerText = feedback;
+    feedbackEl.classList.remove("hidden");
+  }
+}
+
+async function salvarCheckinEscada(user) {
+  const hojeStr = getDataHojeISO();
+  if (!escadaEstado || escadaEstado.ultimo_checkin === hojeStr) return;
+
+  const infoNivel = ESCADA_NIVEIS[escadaEstado.nivel_atual - 1];
+  const treinouHoje = document.getElementById("escadaTreinouHoje").checked;
+  const diaValido = refeicoesSelecionadasHoje >= infoNivel.refeicoesReq;
+  const diaDoCiclo = calcularDiffDias(escadaEstado.data_inicio_ciclo, hojeStr);
+
+  let tSem1 = escadaEstado.treinos_semana_1;
+  let tSem2 = escadaEstado.treinos_semana_2;
+  if (treinouHoje) {
+    if (diaDoCiclo < 7) tSem1 += 1;
+    else tSem2 += 1;
+  }
+
+  let novosDiasValidos = diaValido ? escadaEstado.dias_validos_ciclo + 1 : escadaEstado.dias_validos_ciclo;
+  const bateuTreinos = tSem1 >= infoNivel.treinosSemReq && tSem2 >= infoNivel.treinosSemReq;
+
+  let novoNivel = escadaEstado.nivel_atual;
+  let novaDataNivel = escadaEstado.data_inicio_nivel;
+  let novaDataCiclo = escadaEstado.data_inicio_ciclo;
+  let msg = "";
+
+  // Se já cumpriu 11+ dias e os treinos da semana a partir do 11º dia, já sobe na hora
+  if (novosDiasValidos >= 11 && bateuTreinos && diaDoCiclo >= 10) {
+    if (novoNivel < 6) {
+      novoNivel += 1;
+      novaDataNivel = hojeStr;
+      msg = `🎉 Incrível! Você subiu para o Degrau ${novoNivel}!`;
+    } else {
+      msg = "🏆 Constância Master mantida!";
+    }
+    novaDataCiclo = hojeStr;
+    novosDiasValidos = 0;
+    tSem1 = 0;
+    tSem2 = 0;
+  } else {
+    msg = diaValido
+      ? "🔥 Boa! +1 dia válido contado na sua escada!"
+      : "Dia registrado! Amanhã você retoma a meta com tudo.";
+  }
+
+  const historicoAtualizado = [
+    ...(escadaEstado.historico_checkins || []),
+    { data: hojeStr, refeicoes: refeicoesSelecionadasHoje, treino: treinouHoje, valido: diaValido }
+  ];
+
+  const payload = {
+    nivel_atual: novoNivel,
+    data_inicio_nivel: novaDataNivel,
+    data_inicio_ciclo: novaDataCiclo,
+    dias_validos_ciclo: novosDiasValidos,
+    treinos_semana_1: tSem1,
+    treinos_semana_2: tSem2,
+    ultimo_checkin: hojeStr,
+    historico_checkins: historicoAtualizado
+  };
+
+  const { data, error } = await supabase
+    .from("escada_constancia")
+    .update(payload)
+    .eq("user_id", user.id)
+    .select()
+    .single();
+
+  if (!error && data) {
+    escadaEstado = data;
+    renderizarEscadaUI(msg);
+  } else {
+    alert("Erro ao salvar check-in. Tente novamente.");
+  }
+}
