@@ -762,7 +762,7 @@ async function carregarEscadaConstancia(user) {
     data.treinos_semana_2 >= infoNivel.treinosSemReq
 
   if (diasNoCiclo >= 14) {
-    if (data.dias_validos_ciclo >= 11 && bateuTreinos) {
+    if (data.dias_validos_ciclo >= 10 && bateuTreinos) {
       if (data.nivel_atual < 6) {
         data.nivel_atual += 1
         data.data_inicio_nivel = hojeStr
@@ -801,7 +801,7 @@ function renderizarEscadaUI(feedback = "") {
   const infoNivel = ESCADA_NIVEIS[escadaEstado.nivel_atual - 1]
   const diaAtualCiclo = Math.min(14, calcularDiffDias(escadaEstado.data_inicio_ciclo, hojeStr) + 1)
   const diasRestantesCiclo = Math.max(0, 14 - diaAtualCiclo)
-  const diasFaltamSubir = Math.max(0, 11 - escadaEstado.dias_validos_ciclo)
+  const diasFaltamSubir = Math.max(0, 10 - escadaEstado.dias_validos_ciclo)
 
   document.getElementById("escadaDataHoje").innerText = `📅 Hoje: ${formatarDataBR(hojeStr)}`
   document.getElementById("escadaCicloInfo").innerText = `Dia ${diaAtualCiclo} de 14 • Restam ${diasRestantesCiclo} dia(s) neste ciclo`
@@ -832,10 +832,10 @@ function renderizarEscadaUI(feedback = "") {
   if (diasFaltamSubir > 0) {
     faltamEl.innerText = `⏳ Faltam ${diasFaltamSubir} dia(s) válido(s) para subir de degrau`
   } else {
-    faltamEl.innerText = `🔥 Meta de 11 dias atingida! Continue firme até fechar o ciclo`
+    faltamEl.innerText = `🔥 Meta de 10 dias atingida! Continue firme até fechar o ciclo`
   }
 
-  let progTexto = `Concluídos neste ciclo: ${escadaEstado.dias_validos_ciclo}/11 dias válidos`
+  let progTexto = `Concluídos neste ciclo: ${escadaEstado.dias_validos_ciclo}/10 dias válidos`
   if (infoNivel.treinosSemReq > 0) {
     progTexto += ` • Treinos: Sem 1 (${escadaEstado.treinos_semana_1}/${infoNivel.treinosSemReq}) | Sem 2 (${escadaEstado.treinos_semana_2}/${infoNivel.treinosSemReq})`
   }
@@ -949,7 +949,7 @@ async function salvarCheckinEscada(user) {
   let novaDataCiclo = escadaEstado.data_inicio_ciclo
   let msg = ""
 
-  if (diasValidos >= 11 && bateuTreinos && diaDoCiclo >= 10) {
+  if (diasValidos >= 10 && bateuTreinos && diaDoCiclo >= 9) {
     if (novoNivel < 6) {
       novoNivel += 1
       novaDataNivel = hojeStr
