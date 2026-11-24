@@ -136,6 +136,57 @@
 
     </div>
 
+    <!-- ========================= -->
+    <!-- ESCADA DA CONSTÂNCIA -->
+    <!-- ========================= -->
+    <div id="escadaConstanciaCard" class="escada-card">
+      <div class="escada-header">
+        <div>
+          <h3>🪜 ESCADA DA CONSTÂNCIA</h3>
+          <small id="escadaCicloInfo">Carregando seu progresso...</small>
+        </div>
+        <span id="escadaBadgeNivel" class="escada-badge">Nível 1/6</span>
+      </div>
+
+      <!-- Visual dos 6 degraus -->
+      <div id="escadaDegrausVisual" class="escada-degraus"></div>
+
+      <!-- Meta atual e próxima -->
+      <div class="escada-meta-box">
+        <div class="escada-meta-atual-label">SUA META ATUAL:</div>
+        <div id="escadaMetaAtualTexto" class="escada-meta-atual-texto">...</div>
+        <div id="escadaProgressoTexto" class="escada-progresso-texto">...</div>
+        <div id="escadaProxMetaTexto" class="escada-prox-meta">...</div>
+      </div>
+
+      <!-- Área de check-in do dia -->
+      <div id="escadaCheckinArea" class="escada-checkin-area">
+        <label class="escada-label">Quantas refeições do cardápio você fez hoje?</label>
+        <div class="escada-ref-botoes" id="escadaRefBotoes">
+          <button type="button" class="escada-ref-btn" data-val="0">0</button>
+          <button type="button" class="escada-ref-btn" data-val="1">1</button>
+          <button type="button" class="escada-ref-btn" data-val="2">2</button>
+          <button type="button" class="escada-ref-btn" data-val="3">3</button>
+          <button type="button" class="escada-ref-btn" data-val="4">4</button>
+        </div>
+
+        <label class="escada-treino-check">
+          <input type="checkbox" id="escadaTreinouHoje">
+          <span>💪 Treinei hoje</span>
+        </label>
+
+        <button type="button" id="btnSalvarEscada" class="btn-salvar-escada">
+          REGISTRAR DIA NA ESCADA
+        </button>
+      </div>
+
+      <div id="escadaFeitoHojeMsg" class="escada-feito-msg hidden">
+        ✅ Check-in de hoje registrado! Volte amanhã para continuar subindo.
+      </div>
+
+      <p id="escadaFeedbackMsg" class="escada-feedback hidden"></p>
+    </div>
+
 
     <!-- NOTIFICAÇÕES -->
 
