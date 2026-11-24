@@ -1268,16 +1268,9 @@ async function salvarCheckinEscada(user) {
       : `✅ Salvo! (${totalRefeicoes}/4 refeições) — Você pode atualizar até 23h59 se fizer mais refeições hoje.`;
   }
 
-  const novoRegistroHoje = {
-    data: hojeStr,
-    cafe,
-    almoco,
-    lanche,
-    jantar,
-    refeicoes: totalRefeicoes,
-    treino: treinouHoje,
-    valido: diaValido
-  };
+  const novoHistoricoCompleto = [...historicoSemHoje, novoRegistroHoje].sort((a, b) =>
+    a.data.localeCompare(b.data)
+  );
 
   const payload = {
     nivel_atual: novoNivel,
@@ -1287,7 +1280,7 @@ async function salvarCheckinEscada(user) {
     treinos_semana_1: tSem1,
     treinos_semana_2: tSem2,
     ultimo_checkin: hojeStr,
-    historico_checkins: [...historicoSemHoje, novoRegistroHoje]
+    historico_checkins: novoHistoricoCompleto
   };
 
   const { data, error } = await supabase
@@ -1298,7 +1291,10 @@ async function salvarCheckinEscada(user) {
     .single();
 
   if (!error && data) {
-    escadaEstado = data;
+    escadaEstado = {
+      ...data,
+      historico_checkins: novoHistoricoCompleto
+    };
     renderizarEscadaUI(msg);
   } else {
     alert("Erro ao salvar check-in. Tente novamente.");
