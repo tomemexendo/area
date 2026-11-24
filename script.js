@@ -1211,6 +1211,11 @@ async function salvarCheckinEscada(user) {
   const hojeStr = getDataHojeISO();
   if (!escadaEstado) return;
 
+  const btnSalvar = document.getElementById("btnSalvarEscada");
+  const textoOriginalBtn = btnSalvar.innerText;
+  btnSalvar.innerText = "SALVANDO...";
+  btnSalvar.disabled = true;
+
   const infoNivel = ESCADA_NIVEIS[escadaEstado.nivel_atual - 1];
   const cafe = document.getElementById("chkCafe").checked;
   const almoco = document.getElementById("chkAlmoco").checked;
@@ -1222,13 +1227,18 @@ async function salvarCheckinEscada(user) {
   const diaValido = totalRefeicoes >= infoNivel.refeicoesReq;
   const diaDoCiclo = calcularDiffDias(escadaEstado.data_inicio_ciclo, hojeStr);
 
-  // Verifica se já havia um registro de hoje para recalcular sem duplicar
-  const historicoSemHoje = (escadaEstado.historico_checkins || []).filter(item => item.data !== hojeStr);
-  const registroAnteriorHoje = (escadaEstado.historico_checkins || []).find(item => item.data === hojeStr);
+  // Separa registros anteriores e verifica se já existia registro hoje
+  const historicoAtual = Array.isArray(escadaEstado.historico_checkins)
+    ? escadaEstado.historico_checkins
+    : [];
+
+  const historicoSemHoje = historicoAtual.filter(item => item.data !== hojeStr);
+  const registroAnteriorHoje = historicoAtual.find(item => item.data === hojeStr);
 
   let diasValidos = escadaEstado.dias_validos_ciclo;
   if (registroAnteriorHoje?.valido) diasValidos -= 1;
   if (diaValido) diasValidos += 1;
+  diasValidos = Math.max(0, diasValidos);
 
   let tSem1 = escadaEstado.treinos_semana_1;
   let tSem2 = escadaEstado.treinos_semana_2;
@@ -1249,7 +1259,6 @@ async function salvarCheckinEscada(user) {
   let novaDataCiclo = escadaEstado.data_inicio_ciclo;
   let msg = "";
 
-  // Sobe na hora se já atingiu 11+ dias válidos e os treinos semanais a partir do 11º dia
   if (diasValidos >= 11 && bateuTreinos && diaDoCiclo >= 10) {
     if (novoNivel < 6) {
       novoNivel += 1;
@@ -1279,6 +1288,11 @@ async function salvarCheckinEscada(user) {
     valido: diaValido
   };
 
+  // Ordena por data crescente para o .reverse() no histórico mostrar sempre o mais recente no topo
+  const novoHistoricoCompleto = [...historicoSemHoje, novoRegistroHoje].sort((a, b) =>
+    a.data.localeCompare(b.data)
+  );
+
   const payload = {
     nivel_atual: novoNivel,
     data_inicio_nivel: novaDataNivel,
@@ -1287,7 +1301,7 @@ async function salvarCheckinEscada(user) {
     treinos_semana_1: tSem1,
     treinos_semana_2: tSem2,
     ultimo_checkin: hojeStr,
-    historico_checkins: [...historicoSemHoje, novoRegistroHoje]
+    historico_checkins: novoHistoricoCompleto
   };
 
   const { data, error } = await supabase
@@ -1297,10 +1311,18 @@ async function salvarCheckinEscada(user) {
     .select()
     .single();
 
+  btnSalvar.disabled = false;
+
   if (!error && data) {
-    escadaEstado = data;
+    // Garante que o estado local tenha exatamente o histórico atualizado
+    escadaEstado = {
+      ...data,
+      historico_checkins: novoHistoricoCompleto
+    };
     renderizarEscadaUI(msg);
   } else {
+    console.error("Erro ao salvar escada:", error);
+    btnSalvar.innerText = textoOriginalBtn;
     alert("Erro ao salvar check-in. Tente novamente.");
   }
 }
