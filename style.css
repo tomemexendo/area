@@ -1876,22 +1876,25 @@ body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float
 ========================================================= */
 
 .escada-how-box {
-  background: rgba(57, 255, 20, 0.08);
-  border: 1px solid rgba(57, 255, 20, 0.25);
+  background: #0f2133 !important;
+  border: 1.5px solid #39ff14 !important;
   border-radius: 14px;
-  padding: 12px 14px;
-  font-size: 12px;
+  padding: 13px 15px;
+  font-size: 13px;
   line-height: 1.45;
-  color: #e2e8f0;
+  color: #ffffff !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
 }
 
 .escada-how-box strong {
-  color: #39ff14;
-  font-size: 13px;
+  color: #39ff14 !important;
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .escada-how-box p {
-  margin: 4px 0 0;
+  margin: 5px 0 0;
+  color: #f1f5f9 !important;
 }
 
 .escada-card {
