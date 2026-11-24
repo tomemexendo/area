@@ -1869,3 +1869,216 @@ input::placeholder {
 body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float-btn {
   display: none !important;
 }
+
+
+/* =========================================================
+   ESCADA DA CONSTÂNCIA
+========================================================= */
+
+.escada-card {
+  background: linear-gradient(145deg, #1a3044, #112233);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 16px;
+  margin: 4px 0 6px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.escada-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.escada-header h3 {
+  margin: 0 0 2px;
+  font-size: 16px;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.escada-header small {
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.escada-badge {
+  background: #ff1493;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.escada-degraus {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 115px;
+  padding: 10px 8px 8px;
+  background: rgba(8, 20, 33, 0.65);
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+
+.escada-degrau-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.escada-voce-tag {
+  font-size: 9px;
+  font-weight: 900;
+  background: #ff1493;
+  color: #ffffff;
+  padding: 2px 5px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+.escada-degrau-bar {
+  width: 100%;
+  border-radius: 6px 6px 2px 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 900;
+  transition: all 0.2s ease;
+}
+
+.escada-degrau-bar.futuro {
+  background: rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+.escada-degrau-bar.concluido {
+  background: #39ff14;
+  color: #081421;
+}
+
+.escada-degrau-bar.atual {
+  background: #ff1493;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 20, 147, 0.5);
+}
+
+.escada-meta-box {
+  background: #0b1928;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.escada-meta-atual-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: #39ff14;
+  letter-spacing: 0.4px;
+}
+
+.escada-meta-atual-texto {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 3px 0 5px;
+}
+
+.escada-progresso-texto {
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.escada-prox-meta {
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+  color: #ff69b4;
+}
+
+.escada-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 7px;
+}
+
+.escada-ref-botoes {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.escada-ref-btn {
+  flex: 1;
+  height: 40px;
+  border-radius: 10px;
+  background: #0c1b2a;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.escada-ref-btn.selected {
+  background: #39ff14;
+  color: #081421;
+  border-color: #39ff14;
+}
+
+.escada-treino-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.escada-treino-check input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #ff1493;
+}
+
+.btn-salvar-escada {
+  width: 100%;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff1493, #d90b7a);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 900;
+  box-shadow: 0 6px 18px rgba(255, 20, 147, 0.3);
+}
+
+.escada-feito-msg {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(57, 255, 20, 0.12);
+  border: 1px solid rgba(57, 255, 20, 0.35);
+  color: #86efac;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.escada-feedback {
+  margin: 10px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ff69b4;
+  text-align: center;
+}
