@@ -341,7 +341,8 @@ function setupNavigation() {
     "desafioSection",
     "extrasSection",
     "aulasBibliotecaSection",
-    "bibliotecaExtrasSection"
+    "bibliotecaExtrasSection",
+    "escadaSection"
   ]
 
   function showSection(sectionId) {
@@ -418,6 +419,14 @@ function setupNavigation() {
 
   document.getElementById("searchBibliotecaExtrasInput")?.addEventListener("input", (e) => {
     renderizarBibliotecaExtras(e.target.value);
+  });
+
+  document.getElementById("btn_abrir_escada")?.addEventListener("click", () => {
+    showSection("escadaSection");
+  });
+
+  document.getElementById("backFromEscada")?.addEventListener("click", () => {
+    showSection("extrasSection");
   });
 
   /* VOLTAR */
@@ -977,7 +986,7 @@ window.selecionarAbaSO = selecionarAbaSO;
 
 
 /* =========================================================
-   ESCADA DA CONSTÂNCIA (12 SEMANAS / 6 DEGRAUS)
+   ESCADA DA CONSTÂNCIA (EDITÁVEL ATÉ 23H59)
 ========================================================= */
 
 const ESCADA_NIVEIS = [
@@ -990,12 +999,16 @@ const ESCADA_NIVEIS = [
 ];
 
 let escadaEstado = null;
-let refeicoesSelecionadasHoje = 0;
 
 function getDataHojeISO() {
   const agora = new Date();
   const offset = agora.getTimezoneOffset() * 60000;
   return new Date(agora - offset).toISOString().split("T")[0];
+}
+
+function formatarDataBR(isoStr) {
+  const [ano, mes, dia] = isoStr.split("-");
+  return `${dia}/${mes}/${ano}`;
 }
 
 function calcularDiffDias(dataInicioStr, dataFimStr) {
@@ -1034,7 +1047,7 @@ async function carregarEscadaConstancia(user) {
   let mudou = false;
   let feedback = "";
 
-  // 1. Regra dos 90 dias (3 meses estagnada no mesmo nível -> desce 1 degrau)
+  // 1. Regra de 90 dias (3 meses estagnada -> desce 1 degrau)
   const diasNoNivel = calcularDiffDias(data.data_inicio_nivel, hojeStr);
   if (diasNoNivel >= 90 && data.nivel_atual > 1) {
     data.nivel_atual -= 1;
@@ -1078,24 +1091,13 @@ async function carregarEscadaConstancia(user) {
   }
 
   escadaEstado = data;
-  configurarBotoesEscada(user);
-  renderizarEscadaUI(feedback);
-}
-
-function configurarBotoesEscada(user) {
-  const botoesRef = document.querySelectorAll(".escada-ref-btn");
-  botoesRef.forEach(btn => {
-    btn.onclick = () => {
-      botoesRef.forEach(b => b.classList.remove("selected"));
-      btn.classList.add("selected");
-      refeicoesSelecionadasHoje = Number(btn.dataset.val);
-    };
-  });
 
   const btnSalvar = document.getElementById("btnSalvarEscada");
   if (btnSalvar) {
     btnSalvar.onclick = () => salvarCheckinEscada(user);
   }
+
+  renderizarEscadaUI(feedback);
 }
 
 function renderizarEscadaUI(feedback = "") {
@@ -1105,6 +1107,7 @@ function renderizarEscadaUI(feedback = "") {
   const infoNivel = ESCADA_NIVEIS[escadaEstado.nivel_atual - 1];
   const diaAtualCiclo = Math.min(14, calcularDiffDias(escadaEstado.data_inicio_ciclo, hojeStr) + 1);
 
+  document.getElementById("escadaDataHoje").innerText = `📅 Hoje: ${formatarDataBR(hojeStr)}`;
   document.getElementById("escadaCicloInfo").innerText = `Ciclo de 14 dias • Dia ${diaAtualCiclo} de 14`;
   document.getElementById("escadaBadgeNivel").innerText = `Nível ${escadaEstado.nivel_atual}/6`;
 
@@ -1136,10 +1139,16 @@ function renderizarEscadaUI(feedback = "") {
   document.getElementById("escadaProgressoTexto").innerText = progTexto;
   document.getElementById("escadaProxMetaTexto").innerHTML = `Próxima meta: <strong>${infoNivel.proxMeta}</strong>`;
 
-  // Verifica se já preencheu hoje
-  const jaFezHoje = escadaEstado.ultimo_checkin === hojeStr;
-  document.getElementById("escadaCheckinArea").classList.toggle("hidden", jaFezHoje);
-  document.getElementById("escadaFeitoHojeMsg").classList.toggle("hidden", !jaFezHoje);
+  // Preenche as caixinhas se ela já marcou algo hoje (para poder editar até 23h59)
+  const registroHoje = (escadaEstado.historico_checkins || []).find(item => item.data === hojeStr);
+  document.getElementById("chkCafe").checked = Boolean(registroHoje?.cafe);
+  document.getElementById("chkAlmoco").checked = Boolean(registroHoje?.almoco);
+  document.getElementById("chkLanche").checked = Boolean(registroHoje?.lanche);
+  document.getElementById("chkJantar").checked = Boolean(registroHoje?.jantar);
+  document.getElementById("escadaTreinouHoje").checked = Boolean(registroHoje?.treino);
+
+  const btnSalvar = document.getElementById("btnSalvarEscada");
+  btnSalvar.innerText = registroHoje ? "ATUALIZAR CHECK-IN DE HOJE" : "SALVAR CHECK-IN DE HOJE";
 
   const feedbackEl = document.getElementById("escadaFeedbackMsg");
   if (feedback) {
@@ -1150,21 +1159,39 @@ function renderizarEscadaUI(feedback = "") {
 
 async function salvarCheckinEscada(user) {
   const hojeStr = getDataHojeISO();
-  if (!escadaEstado || escadaEstado.ultimo_checkin === hojeStr) return;
+  if (!escadaEstado) return;
 
   const infoNivel = ESCADA_NIVEIS[escadaEstado.nivel_atual - 1];
+  const cafe = document.getElementById("chkCafe").checked;
+  const almoco = document.getElementById("chkAlmoco").checked;
+  const lanche = document.getElementById("chkLanche").checked;
+  const jantar = document.getElementById("chkJantar").checked;
   const treinouHoje = document.getElementById("escadaTreinouHoje").checked;
-  const diaValido = refeicoesSelecionadasHoje >= infoNivel.refeicoesReq;
+
+  const totalRefeicoes = [cafe, almoco, lanche, jantar].filter(Boolean).length;
+  const diaValido = totalRefeicoes >= infoNivel.refeicoesReq;
   const diaDoCiclo = calcularDiffDias(escadaEstado.data_inicio_ciclo, hojeStr);
+
+  // Verifica se já havia um registro de hoje para recalcular sem duplicar
+  const historicoSemHoje = (escadaEstado.historico_checkins || []).filter(item => item.data !== hojeStr);
+  const registroAnteriorHoje = (escadaEstado.historico_checkins || []).find(item => item.data === hojeStr);
+
+  let diasValidos = escadaEstado.dias_validos_ciclo;
+  if (registroAnteriorHoje?.valido) diasValidos -= 1;
+  if (diaValido) diasValidos += 1;
 
   let tSem1 = escadaEstado.treinos_semana_1;
   let tSem2 = escadaEstado.treinos_semana_2;
+
+  if (registroAnteriorHoje?.treino) {
+    if (diaDoCiclo < 7) tSem1 = Math.max(0, tSem1 - 1);
+    else tSem2 = Math.max(0, tSem2 - 1);
+  }
   if (treinouHoje) {
     if (diaDoCiclo < 7) tSem1 += 1;
     else tSem2 += 1;
   }
 
-  let novosDiasValidos = diaValido ? escadaEstado.dias_validos_ciclo + 1 : escadaEstado.dias_validos_ciclo;
   const bateuTreinos = tSem1 >= infoNivel.treinosSemReq && tSem2 >= infoNivel.treinosSemReq;
 
   let novoNivel = escadaEstado.nivel_atual;
@@ -1172,39 +1199,45 @@ async function salvarCheckinEscada(user) {
   let novaDataCiclo = escadaEstado.data_inicio_ciclo;
   let msg = "";
 
-  // Se já cumpriu 11+ dias e os treinos da semana a partir do 11º dia, já sobe na hora
-  if (novosDiasValidos >= 11 && bateuTreinos && diaDoCiclo >= 10) {
+  // Sobe na hora se já atingiu 11+ dias válidos e os treinos semanais a partir do 11º dia
+  if (diasValidos >= 11 && bateuTreinos && diaDoCiclo >= 10) {
     if (novoNivel < 6) {
       novoNivel += 1;
       novaDataNivel = hojeStr;
-      msg = `🎉 Incrível! Você subiu para o Degrau ${novoNivel}!`;
+      msg = `🎉 Meta batida! Você subiu para o Degrau ${novoNivel}!`;
     } else {
       msg = "🏆 Constância Master mantida!";
     }
     novaDataCiclo = hojeStr;
-    novosDiasValidos = 0;
+    diasValidos = 0;
     tSem1 = 0;
     tSem2 = 0;
   } else {
     msg = diaValido
-      ? "🔥 Boa! +1 dia válido contado na sua escada!"
-      : "Dia registrado! Amanhã você retoma a meta com tudo.";
+      ? `✅ Salvo! (${totalRefeicoes}/4 refeições) — Dia válido contado na escada!`
+      : `✅ Salvo! (${totalRefeicoes}/4 refeições) — Você pode atualizar até 23h59 se fizer mais refeições hoje.`;
   }
 
-  const historicoAtualizado = [
-    ...(escadaEstado.historico_checkins || []),
-    { data: hojeStr, refeicoes: refeicoesSelecionadasHoje, treino: treinouHoje, valido: diaValido }
-  ];
+  const novoRegistroHoje = {
+    data: hojeStr,
+    cafe,
+    almoco,
+    lanche,
+    jantar,
+    refeicoes: totalRefeicoes,
+    treino: treinouHoje,
+    valido: diaValido
+  };
 
   const payload = {
     nivel_atual: novoNivel,
     data_inicio_nivel: novaDataNivel,
     data_inicio_ciclo: novaDataCiclo,
-    dias_validos_ciclo: novosDiasValidos,
+    dias_validos_ciclo: diasValidos,
     treinos_semana_1: tSem1,
     treinos_semana_2: tSem2,
     ultimo_checkin: hojeStr,
-    historico_checkins: historicoAtualizado
+    historico_checkins: [...historicoSemHoje, novoRegistroHoje]
   };
 
   const { data, error } = await supabase
