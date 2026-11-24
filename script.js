@@ -308,6 +308,24 @@ function setupNavigation() {
     showSection("extrasSection")
   })
 
+  document.getElementById("btnToggleVideoEscada")?.addEventListener("click", () => {
+    const box = document.getElementById("escadaVideoBox");
+    const iframe = document.getElementById("escadaVideoIframe");
+    const btn = document.getElementById("btnToggleVideoEscada");
+    if (!box || !iframe) return;
+
+    const estaFechado = box.classList.contains("hidden");
+    if (estaFechado) {
+      if (!iframe.src) iframe.src = iframe.dataset.src;
+      box.classList.remove("hidden");
+      btn.innerText = "✖️ Fechar vídeo explicativo";
+    } else {
+      box.classList.add("hidden");
+      iframe.src = ""; // Pausa o vídeo ao fechar
+      btn.innerText = "▶️ Assista: Como funciona a Escada (1 min)";
+    }
+  });
+
   /* VOLTAR */
   document.getElementById("backFromDieta")?.addEventListener("click", () => {
     showSection("homeSection")
