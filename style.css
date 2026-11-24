@@ -1880,7 +1880,6 @@ body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 18px;
   padding: 16px;
-  margin: 4px 0 6px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
 }
 
@@ -1892,11 +1891,10 @@ body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float
   margin-bottom: 12px;
 }
 
-.escada-header h3 {
-  margin: 0 0 2px;
-  font-size: 16px;
-  font-weight: 900;
-  color: #ffffff;
+.escada-data-hoje {
+  font-size: 14px;
+  font-weight: 800;
+  color: #39ff14;
 }
 
 .escada-header small {
@@ -1950,7 +1948,6 @@ body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float
   justify-content: center;
   font-size: 12px;
   font-weight: 900;
-  transition: all 0.2s ease;
 }
 
 .escada-degrau-bar.futuro {
@@ -1974,7 +1971,7 @@ body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 14px;
   padding: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .escada-meta-atual-label {
@@ -2009,48 +2006,55 @@ body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float
   font-size: 12px;
   font-weight: 700;
   color: #e2e8f0;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
 }
 
-.escada-ref-botoes {
+.escada-checklist {
   display: flex;
-  gap: 6px;
-  margin-bottom: 10px;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
-.escada-ref-btn {
-  flex: 1;
-  height: 40px;
-  border-radius: 10px;
-  background: #0c1b2a;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 800;
-}
-
-.escada-ref-btn.selected {
-  background: #39ff14;
-  color: #081421;
-  border-color: #39ff14;
-}
-
-.escada-treino-check {
+.escada-check-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: 10px;
+  padding: 11px 12px;
+  background: #0c1b2a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  font-size: 14px;
   font-weight: 700;
-  color: #f1f5f9;
-  margin-bottom: 12px;
+  color: #f8fafc;
   cursor: pointer;
 }
 
-.escada-treino-check input {
-  width: 18px;
-  height: 18px;
+.escada-check-item:has(input:checked) {
+  border-color: #39ff14;
+  background: rgba(57, 255, 20, 0.1);
+}
+
+.escada-check-item.treino-item:has(input:checked) {
+  border-color: #ff1493;
+  background: rgba(255, 20, 147, 0.14);
+}
+
+.escada-check-item input {
+  width: 20px;
+  height: 20px;
   margin: 0;
+  accent-color: #39ff14;
+}
+
+.escada-check-item.treino-item input {
   accent-color: #ff1493;
+}
+
+.escada-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 2px 0;
 }
 
 .btn-salvar-escada {
@@ -2064,21 +2068,10 @@ body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float
   box-shadow: 0 6px 18px rgba(255, 20, 147, 0.3);
 }
 
-.escada-feito-msg {
-  padding: 12px;
-  border-radius: 12px;
-  background: rgba(57, 255, 20, 0.12);
-  border: 1px solid rgba(57, 255, 20, 0.35);
-  color: #86efac;
-  font-size: 13px;
-  font-weight: 700;
-  text-align: center;
-}
-
 .escada-feedback {
   margin: 10px 0 0;
   font-size: 12px;
   font-weight: 700;
-  color: #ff69b4;
+  color: #39ff14;
   text-align: center;
 }
