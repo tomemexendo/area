@@ -1875,6 +1875,25 @@ body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float
    ESCADA DA CONSTÂNCIA
 ========================================================= */
 
+.escada-how-box {
+  background: rgba(57, 255, 20, 0.08);
+  border: 1px solid rgba(57, 255, 20, 0.25);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #e2e8f0;
+}
+
+.escada-how-box strong {
+  color: #39ff14;
+  font-size: 13px;
+}
+
+.escada-how-box p {
+  margin: 4px 0 0;
+}
+
 .escada-card {
   background: linear-gradient(145deg, #1a3044, #112233);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1916,11 +1935,11 @@ body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float
   display: flex;
   align-items: flex-end;
   gap: 6px;
-  height: 115px;
+  height: 110px;
   padding: 10px 8px 8px;
   background: rgba(8, 20, 33, 0.65);
   border-radius: 14px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .escada-degrau-col {
@@ -1966,39 +1985,54 @@ body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float
   box-shadow: 0 0 12px rgba(255, 20, 147, 0.5);
 }
 
-.escada-meta-box {
-  background: #0b1928;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  padding: 12px;
+/* META ATUAL EM SUPER DESTAQUE */
+.escada-meta-destaque {
+  background: linear-gradient(145deg, #0b1928, #12263a);
+  border: 2px solid #ff1493;
+  border-radius: 16px;
+  padding: 14px;
   margin-bottom: 14px;
+  box-shadow: 0 0 18px rgba(255, 20, 147, 0.18);
 }
 
-.escada-meta-atual-label {
+.escada-meta-tag {
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 900;
   color: #39ff14;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
 }
 
-.escada-meta-atual-texto {
-  font-size: 15px;
-  font-weight: 800;
+.escada-meta-principal {
+  font-size: 18px;
+  font-weight: 900;
   color: #ffffff;
-  margin: 3px 0 5px;
+  margin: 4px 0 10px;
+  line-height: 1.25;
 }
 
-.escada-progresso-texto {
+.escada-faltam-pill {
+  display: inline-block;
+  background: rgba(255, 20, 147, 0.2);
+  border: 1px solid #ff1493;
+  color: #ff85c8;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+.escada-progresso-sub {
   font-size: 12px;
   color: #cbd5e1;
 }
 
 .escada-prox-meta {
   margin-top: 8px;
-  padding-top: 7px;
+  padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 11px;
-  color: #ff69b4;
+  color: #94a3b8;
 }
 
 .escada-label {
@@ -2074,4 +2108,84 @@ body:has(#login[style*="display: none"]):has(#homeSection.hidden) .install-float
   font-weight: 700;
   color: #39ff14;
   text-align: center;
+}
+
+/* MAPA DE TODOS OS NÍVEIS */
+.escada-mapa-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.escada-mapa-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #0c1b2a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 12px;
+}
+
+.escada-mapa-item.atual {
+  border: 1.5px solid #ff1493;
+  background: rgba(255, 20, 147, 0.1);
+}
+
+.escada-mapa-item.concluido {
+  border-color: rgba(57, 255, 20, 0.3);
+}
+
+.escada-mapa-info strong {
+  display: block;
+  font-size: 13px;
+  color: #ffffff;
+}
+
+.escada-mapa-info span {
+  color: #cbd5e1;
+  font-size: 11px;
+}
+
+.escada-mapa-status {
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* HISTÓRICO RECENTE */
+.escada-historico-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.escada-hist-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 11px;
+  border-radius: 10px;
+  background: #0c1b2a;
+  font-size: 12px;
+  color: #e2e8f0;
+}
+
+.escada-hist-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.escada-hist-badge.ok {
+  background: rgba(57, 255, 20, 0.16);
+  color: #39ff14;
+}
+
+.escada-hist-badge.parcial {
+  background: rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
 }
