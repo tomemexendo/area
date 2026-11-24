@@ -16,18 +16,23 @@ function normalizeText(text = "") {
     .replace(/[\u0300-\u036f]/g, "")
 }
 
+
 /* ---------------- ESTADO ---------------- */
 
 let contentData = {}
 
+
 /* ---------------- ONESIGNAL ---------------- */
 
 async function syncOneSignal(user) {
+
   try {
+
     if (!window.OneSignal) return
 
     const playerId = OneSignal.User.PushSubscription.id
-    const notificationsEnabled = OneSignal.User.PushSubscription.optedIn
+    const notificationsEnabled =
+      OneSignal.User.PushSubscription.optedIn
 
     if (!playerId) return
 
@@ -44,44 +49,81 @@ async function syncOneSignal(user) {
     if (error) {
       console.log("Erro sync OneSignal:", error)
     }
+
   } catch (e) {
+
     console.log("Erro sync:", e)
+
   }
+
 }
+
 
 /* ---------------- LOGIN ---------------- */
 
 async function login() {
-  const nome = normalizeText(document.getElementById("nome").value)
-  const codigo = document.getElementById("codigo").value.trim()
+
+  const nome = normalizeText(
+    document.getElementById("nome").value
+  )
+
+  const codigo =
+    document.getElementById("codigo").value.trim()
+
 
   const { data, error } = await supabase
     .from("users")
     .select("*")
+
+
+  console.log("USERS:", data)
+
 
   const user = data?.find(u =>
     normalizeText(u.name) === nome &&
     String(u.phone).trim() === codigo
   )
 
+
+  console.log("USER FOUND:", user)
+
+
   if (error || !user) {
+
     alert("Usuário não encontrado")
+
     return
+
   }
 
-  localStorage.setItem("user", JSON.stringify(user))
+
+  localStorage.setItem(
+    "user",
+    JSON.stringify(user)
+  )
+
 
   /* ONE SIGNAL */
+
   try {
+
     if (window.OneSignal && user?.id) {
+
       OneSignal.login(String(user.id))
+
       syncNotifications(user)
+
     }
+
   } catch (e) {
+
     console.log("OneSignal erro:", e)
+
   }
 
+
   /* REGISTRA ACESSO */
+
   await supabase
     .from("access_logs")
     .insert([{
@@ -89,63 +131,127 @@ async function login() {
       user_phone: user.phone
     }])
 
+
+  console.log("Acesso registrado")
+
+
   /* MOSTRA APP */
+
   document.getElementById("login").style.display = "none"
-  document.getElementById("app").classList.remove("hidden")
-  document.getElementById("userName").innerText = user.name
-  document.getElementById("userName2").innerText = user.name
+
+  document
+    .getElementById("app")
+    .classList
+    .remove("hidden")
+
+
+  document
+    .getElementById("userName")
+    .innerText = user.name
+
+
+  document
+    .getElementById("userName2")
+    .innerText = user.name
+
 
   /* CARREGA CONTEÚDO */
+
   await loadContent()
+
   renderDashboard()
+
   setupNavigation()
+
   await carregarEscadaConstancia(user)
+
 }
+
 
 /* ---------------- LOGOUT ---------------- */
 
 function logout() {
+
   localStorage.removeItem("user")
+
   location.reload()
+
 }
+
 
 /* ---------------- CONTENT ---------------- */
 
 async function loadContent() {
+
   const { data, error } = await supabase
     .from("content")
     .select("*")
 
+
   if (error) {
+
     console.error(error)
+
     return
+
   }
 
+
   const map = {}
+
+
   data.forEach(item => {
+
     map[item.type] = item
+
   })
 
+
   contentData = map
+
 }
+
 
 /* ---------------- DASHBOARD ---------------- */
 
 function renderDashboard() {
+
   const bind = (id, key) => {
-    const el = document.getElementById(id)
+
+    const el =
+      document.getElementById(id)
+
+
     if (!el) return
 
+
     el.onclick = () => {
+
       if (contentData[key]?.link) {
-        window.open(contentData[key].link, "_blank")
+
+        window.open(
+          contentData[key].link,
+          "_blank"
+        )
+
       } else {
-        console.log("Link não configurado:", key)
+
+        console.log(
+          "Link não configurado:",
+          key
+        )
+
       }
+
     }
+
   }
 
+
+  /* ========================= */
   /* DIETA */
+  /* ========================= */
+
   bind("diet_60", "diet_60")
   bind("diet_90", "diet_90")
   bind("diet_120", "diet_120")
@@ -158,16 +264,27 @@ function renderDashboard() {
   bind("dinner", "dinner")
 
   bind("binge_eating", "binge_eating")
-  bind("rotine", "rotine")
+  bind("rotine","rotine")
+
   bind("diet_help", "whatsapp")
 
+
+  /* ========================= */
   /* TREINO */
+  /* ========================= */
+
   bind("home_workout", "home_workout")
   bind("gym_workout", "gym_workout")
   bind("quick_workouts", "quick_workouts")
+
+
   bind("workout_help", "whatsapp")
 
+
+  /* ========================= */
   /* DESAFIO */
+  /* ========================= */
+
   bind("explication", "explication")
   bind("incentive_group2", "incentive_group")
   bind("challenge", "challenge")
@@ -176,27 +293,47 @@ function renderDashboard() {
   bind("diario", "diario")
   bind("support2", "whatsapp")
 
+
+  /* ========================= */
   /* EXTRAS */
+  /* ========================= */
+
   bind("incentive_group", "incentive_group")
   bind("notice_group", "notice_group")
   bind("influencer", "influencer")
   bind("support", "whatsapp")
   bind("sac", "sac")
 
+
+  /* ========================= */
   /* ACESSO RÁPIDO DA HOME */
+  /* ========================= */
+
   bind("home_diario", "diario")
   bind("home_whatsapp", "whatsapp")
 
+
+  /* ========================= */
   /* NOTIFICAÇÕES */
-  const pushBtn = document.getElementById("enablePush")
+  /* ========================= */
+
+  const pushBtn =
+    document.getElementById("enablePush")
+
+
   if (pushBtn) {
+
     pushBtn.onclick = enablePush
+
   }
+
 }
+
 
 /* ---------------- NAVEGAÇÃO ---------------- */
 
 function setupNavigation() {
+
   const sections = [
     "homeSection",
     "dietaSection",
@@ -227,6 +364,7 @@ function setupNavigation() {
   }
 
   /* MENU PRINCIPAL */
+
   document.getElementById("menu_dieta")?.addEventListener("click", () => {
     showSection("dietaSection")
   })
@@ -244,6 +382,7 @@ function setupNavigation() {
   })
 
   /* AULAS EXTRAS (PLANILHA) */
+
   document.getElementById("extra_classes")?.addEventListener("click", async () => {
     showSection("aulasBibliotecaSection")
     await carregarPlanilhaAulas()
@@ -268,29 +407,30 @@ function setupNavigation() {
   })
 
   document.getElementById("btn_biblioteca_extras")?.addEventListener("click", async () => {
-    showSection("bibliotecaExtrasSection")
-    await carregarPlanilhaExtras()
-    renderizarBibliotecaExtras()
-  })
+    showSection("bibliotecaExtrasSection");
+    await carregarPlanilhaExtras();
+    renderizarBibliotecaExtras();
+  });
 
   document.getElementById("backFromBibliotecaExtras")?.addEventListener("click", () => {
-    document.getElementById("searchBibliotecaExtrasInput").value = ""
-    showSection("extrasSection")
-  })
+    document.getElementById("searchBibliotecaExtrasInput").value = "";
+    showSection("extrasSection");
+  });
 
   document.getElementById("searchBibliotecaExtrasInput")?.addEventListener("input", (e) => {
-    renderizarBibliotecaExtras(e.target.value)
-  })
+    renderizarBibliotecaExtras(e.target.value);
+  });
 
   document.getElementById("btn_abrir_escada")?.addEventListener("click", () => {
-    showSection("escadaSection")
-  })
+    showSection("escadaSection");
+  });
 
   document.getElementById("backFromEscada")?.addEventListener("click", () => {
-    showSection("extrasSection")
-  })
+    showSection("extrasSection");
+  });
 
   /* VOLTAR */
+
   document.getElementById("backFromDieta")?.addEventListener("click", () => {
     showSection("homeSection")
   })
@@ -308,108 +448,301 @@ function setupNavigation() {
   })
 
   /* COMEÇA NA HOME */
+
   showSection("homeSection")
 }
 
 /* ---------------- ONE SIGNAL ---------------- */
 
 async function syncNotifications(user) {
+
   try {
-    if (!window.OneSignal || !user?.id) return
 
-    let playerId = null
-    let tentativas = 0
+    if (!window.OneSignal || !user?.id) {
 
-    while (!playerId && tentativas < 5) {
-      playerId = OneSignal.User.PushSubscription.id
-      if (!playerId) {
-        await new Promise(resolve => setTimeout(resolve, 500))
-      }
-      tentativas++
+      return
+
     }
 
-    const notificationsEnabled = OneSignal.User.PushSubscription.optedIn
-    if (!playerId) return
+
+    let playerId = null
+
+    let tentativas = 0
+
+
+    while (!playerId && tentativas < 5) {
+
+      playerId =
+        OneSignal.User.PushSubscription.id
+
+
+      if (!playerId) {
+
+        await new Promise(
+          resolve => setTimeout(resolve, 500)
+        )
+
+      }
+
+
+      tentativas++
+
+    }
+
+
+    const notificationsEnabled =
+      OneSignal.User.PushSubscription.optedIn
+
+
+    console.log(
+      "SYNC PLAYER:",
+      playerId
+    )
+
+
+    console.log(
+      "SYNC NOTIFICAÇÃO:",
+      notificationsEnabled
+    )
+
+
+    if (!playerId) {
+
+      return
+
+    }
+
 
     const { error } = await supabase
       .from("user_devices")
       .upsert({
+
         user_id: user.id,
-        onesignal_player_id: playerId,
+
+        onesignal_player_id:
+          playerId,
+
         status: "active",
-        notifications_enabled: notificationsEnabled,
-        updated_at: new Date()
+
+        notifications_enabled:
+          notificationsEnabled,
+
+        updated_at:
+          new Date()
+
       })
 
+
     if (error) {
-      console.log("Erro sync:", error)
+
+      console.log(
+        "Erro sync:",
+        error
+      )
+
     }
+
+
   } catch (err) {
-    console.log("Erro sincronização:", err)
+
+    console.log(
+      "Erro sincronização:",
+      err
+    )
+
   }
+
 }
+
 
 /* ---------------- ATIVAR NOTIFICAÇÕES ---------------- */
 
 async function enablePush() {
-  try {
-    const permission = await OneSignal.Notifications.requestPermission()
 
-    if (permission === "denied" || Notification.permission === "denied") {
+  try {
+
+    console.log(
+      "BOTÃO CLICADO"
+    )
+
+
+    const permission =
+      await OneSignal
+        .Notifications
+        .requestPermission()
+
+
+    console.log(
+      "PERMISSÃO:",
+      permission
+    )
+
+
+    if (
+      permission === "denied" ||
+      Notification.permission === "denied"
+    ) {
+
       showBlockedMessage()
+
       return
+
     }
 
+
+    /* espera OneSignal registrar */
+
     setTimeout(async () => {
-      const playerId = OneSignal.User.PushSubscription.id
-      const notificationsEnabled = OneSignal.User.PushSubscription.optedIn
 
-      if (!playerId) return
 
-      localStorage.setItem("onesignal_player_id", playerId)
+      const playerId =
+        OneSignal
+          .User
+          .PushSubscription
+          .id
 
-      const user = JSON.parse(localStorage.getItem("user"))
-      if (!user) return
 
-      const { error } = await supabase
-        .from("user_devices")
-        .upsert({
-          user_id: user.id,
-          onesignal_player_id: playerId,
-          status: "active",
-          notifications_enabled: notificationsEnabled,
-          updated_at: new Date()
-        })
+      const notificationsEnabled =
+        OneSignal
+          .User
+          .PushSubscription
+          .optedIn
 
-      if (error) {
-        console.log("Erro Supabase:", error)
+
+      console.log(
+        "NOTIFICAÇÕES ATIVAS:",
+        notificationsEnabled
+      )
+
+
+      console.log(
+        "PLAYER ID:",
+        playerId
+      )
+
+
+      if (!playerId) {
+
+        console.log(
+          "Ainda não gerou playerId"
+        )
+
         return
+
       }
 
-      alert("INCENTIVO ATIVADO 🔔")
+
+      /* salva local */
+
+      localStorage.setItem(
+        "onesignal_player_id",
+        playerId
+      )
+
+
+      const user =
+        JSON.parse(
+          localStorage.getItem("user")
+        )
+
+
+      if (!user) {
+
+        console.log(
+          "Usuário não encontrado"
+        )
+
+        return
+
+      }
+
+
+      /* salva no Supabase */
+
+      const { error } =
+        await supabase
+          .from("user_devices")
+          .upsert({
+
+            user_id:
+              user.id,
+
+            onesignal_player_id:
+              playerId,
+
+            status:
+              "active",
+
+            notifications_enabled:
+              notificationsEnabled,
+
+            updated_at:
+              new Date()
+
+          })
+
+
+      if (error) {
+
+        console.log(
+          "Erro Supabase:",
+          error
+        )
+
+        return
+
+      }
+
+
+      alert(
+        "INCENTIVO ATIVADO 🔔"
+      )
+
+
     }, 1500)
+
+
   } catch (err) {
-    console.error("Erro push:", err)
+
+    console.error(
+      "Erro push:",
+      err
+    )
+
   }
+
 }
+
 
 /* ---------------- BLOQUEIO DE NOTIFICAÇÕES ---------------- */
 
 function showBlockedMessage() {
-  const msg = document.getElementById("pushBlockedMsg")
+
+  const msg =
+    document.getElementById(
+      "pushBlockedMsg"
+    )
+
+
   if (msg) {
-    msg.classList.remove("hidden")
+
+    msg
+      .classList
+      .remove("hidden")
+
   }
+
 }
+
 
 /* ---------------- EXPOR FUNÇÕES PRO HTML ---------------- */
 
 window.login = login
 window.logout = logout
 
-/* ---------------- PLANILHA DE AULAS EXTRAS ---------------- */
 
-const PLANILHA_AULAS_CSV_URL = "https://docs.google.com/spreadsheets/d/1Zl8fF-3FM-ONv4wEVUmAYPqynrouOX5AoOKwTws6cBo/gviz/tq?tqx=out:csv&sheet=BASE_APP"
+
+const PLANILHA_AULAS_CSV_URL = "https://docs.google.com/spreadsheets/d/1Zl8fF-3FM-ONv4wEVUmAYPqynrouOX5AoOKwTws6cBo/gviz/tq?tqx=out:csv&sheet=BASE_APP";
 
 const ICONES_MODALIDADES = {
   "GLOBAL": "🔥", "SEM IMPACTO": "👟", "HIIT": "⚡", "PERNA+GLUTEO": "🍑",
@@ -417,51 +750,53 @@ const ICONES_MODALIDADES = {
   "ABDÔMEN": "🧱", "ALONGAMENTO": "🧘‍♀️", "PILATES": "🌿", "ZUMBA": "💃",
   "FITDANCE": "🎶", "VACUUM": "🌬️", "YOGA": "🕉️", "STEP": "🪜",
   "GLOBAL MOVE": "🏃‍♀️", "SUPRA MOVE": "🚀", "BALLET FIT": "🩰"
-}
+};
 
-let modalidadesData = []
-let modalidadeSelecionada = null
+let modalidadesData = [];
+let modalidadeSelecionada = null;
 
 async function carregarPlanilhaAulas() {
-  if (modalidadesData.length > 0) return
-  const container = document.getElementById("modalidadesContainer")
-  container.innerHTML = `<p style="grid-column:1/-1; text-align:center;">Carregando aulas...</p>`
+  if (modalidadesData.length > 0) return;
+  const container = document.getElementById("modalidadesContainer");
+  container.innerHTML = `<p style="grid-column:1/-1; text-align:center;">Carregando aulas...</p>`;
 
   try {
-    const res = await fetch(PLANILHA_AULAS_CSV_URL)
-    const csv = await res.text()
+    const res = await fetch(PLANILHA_AULAS_CSV_URL);
+    const csv = await res.text();
 
+    // Se o Google devolveu HTML (planilha restrita), avisa na tela
     if (csv.trim().startsWith("<!DOCTYPE") || csv.trim().startsWith("<html")) {
-      container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#dc2626;">A planilha ainda está restrita. Mude o compartilhamento para "Qualquer pessoa com o link".</p>`
-      return
+      container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#dc2626;">A planilha ainda está restrita. Mude o compartilhamento para "Qualquer pessoa com o link".</p>`;
+      return;
     }
 
     const linhas = csv.split(/\r?\n/).map(l =>
       l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, "").trim())
-    )
+    );
 
+    // Encontra automaticamente a linha onde começa "GLOBAL"
     const linhaCabecalhoIdx = linhas.findIndex(l =>
       l.some(cel => cel.toUpperCase() === "GLOBAL")
-    )
+    );
 
     if (linhaCabecalhoIdx === -1) {
-      container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#dc2626;">Não encontrei a coluna GLOBAL na aba BASE_APP.</p>`
-      return
+      container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#dc2626;">Não encontrei a coluna GLOBAL na aba BASE_APP.</p>`;
+      return;
     }
 
-    const cabecalho = linhas[linhaCabecalhoIdx]
-    const resultado = []
+    const cabecalho = linhas[linhaCabecalhoIdx];
+    const resultado = [];
 
     for (let col = 0; col < cabecalho.length; col += 2) {
-      const nome = cabecalho[col]
-      if (!nome) continue
+      const nome = cabecalho[col];
+      if (!nome) continue;
 
-      const aulas = []
+      const aulas = [];
       for (let row = linhaCabecalhoIdx + 1; row < linhas.length; row++) {
-        const codigo = linhas[row][col] || ""
-        const link = linhas[row][col + 1] || ""
+        const codigo = linhas[row][col] || "";
+        const link = linhas[row][col + 1] || "";
         if (codigo && link.startsWith("http")) {
-          aulas.push({ codigo, link })
+          aulas.push({ codigo, link });
         }
       }
 
@@ -469,31 +804,31 @@ async function carregarPlanilhaAulas() {
         nome,
         icone: ICONES_MODALIDADES[nome.toUpperCase()] || "🏋️‍♀️",
         aulas
-      })
+      });
     }
 
-    modalidadesData = resultado
+    modalidadesData = resultado;
   } catch (err) {
-    console.error("Erro planilha:", err)
-    container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#dc2626;">Erro de conexão ao carregar aulas.</p>`
+    console.error("Erro planilha:", err);
+    container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#dc2626;">Erro de conexão ao carregar aulas.</p>`;
   }
 }
 
 function renderizarModalidades(filtro = "") {
-  modalidadeSelecionada = null
-  document.getElementById("bibliotecaMainTitle").innerText = "💃🏻🧘🏻 AULAS EXTRAS"
-  document.getElementById("backFromBiblioteca").innerText = "← VOLTAR"
-  const search = document.getElementById("searchAulasInput")
-  search.placeholder = "Buscar modalidade (ex: HIIT, Pilates, Zumba)..."
+  modalidadeSelecionada = null;
+  document.getElementById("bibliotecaMainTitle").innerText = "💃🏻🧘🏻 AULAS EXTRAS";
+  document.getElementById("backFromBiblioteca").innerText = "← VOLTAR";
+  const search = document.getElementById("searchAulasInput");
+  search.placeholder = "Buscar modalidade (ex: HIIT, Pilates, Zumba)...";
 
-  const modContainer = document.getElementById("modalidadesContainer")
-  const aulasContainer = document.getElementById("aulasListaContainer")
-  modContainer.classList.remove("hidden")
-  aulasContainer.classList.add("hidden")
+  const modContainer = document.getElementById("modalidadesContainer");
+  const aulasContainer = document.getElementById("aulasListaContainer");
+  modContainer.classList.remove("hidden");
+  aulasContainer.classList.add("hidden");
 
   const filtradas = modalidadesData.filter(m =>
     normalizeText(m.nome).includes(normalizeText(filtro))
-  )
+  );
 
   modContainer.innerHTML = filtradas.map(m => `
     <button class="modalidade-card" onclick="abrirModalidade('${m.nome}')">
@@ -501,30 +836,30 @@ function renderizarModalidades(filtro = "") {
       <span class="modalidade-nome">${m.nome}</span>
       <span class="modalidade-count">${m.aulas.length} aulas</span>
     </button>
-  `).join("")
+  `).join("");
 }
 
 function abrirModalidade(nome) {
-  const mod = modalidadesData.find(m => m.nome === nome)
-  if (!mod) return
-  modalidadeSelecionada = mod
-  document.getElementById("bibliotecaMainTitle").innerText = `${mod.icone} ${mod.nome}`
-  document.getElementById("backFromBiblioteca").innerText = "← VOLTAR PARA MODALIDADES"
-  const search = document.getElementById("searchAulasInput")
-  search.value = ""
-  search.placeholder = `Buscar aula em ${mod.nome}...`
+  const mod = modalidadesData.find(m => m.nome === nome);
+  if (!mod) return;
+  modalidadeSelecionada = mod;
+  document.getElementById("bibliotecaMainTitle").innerText = `${mod.icone} ${mod.nome}`;
+  document.getElementById("backFromBiblioteca").innerText = "← VOLTAR PARA MODALIDADES";
+  const search = document.getElementById("searchAulasInput");
+  search.value = "";
+  search.placeholder = `Buscar aula em ${mod.nome}...`;
 
-  document.getElementById("modalidadesContainer").classList.add("hidden")
-  document.getElementById("aulasListaContainer").classList.remove("hidden")
-  renderizarListaAulas()
+  document.getElementById("modalidadesContainer").classList.add("hidden");
+  document.getElementById("aulasListaContainer").classList.remove("hidden");
+  renderizarListaAulas();
 }
 
 function renderizarListaAulas(filtro = "") {
-  if (!modalidadeSelecionada) return
-  const aulasContainer = document.getElementById("aulasListaContainer")
+  if (!modalidadeSelecionada) return;
+  const aulasContainer = document.getElementById("aulasListaContainer");
   const filtradas = modalidadeSelecionada.aulas.filter(a =>
     normalizeText(a.codigo).includes(normalizeText(filtro))
-  )
+  );
 
   aulasContainer.innerHTML = filtradas.length
     ? filtradas.map(a => `
@@ -536,56 +871,57 @@ function renderizarListaAulas(filtro = "") {
           <a href="${a.link}" target="_blank" rel="noopener noreferrer" class="btn-assistir-aula">▶ ASSISTIR</a>
         </div>
       `).join("")
-    : `<p style="text-align:center;">Nenhuma aula com link cadastrado nesta modalidade ainda.</p>`
+    : `<p style="text-align:center;">Nenhuma aula com link cadastrado nesta modalidade ainda.</p>`;
 }
 
-window.abrirModalidade = abrirModalidade
+window.abrirModalidade = abrirModalidade;
 
-/* ---------------- BIBLIOTECA DE CONTEÚDOS EXTRAS ---------------- */
 
-const PLANILHA_EXTRAS_CSV_URL = "https://docs.google.com/spreadsheets/d/1Zl8fF-3FM-ONv4wEVUmAYPqynrouOX5AoOKwTws6cBo/gviz/tq?tqx=out:csv&sheet=BIBLIOTECA_EXTRAS"
 
-let bibliotecaExtrasData = []
+const PLANILHA_EXTRAS_CSV_URL = "https://docs.google.com/spreadsheets/d/1Zl8fF-3FM-ONv4wEVUmAYPqynrouOX5AoOKwTws6cBo/gviz/tq?tqx=out:csv&sheet=BIBLIOTECA_EXTRAS";
+
+let bibliotecaExtrasData = [];
 
 async function carregarPlanilhaExtras() {
-  if (bibliotecaExtrasData.length > 0) return
-  const container = document.getElementById("bibliotecaExtrasListaContainer")
-  container.innerHTML = `<p style="text-align:center;">Carregando conteúdos...</p>`
+  if (bibliotecaExtrasData.length > 0) return;
+  const container = document.getElementById("bibliotecaExtrasListaContainer");
+  container.innerHTML = `<p style="text-align:center;">Carregando conteúdos...</p>`;
 
   try {
-    const res = await fetch(PLANILHA_EXTRAS_CSV_URL)
-    const csv = await res.text()
+    const res = await fetch(PLANILHA_EXTRAS_CSV_URL);
+    const csv = await res.text();
 
     if (csv.trim().startsWith("<!DOCTYPE") || csv.trim().startsWith("<html")) {
-      container.innerHTML = `<p style="text-align:center; color:#dc2626;">A planilha está restrita. Mude o compartilhamento para "Qualquer pessoa com o link".</p>`
-      return
+      container.innerHTML = `<p style="text-align:center; color:#dc2626;">A planilha está restrita. Mude o compartilhamento para "Qualquer pessoa com o link".</p>`;
+      return;
     }
 
     const linhas = csv.split(/\r?\n/).map(l =>
       l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, "").trim())
-    )
+    );
 
-    const resultado = []
+    const resultado = [];
+    // Começa na linha 1 (pula o cabeçalho NOME / LINK)
     for (let row = 1; row < linhas.length; row++) {
-      const nome = linhas[row][0] || ""
-      const link = linhas[row][1] || ""
+      const nome = linhas[row][0] || "";
+      const link = linhas[row][1] || "";
       if (nome && link.startsWith("http")) {
-        resultado.push({ nome, link })
+        resultado.push({ nome, link });
       }
     }
 
-    bibliotecaExtrasData = resultado
+    bibliotecaExtrasData = resultado;
   } catch (err) {
-    console.error("Erro planilha extras:", err)
-    container.innerHTML = `<p style="text-align:center; color:#dc2626;">Erro ao carregar conteúdos.</p>`
+    console.error("Erro planilha extras:", err);
+    container.innerHTML = `<p style="text-align:center; color:#dc2626;">Erro ao carregar conteúdos.</p>`;
   }
 }
 
 function renderizarBibliotecaExtras(filtro = "") {
-  const container = document.getElementById("bibliotecaExtrasListaContainer")
+  const container = document.getElementById("bibliotecaExtrasListaContainer");
   const filtrados = bibliotecaExtrasData.filter(item =>
     normalizeText(item.nome).includes(normalizeText(filtro))
-  )
+  );
 
   container.innerHTML = filtrados.length
     ? filtrados.map(item => `
@@ -596,54 +932,58 @@ function renderizarBibliotecaExtras(filtro = "") {
           <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="btn-assistir-aula">ver vídeo ▶️</a>
         </div>
       `).join("")
-    : `<p style="text-align:center;">Nenhum conteúdo encontrado.</p>`
+    : `<p style="text-align:center;">Nenhum conteúdo encontrado.</p>`;
 }
+
+
 
 /* ---------------- INSTALAR APP (IPHONE / ANDROID) ---------------- */
 
 function detectarSistemaOperacional() {
-  const ua = navigator.userAgent || navigator.vendor || window.opera
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
   if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
-    return "iphone"
+    return "iphone";
   }
-  return "android"
+  return "android";
 }
 
 function selecionarAbaSO(so) {
-  const tabIphone = document.getElementById("tabIphone")
-  const tabAndroid = document.getElementById("tabAndroid")
-  const instIphone = document.getElementById("instrucoesIphone")
-  const instAndroid = document.getElementById("instrucoesAndroid")
+  const tabIphone = document.getElementById("tabIphone");
+  const tabAndroid = document.getElementById("tabAndroid");
+  const instIphone = document.getElementById("instrucoesIphone");
+  const instAndroid = document.getElementById("instrucoesAndroid");
 
   if (so === "iphone") {
-    tabIphone.classList.add("active")
-    tabAndroid.classList.remove("active")
-    instIphone.classList.remove("hidden")
-    instAndroid.classList.add("hidden")
+    tabIphone.classList.add("active");
+    tabAndroid.classList.remove("active");
+    instIphone.classList.remove("hidden");
+    instAndroid.classList.add("hidden");
   } else {
-    tabAndroid.classList.add("active")
-    tabIphone.classList.remove("active")
-    instAndroid.classList.remove("hidden")
-    instIphone.classList.add("hidden")
+    tabAndroid.classList.add("active");
+    tabIphone.classList.remove("active");
+    instAndroid.classList.remove("hidden");
+    instIphone.classList.add("hidden");
   }
 }
 
 function abrirModalInstalarApp() {
-  selecionarAbaSO(detectarSistemaOperacional())
-  document.getElementById("modalInstalarApp")?.classList.remove("hidden")
+  selecionarAbaSO(detectarSistemaOperacional());
+  document.getElementById("modalInstalarApp")?.classList.remove("hidden");
 }
 
 function fecharModalInstalarApp() {
-  document.getElementById("modalInstalarApp")?.classList.add("hidden")
+  document.getElementById("modalInstalarApp")?.classList.add("hidden");
 }
 
+// Esconde o botão flutuante se a aluna já abriu pelo app instalado na tela inicial
 if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true) {
-  document.getElementById("btnInstalarAppFloat")?.classList.add("hidden")
+  document.getElementById("btnInstalarAppFloat")?.classList.add("hidden");
 }
 
-window.abrirModalInstalarApp = abrirModalInstalarApp
-window.fecharModalInstalarApp = fecharModalInstalarApp
-window.selecionarAbaSO = selecionarAbaSO
+window.abrirModalInstalarApp = abrirModalInstalarApp;
+window.fecharModalInstalarApp = fecharModalInstalarApp;
+window.selecionarAbaSO = selecionarAbaSO;
+
 
 /* =========================================================
    ESCADA DA CONSTÂNCIA (EDITÁVEL ATÉ 23H59)
@@ -656,36 +996,36 @@ const ESCADA_NIVEIS = [
   { nivel: 4, titulo: "Degrau 4", metaTexto: "4 refeições do cardápio por dia", refeicoesReq: 4, treinosSemReq: 0, proxMeta: "4 refeições/dia + 1 treino/semana" },
   { nivel: 5, titulo: "Degrau 5", metaTexto: "4 refeições/dia + 1 treino na semana", refeicoesReq: 4, treinosSemReq: 1, proxMeta: "4 refeições/dia + 2 treinos/semana" },
   { nivel: 6, titulo: "Degrau 6", metaTexto: "4 refeições/dia + 2 treinos na semana", refeicoesReq: 4, treinosSemReq: 2, proxMeta: "Constância Master concluída! 🏆" }
-]
+];
 
-let escadaEstado = null
+let escadaEstado = null;
 
 function getDataHojeISO() {
-  const agora = new Date()
-  const offset = agora.getTimezoneOffset() * 60000
-  return new Date(agora - offset).toISOString().split("T")[0]
+  const agora = new Date();
+  const offset = agora.getTimezoneOffset() * 60000;
+  return new Date(agora - offset).toISOString().split("T")[0];
 }
 
 function formatarDataBR(isoStr) {
-  const [ano, mes, dia] = isoStr.split("-")
-  return `${dia}/${mes}/${ano}`
+  const [ano, mes, dia] = isoStr.split("-");
+  return `${dia}/${mes}/${ano}`;
 }
 
 function calcularDiffDias(dataInicioStr, dataFimStr) {
-  const d1 = new Date(dataInicioStr + "T00:00:00")
-  const d2 = new Date(dataFimStr + "T00:00:00")
-  return Math.floor((d2 - d1) / (1000 * 60 * 60 * 24))
+  const d1 = new Date(dataInicioStr + "T00:00:00");
+  const d2 = new Date(dataFimStr + "T00:00:00");
+  return Math.floor((d2 - d1) / (1000 * 60 * 60 * 24));
 }
 
 async function carregarEscadaConstancia(user) {
-  if (!user?.id) return
-  const hojeStr = getDataHojeISO()
+  if (!user?.id) return;
+  const hojeStr = getDataHojeISO();
 
   let { data, error } = await supabase
     .from("escada_constancia")
     .select("*")
     .eq("user_id", user.id)
-    .maybeSingle()
+    .maybeSingle();
 
   if (!data && !error) {
     const novo = {
@@ -697,89 +1037,87 @@ async function carregarEscadaConstancia(user) {
       treinos_semana_1: 0,
       treinos_semana_2: 0,
       historico_checkins: []
-    }
-    const res = await supabase.from("escada_constancia").insert(novo).select().single()
-    data = res.data
+    };
+    const res = await supabase.from("escada_constancia").insert(novo).select().single();
+    data = res.data;
   }
 
-  if (!data) return
+  if (!data) return;
 
-  let mudou = false
-  let feedback = ""
+  let mudou = false;
+  let feedback = "";
 
   // 1. Regra de 90 dias (3 meses estagnada -> desce 1 degrau)
-  const diasNoNivel = calcularDiffDias(data.data_inicio_nivel, hojeStr)
+  const diasNoNivel = calcularDiffDias(data.data_inicio_nivel, hojeStr);
   if (diasNoNivel >= 90 && data.nivel_atual > 1) {
-    data.nivel_atual -= 1
-    data.data_inicio_nivel = hojeStr
-    data.data_inicio_ciclo = hojeStr
-    data.dias_validos_ciclo = 0
-    data.treinos_semana_1 = 0
-    data.treinos_semana_2 = 0
-    feedback = "Voltamos 1 degrau para você retomar no seu ritmo com leveza! 💜"
-    mudou = true
+    data.nivel_atual -= 1;
+    data.data_inicio_nivel = hojeStr;
+    data.data_inicio_ciclo = hojeStr;
+    data.dias_validos_ciclo = 0;
+    data.treinos_semana_1 = 0;
+    data.treinos_semana_2 = 0;
+    feedback = "Voltamos 1 degrau para você retomar no seu ritmo com leveza! 💜";
+    mudou = true;
   }
 
   // 2. Fechamento do ciclo de 14 dias
-  const diasNoCiclo = calcularDiffDias(data.data_inicio_ciclo, hojeStr)
-  const infoNivel = ESCADA_NIVEIS[data.nivel_atual - 1]
+  const diasNoCiclo = calcularDiffDias(data.data_inicio_ciclo, hojeStr);
+  const infoNivel = ESCADA_NIVEIS[data.nivel_atual - 1];
   const bateuTreinos =
     data.treinos_semana_1 >= infoNivel.treinosSemReq &&
-    data.treinos_semana_2 >= infoNivel.treinosSemReq
+    data.treinos_semana_2 >= infoNivel.treinosSemReq;
 
   if (diasNoCiclo >= 14) {
     if (data.dias_validos_ciclo >= 11 && bateuTreinos) {
       if (data.nivel_atual < 6) {
-        data.nivel_atual += 1
-        data.data_inicio_nivel = hojeStr
-        feedback = `🎉 Parabéns! Você subiu para o Degrau ${data.nivel_atual}!`
+        data.nivel_atual += 1;
+        data.data_inicio_nivel = hojeStr;
+        feedback = `🎉 Parabéns! Você subiu para o Degrau ${data.nivel_atual}!`;
       } else {
-        feedback = "🏆 Você manteve a Constância Master por mais 2 semanas!"
+        feedback = "🏆 Você manteve a Constância Master por mais 2 semanas!";
       }
     } else {
-      feedback = "Você manteve seu degrau! Vamos repetir essas 2 semanas para consolidar."
+      feedback = "Você manteve seu degrau! Vamos repetir essas 2 semanas para consolidar.";
     }
-    data.data_inicio_ciclo = hojeStr
-    data.dias_validos_ciclo = 0
-    data.treinos_semana_1 = 0
-    data.treinos_semana_2 = 0
-    mudou = true
+    data.data_inicio_ciclo = hojeStr;
+    data.dias_validos_ciclo = 0;
+    data.treinos_semana_1 = 0;
+    data.treinos_semana_2 = 0;
+    mudou = true;
   }
 
   if (mudou) {
-    await supabase.from("escada_constancia").update(data).eq("user_id", user.id)
+    await supabase.from("escada_constancia").update(data).eq("user_id", user.id);
   }
 
-  escadaEstado = data
+  escadaEstado = data;
 
-  const btnSalvar = document.getElementById("btnSalvarEscada")
+  const btnSalvar = document.getElementById("btnSalvarEscada");
   if (btnSalvar) {
-    btnSalvar.onclick = () => salvarCheckinEscada(user)
+    btnSalvar.onclick = () => salvarCheckinEscada(user);
   }
 
-  renderizarEscadaUI(feedback)
-}
-
+  
 function renderizarEscadaUI(feedback = "") {
-  if (!escadaEstado) return
+  if (!escadaEstado) return;
 
-  const hojeStr = getDataHojeISO()
-  const infoNivel = ESCADA_NIVEIS[escadaEstado.nivel_atual - 1]
-  const diaAtualCiclo = Math.min(14, calcularDiffDias(escadaEstado.data_inicio_ciclo, hojeStr) + 1)
-  const diasRestantesCiclo = Math.max(0, 14 - diaAtualCiclo)
-  const diasFaltamSubir = Math.max(0, 11 - escadaEstado.dias_validos_ciclo)
+  const hojeStr = getDataHojeISO();
+  const infoNivel = ESCADA_NIVEIS[escadaEstado.nivel_atual - 1];
+  const diaAtualCiclo = Math.min(14, calcularDiffDias(escadaEstado.data_inicio_ciclo, hojeStr) + 1);
+  const diasRestantesCiclo = Math.max(0, 14 - diaAtualCiclo);
+  const diasFaltamSubir = Math.max(0, 11 - escadaEstado.dias_validos_ciclo);
 
-  document.getElementById("escadaDataHoje").innerText = `📅 Hoje: ${formatarDataBR(hojeStr)}`
-  document.getElementById("escadaCicloInfo").innerText = `Dia ${diaAtualCiclo} de 14 • Restam ${diasRestantesCiclo} dia(s) neste ciclo`
-  document.getElementById("escadaBadgeNivel").innerText = `Degrau ${escadaEstado.nivel_atual}/6`
+  document.getElementById("escadaDataHoje").innerText = `📅 Hoje: ${formatarDataBR(hojeStr)}`;
+  document.getElementById("escadaCicloInfo").innerText = `Dia ${diaAtualCiclo} de 14 • Restam ${diasRestantesCiclo} dia(s) neste ciclo`;
+  document.getElementById("escadaBadgeNivel").innerText = `Degrau ${escadaEstado.nivel_atual}/6`;
 
   // 1. Desenha os 6 degraus gráficos
-  const degrausContainer = document.getElementById("escadaDegrausVisual")
+  const degrausContainer = document.getElementById("escadaDegrausVisual");
   degrausContainer.innerHTML = ESCADA_NIVEIS.map(item => {
-    const isAtual = item.nivel === escadaEstado.nivel_atual
-    const isConcluido = item.nivel < escadaEstado.nivel_atual
-    const classe = isAtual ? "atual" : isConcluido ? "concluido" : "futuro"
-    const altura = item.nivel * 13 + 14
+    const isAtual = item.nivel === escadaEstado.nivel_atual;
+    const isConcluido = item.nivel < escadaEstado.nivel_atual;
+    const classe = isAtual ? "atual" : isConcluido ? "concluido" : "futuro";
+    const altura = item.nivel * 13 + 14;
 
     return `
       <div class="escada-degrau-col">
@@ -788,49 +1126,49 @@ function renderizarEscadaUI(feedback = "") {
           ${item.nivel}
         </div>
       </div>
-    `
-  }).join("")
+    `;
+  }).join("");
 
   // 2. Meta atual em super destaque
-  document.getElementById("escadaMetaAtualTexto").innerText = infoNivel.metaTexto
+  document.getElementById("escadaMetaAtualTexto").innerText = infoNivel.metaTexto;
 
-  const faltamEl = document.getElementById("escadaFaltamTexto")
+  const faltamEl = document.getElementById("escadaFaltamTexto");
   if (diasFaltamSubir > 0) {
-    faltamEl.innerText = `⏳ Faltam ${diasFaltamSubir} dia(s) válido(s) para subir de degrau`
+    faltamEl.innerText = `⏳ Faltam ${diasFaltamSubir} dia(s) válido(s) para subir de degrau`;
   } else {
-    faltamEl.innerText = `🔥 Meta de 11 dias atingida! Continue firme até fechar o ciclo`
+    faltamEl.innerText = `🔥 Meta de 11 dias atingida! Continue firme até fechar o ciclo`;
   }
 
-  let progTexto = `Concluídos neste ciclo: ${escadaEstado.dias_validos_ciclo}/11 dias válidos`
+  let progTexto = `Concluídos neste ciclo: ${escadaEstado.dias_validos_ciclo}/11 dias válidos`;
   if (infoNivel.treinosSemReq > 0) {
-    progTexto += ` • Treinos: Sem 1 (${escadaEstado.treinos_semana_1}/${infoNivel.treinosSemReq}) | Sem 2 (${escadaEstado.treinos_semana_2}/${infoNivel.treinosSemReq})`
+    progTexto += ` • Treinos: Sem 1 (${escadaEstado.treinos_semana_1}/${infoNivel.treinosSemReq}) | Sem 2 (${escadaEstado.treinos_semana_2}/${infoNivel.treinosSemReq})`;
   }
-  document.getElementById("escadaProgressoTexto").innerText = progTexto
-  document.getElementById("escadaProxMetaTexto").innerHTML = `Próximo degrau: <strong>${infoNivel.proxMeta}</strong>`
+  document.getElementById("escadaProgressoTexto").innerText = progTexto;
+  document.getElementById("escadaProxMetaTexto").innerHTML = `Próximo degrau: <strong>${infoNivel.proxMeta}</strong>`;
 
   // 3. Garante caixinhas limpas (ou preenche SOMENTE o que já foi salvo hoje)
-  const registroHoje = (escadaEstado.historico_checkins || []).find(item => item.data === hojeStr)
-  document.getElementById("chkCafe").checked = registroHoje ? Boolean(registroHoje.cafe) : false
-  document.getElementById("chkAlmoco").checked = registroHoje ? Boolean(registroHoje.almoco) : false
-  document.getElementById("chkLanche").checked = registroHoje ? Boolean(registroHoje.lanche) : false
-  document.getElementById("chkJantar").checked = registroHoje ? Boolean(registroHoje.jantar) : false
-  document.getElementById("escadaTreinouHoje").checked = registroHoje ? Boolean(registroHoje.treino) : false
+  const registroHoje = (escadaEstado.historico_checkins || []).find(item => item.data === hojeStr);
+  document.getElementById("chkCafe").checked = registroHoje ? Boolean(registroHoje.cafe) : false;
+  document.getElementById("chkAlmoco").checked = registroHoje ? Boolean(registroHoje.almoco) : false;
+  document.getElementById("chkLanche").checked = registroHoje ? Boolean(registroHoje.lanche) : false;
+  document.getElementById("chkJantar").checked = registroHoje ? Boolean(registroHoje.jantar) : false;
+  document.getElementById("escadaTreinouHoje").checked = registroHoje ? Boolean(registroHoje.treino) : false;
 
-  const btnSalvar = document.getElementById("btnSalvarEscada")
-  btnSalvar.innerText = registroHoje ? "ATUALIZAR CHECK-IN DE HOJE" : "SALVAR CHECK-IN DE HOJE"
+  const btnSalvar = document.getElementById("btnSalvarEscada");
+  btnSalvar.innerText = registroHoje ? "ATUALIZAR CHECK-IN DE HOJE" : "SALVAR CHECK-IN DE HOJE";
 
   // 4. Mapa de todos os 6 níveis
-  const mapaContainer = document.getElementById("escadaMapaNiveis")
+  const mapaContainer = document.getElementById("escadaMapaNiveis");
   if (mapaContainer) {
     mapaContainer.innerHTML = ESCADA_NIVEIS.map(item => {
-      const isAtual = item.nivel === escadaEstado.nivel_atual
-      const isConcluido = item.nivel < escadaEstado.nivel_atual
-      const classe = isAtual ? "atual" : isConcluido ? "concluido" : ""
+      const isAtual = item.nivel === escadaEstado.nivel_atual;
+      const isConcluido = item.nivel < escadaEstado.nivel_atual;
+      const classe = isAtual ? "atual" : isConcluido ? "concluido" : "";
       const statusHtml = isAtual
         ? `<span class="escada-mapa-status" style="color:#ff1493;">📍 ATUAL</span>`
         : isConcluido
           ? `<span class="escada-mapa-status" style="color:#39ff14;">✅ FEITO</span>`
-          : `<span class="escada-mapa-status" style="color:#64748b;">🔒 Sem. ${(item.nivel - 1) * 2 + 1}-${item.nivel * 2}</span>`
+          : `<span class="escada-mapa-status" style="color:#64748b;">🔒 Sem. ${(item.nivel - 1) * 2 + 1}-${item.nivel * 2}</span>`;
 
       return `
         <div class="escada-mapa-item ${classe}">
@@ -840,14 +1178,14 @@ function renderizarEscadaUI(feedback = "") {
           </div>
           ${statusHtml}
         </div>
-      `
-    }).join("")
+      `;
+    }).join("");
   }
 
   // 5. Histórico dos últimos 7 dias registrados
-  const histContainer = document.getElementById("escadaHistoricoLista")
+  const histContainer = document.getElementById("escadaHistoricoLista");
   if (histContainer) {
-    const ultimos = [...(escadaEstado.historico_checkins || [])].reverse().slice(0, 7)
+    const ultimos = [...(escadaEstado.historico_checkins || [])].reverse().slice(0, 7);
     histContainer.innerHTML = ultimos.length
       ? ultimos.map(h => `
           <div class="escada-hist-row">
@@ -859,83 +1197,75 @@ function renderizarEscadaUI(feedback = "") {
             </span>
           </div>
         `).join("")
-      : `<p style="font-size:12px; color:#94a3b8; margin:0; text-align:center;">Nenhum dia registrado ainda. Comece marcando hoje acima!</p>`
+      : `<p style="font-size:12px; color:#94a3b8; margin:0; text-align:center;">Nenhum dia registrado ainda. Comece marcando hoje acima!</p>`;
   }
 
-  const feedbackEl = document.getElementById("escadaFeedbackMsg")
+  const feedbackEl = document.getElementById("escadaFeedbackMsg");
   if (feedback) {
-    feedbackEl.innerText = feedback
-    feedbackEl.classList.remove("hidden")
+    feedbackEl.innerText = feedback;
+    feedbackEl.classList.remove("hidden");
   }
 }
 
 async function salvarCheckinEscada(user) {
-  const hojeStr = getDataHojeISO()
-  if (!escadaEstado) return
+  const hojeStr = getDataHojeISO();
+  if (!escadaEstado) return;
 
-  const btnSalvar = document.getElementById("btnSalvarEscada")
-  const textoOriginalBtn = btnSalvar.innerText
-  btnSalvar.innerText = "SALVANDO..."
-  btnSalvar.disabled = true
+  const infoNivel = ESCADA_NIVEIS[escadaEstado.nivel_atual - 1];
+  const cafe = document.getElementById("chkCafe").checked;
+  const almoco = document.getElementById("chkAlmoco").checked;
+  const lanche = document.getElementById("chkLanche").checked;
+  const jantar = document.getElementById("chkJantar").checked;
+  const treinouHoje = document.getElementById("escadaTreinouHoje").checked;
 
-  const infoNivel = ESCADA_NIVEIS[escadaEstado.nivel_atual - 1]
-  const cafe = document.getElementById("chkCafe").checked
-  const almoco = document.getElementById("chkAlmoco").checked
-  const lanche = document.getElementById("chkLanche").checked
-  const jantar = document.getElementById("chkJantar").checked
-  const treinouHoje = document.getElementById("escadaTreinouHoje").checked
+  const totalRefeicoes = [cafe, almoco, lanche, jantar].filter(Boolean).length;
+  const diaValido = totalRefeicoes >= infoNivel.refeicoesReq;
+  const diaDoCiclo = calcularDiffDias(escadaEstado.data_inicio_ciclo, hojeStr);
 
-  const totalRefeicoes = [cafe, almoco, lanche, jantar].filter(Boolean).length
-  const diaValido = totalRefeicoes >= infoNivel.refeicoesReq
-  const diaDoCiclo = calcularDiffDias(escadaEstado.data_inicio_ciclo, hojeStr)
+  // Verifica se já havia um registro de hoje para recalcular sem duplicar
+  const historicoSemHoje = (escadaEstado.historico_checkins || []).filter(item => item.data !== hojeStr);
+  const registroAnteriorHoje = (escadaEstado.historico_checkins || []).find(item => item.data === hojeStr);
 
-  const historicoAtual = Array.isArray(escadaEstado.historico_checkins)
-    ? escadaEstado.historico_checkins
-    : []
+  let diasValidos = escadaEstado.dias_validos_ciclo;
+  if (registroAnteriorHoje?.valido) diasValidos -= 1;
+  if (diaValido) diasValidos += 1;
 
-  const historicoSemHoje = historicoAtual.filter(item => item.data !== hojeStr)
-  const registroAnteriorHoje = historicoAtual.find(item => item.data === hojeStr)
-
-  let diasValidos = escadaEstado.dias_validos_ciclo
-  if (registroAnteriorHoje?.valido) diasValidos -= 1
-  if (diaValido) diasValidos += 1
-  diasValidos = Math.max(0, diasValidos)
-
-  let tSem1 = escadaEstado.treinos_semana_1
-  let tSem2 = escadaEstado.treinos_semana_2
+  let tSem1 = escadaEstado.treinos_semana_1;
+  let tSem2 = escadaEstado.treinos_semana_2;
 
   if (registroAnteriorHoje?.treino) {
-    if (diaDoCiclo < 7) tSem1 = Math.max(0, tSem1 - 1)
-    else tSem2 = Math.max(0, tSem2 - 1)
+    if (diaDoCiclo < 7) tSem1 = Math.max(0, tSem1 - 1);
+    else tSem2 = Math.max(0, tSem2 - 1);
   }
   if (treinouHoje) {
-    if (diaDoCiclo < 7) tSem1 += 1
-    else tSem2 += 1
+    if (diaDoCiclo < 7) tSem1 += 1;
+    else tSem2 += 1;
   }
 
-  const bateuTreinos = tSem1 >= infoNivel.treinosSemReq && tSem2 >= infoNivel.treinosSemReq
+  const bateuTreinos = tSem1 >= infoNivel.treinosSemReq && tSem2 >= infoNivel.treinosSemReq;
 
-  let novoNivel = escadaEstado.nivel_atual
-  let novaDataNivel = escadaEstado.data_inicio_nivel
-  let novaDataCiclo = escadaEstado.data_inicio_ciclo
-  let msg = ""
+  let novoNivel = escadaEstado.nivel_atual;
+  let novaDataNivel = escadaEstado.data_inicio_nivel;
+  let novaDataCiclo = escadaEstado.data_inicio_ciclo;
+  let msg = "";
 
+  // Sobe na hora se já atingiu 11+ dias válidos e os treinos semanais a partir do 11º dia
   if (diasValidos >= 11 && bateuTreinos && diaDoCiclo >= 10) {
     if (novoNivel < 6) {
-      novoNivel += 1
-      novaDataNivel = hojeStr
-      msg = `🎉 Meta batida! Você subiu para o Degrau ${novoNivel}!`
+      novoNivel += 1;
+      novaDataNivel = hojeStr;
+      msg = `🎉 Meta batida! Você subiu para o Degrau ${novoNivel}!`;
     } else {
-      msg = "🏆 Constância Master mantida!"
+      msg = "🏆 Constância Master mantida!";
     }
-    novaDataCiclo = hojeStr
-    diasValidos = 0
-    tSem1 = 0
-    tSem2 = 0
+    novaDataCiclo = hojeStr;
+    diasValidos = 0;
+    tSem1 = 0;
+    tSem2 = 0;
   } else {
     msg = diaValido
       ? `✅ Salvo! (${totalRefeicoes}/4 refeições) — Dia válido contado na escada!`
-      : `✅ Salvo! (${totalRefeicoes}/4 refeições) — Você pode atualizar até 23h59 se fizer mais refeições hoje.`
+      : `✅ Salvo! (${totalRefeicoes}/4 refeições) — Você pode atualizar até 23h59 se fizer mais refeições hoje.`;
   }
 
   const novoRegistroHoje = {
@@ -947,11 +1277,7 @@ async function salvarCheckinEscada(user) {
     refeicoes: totalRefeicoes,
     treino: treinouHoje,
     valido: diaValido
-  }
-
-  const novoHistoricoCompleto = [...historicoSemHoje, novoRegistroHoje].sort((a, b) =>
-    a.data.localeCompare(b.data)
-  )
+  };
 
   const payload = {
     nivel_atual: novoNivel,
@@ -961,27 +1287,20 @@ async function salvarCheckinEscada(user) {
     treinos_semana_1: tSem1,
     treinos_semana_2: tSem2,
     ultimo_checkin: hojeStr,
-    historico_checkins: novoHistoricoCompleto
-  }
+    historico_checkins: [...historicoSemHoje, novoRegistroHoje]
+  };
 
   const { data, error } = await supabase
     .from("escada_constancia")
     .update(payload)
     .eq("user_id", user.id)
     .select()
-    .single()
-
-  btnSalvar.disabled = false
+    .single();
 
   if (!error && data) {
-    escadaEstado = {
-      ...data,
-      historico_checkins: novoHistoricoCompleto
-    }
-    renderizarEscadaUI(msg)
+    escadaEstado = data;
+    renderizarEscadaUI(msg);
   } else {
-    console.error("Erro ao salvar escada:", error)
-    btnSalvar.innerText = textoOriginalBtn
-    alert("Erro ao salvar check-in. Tente novamente.")
+    alert("Erro ao salvar check-in. Tente novamente.");
   }
 }
