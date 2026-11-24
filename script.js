@@ -322,7 +322,7 @@ function setupNavigation() {
     } else {
       box.classList.add("hidden");
       iframe.removeAttribute("src");
-      btn.innerText = "▶️ Assista: Como funciona a Escada (1 min)";
+      btn.innerText = "▶️ VÍDEO EXPLICANDO COMO UTILIZAR A FERRAMENTA";
     }
   });
 
