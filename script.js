@@ -308,23 +308,23 @@ function setupNavigation() {
     showSection("extrasSection")
   })
 
- document.getElementById("btnToggleVideoEscada")?.addEventListener("click", () => {
-    const box = document.getElementById("escadaVideoBox");
-    const iframe = document.getElementById("escadaVideoIframe");
-    const btn = document.getElementById("btnToggleVideoEscada");
-    if (!box || !iframe) return;
+  document.getElementById("btnToggleVideoEscada")?.addEventListener("click", () => {
+    const box = document.getElementById("escadaVideoBox")
+    const iframe = document.getElementById("escadaVideoIframe")
+    const btn = document.getElementById("btnToggleVideoEscada")
+    if (!box || !iframe) return
 
-    const estaFechado = box.classList.contains("hidden");
+    const estaFechado = box.classList.contains("hidden")
     if (estaFechado) {
-      iframe.src = iframe.dataset.src;
-      box.classList.remove("hidden");
-      btn.innerText = "✖️ Fechar vídeo explicativo";
+      iframe.src = iframe.dataset.src
+      box.classList.remove("hidden")
+      btn.innerText = "✖️ Fechar vídeo explicativo"
     } else {
-      box.classList.add("hidden");
-      iframe.removeAttribute("src");
-      btn.innerText = "▶️ VÍDEO: ENTENDA A ESCADA DA CONSTÂNCIA";
+      box.classList.add("hidden")
+      iframe.removeAttribute("src")
+      btn.innerText = "▶️ VÍDEO: ENTENDA A ESCADA DA CONSTÂNCIA"
     }
-  });
+  })
 
   /* VOLTAR */
   document.getElementById("backFromDieta")?.addEventListener("click", () => {
@@ -853,9 +853,15 @@ function renderizarEscadaUI(feedback = "") {
     faltamEl.innerText = `🔥 Meta de 10 dias atingida! Continue firme até fechar o ciclo`
   }
 
+  const treinosSemanaAtual = diaAtualCiclo <= 7
+    ? escadaEstado.treinos_semana_1
+    : escadaEstado.treinos_semana_2
+
   let progTexto = `Concluídos neste ciclo: ${escadaEstado.dias_validos_ciclo}/10 dias válidos`
   if (infoNivel.treinosSemReq > 0) {
     progTexto += ` • Treinos: Sem 1 (${escadaEstado.treinos_semana_1}/${infoNivel.treinosSemReq}) | Sem 2 (${escadaEstado.treinos_semana_2}/${infoNivel.treinosSemReq})`
+  } else {
+    progTexto += ` • 💪 Treinos na semana: ${treinosSemanaAtual} (bônus)`
   }
   document.getElementById("escadaProgressoTexto").innerText = progTexto
   document.getElementById("escadaProxMetaTexto").innerHTML = `Próximo degrau: <strong>${infoNivel.proxMeta}</strong>`
