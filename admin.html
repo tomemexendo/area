@@ -33,11 +33,12 @@
     Sair
   </button>
 
-  <div style="margin-bottom:20px;">
-  <button onclick="showContent()">Conteúdos</button>
-  <button onclick="showUsers()">Alunos</button>
-  <button onclick="showAccess()">Acessos</button>
-</div>
+  <div style="margin-bottom:20px; display:flex; gap:8px; flex-wrap:wrap;">
+    <button onclick="showContent()">Conteúdos</button>
+    <button onclick="showUsers()">Alunos</button>
+    <button onclick="showAccess()">Acessos</button>
+    <button onclick="showEscada()">🪜 Escada da Constância</button>
+  </div>
 
   <div id="contentArea"></div>
 </div>
@@ -62,8 +63,9 @@ window.addEventListener("DOMContentLoaded", () => {
     panel.style.display = "block"
     loadContent()
   }
+
   window.showContent = () => {
-  loadContent()
+    loadContent()
   }
 
   form.addEventListener("submit", async (e) => {
@@ -78,16 +80,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
     sessionStorage.setItem("admin", "true")
     enterAdmin()
-    
   })
 
   async function loadContent() {
     const { data, error } = await supabase
       .from("content")
       .select("*")
-
-    console.log("DATA:", data)
-    console.log("ERROR:", error)
 
     if (error) {
       alert("Erro ao carregar dados")
@@ -120,381 +118,372 @@ window.addEventListener("DOMContentLoaded", () => {
     })
   }
 
-    window.showUsers = async () => {
-const { data, error } = await supabase
-    .from("users")
-    .select("*")
+  window.showUsers = async () => {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
 
-  if (error) {
-    alert("Erro ao carregar usuários")
-    return
+    if (error) {
+      alert("Erro ao carregar usuários")
+      return
+    }
+
+    area.innerHTML = `
+      <h2>Adicionar novo</h2>
+      <input id="newName" placeholder="Nome" />
+      <input id="newPhone" placeholder="Senha" />
+      <button onclick="addUser()">Adicionar</button>
+     
+      <h2>Alunos</h2>
+      <input id="searchUser" placeholder="Buscar nome..." style="padding:5px; margin-bottom:10px;" />
+    
+      <div id="userList"></div>
+    `
+
+    renderUsers(data)
+
+    document.getElementById("searchUser").oninput = (e) => {
+      const term = e.target.value.toLowerCase()
+      const filtered = data.filter(u =>
+        u.name.toLowerCase().includes(term) ||
+        u.phone.includes(term)
+      )
+      renderUsers(filtered)
+    }
   }
-
-  area.innerHTML = `
-    <h2>Adicionar novo</h2>
-    <input id="newName" placeholder="Nome" />
-    <input id="newPhone" placeholder="Senha" />
-    <button onclick="addUser()">Adicionar</button>
-   
-    <h2>Alunos</h2>
-    <input id="searchUser" placeholder="Buscar nome..." style="padding:5px; margin-bottom:10px;" />
-  
-  <div id="userList"></div>
-  `
-
-
-  renderUsers(data)
-
-  document.getElementById("searchUser").oninput = (e) => {
-    const term = e.target.value.toLowerCase()
-    const filtered = data.filter(u =>
-      u.name.toLowerCase().includes(term) ||
-u.phone.includes(term)
-    )
-    renderUsers(filtered)
-  }
-}
 
   function renderUsers(users) {
-  const list = document.getElementById("userList")
+    const list = document.getElementById("userList")
+    list.innerHTML = ""
 
-  list.innerHTML = ""
+    users.forEach(user => {
+      list.innerHTML += `
+        <div style="margin-bottom:10px;">
+          ${user.name} (${user.phone})
 
-  users.forEach(user => {
-    list.innerHTML += `
-      <div style="margin-bottom:10px;">
-        ${user.name} (${user.phone})
-
-        <button onclick="deleteUser('${user.id}')">
-          ❌
-        </button>
-      </div>
-    `
-  })
-}
+          <button onclick="deleteUser('${user.id}')">
+            ❌
+          </button>
+        </div>
+      `
+    })
+  }
 
   window.addUser = async () => {
-  const name = document.getElementById("newName").value
-  const phone = document.getElementById("newPhone").value
+    const name = document.getElementById("newName").value
+    const phone = document.getElementById("newPhone").value
 
-  if (!name || !phone) {
-    alert("Preencha tudo")
-    return
+    if (!name || !phone) {
+      alert("Preencha tudo")
+      return
+    }
+
+    const { error } = await supabase
+      .from("users")
+      .insert([{ name, phone }])
+
+    if (!error) {
+      alert("Adicionado!")
+      showUsers()
+    } else {
+      alert("Erro ao adicionar")
+    }
   }
-
-  const { error } = await supabase
-    .from("users")
-    .insert([{ name, phone }])
-
-  if (!error) {
-    alert("Adicionado!")
-    showUsers()
-  } else {
-    alert("Erro ao adicionar")
-  }
-}
 
   window.deleteUser = async (id) => {
-  const confirmDelete = confirm("Remover esse aluno?")
+    const confirmDelete = confirm("Remover esse aluno?")
+    if (!confirmDelete) return
 
-  if (!confirmDelete) return
+    const { error } = await supabase
+      .from("users")
+      .delete()
+      .eq("id", id)
 
-  const { error } = await supabase
-    .from("users")
-    .delete()
-    .eq("id", id)
-
-  if (!error) {
-    alert("Removido!")
-    showUsers()
-  } else {
-    alert("Erro ao remover")
-  }
-}
-
-window.showAccess = async () => {
-
-const users =
-await supabase
-.from("users")
-.select("*")
-
-const logs =
-await supabase
-.from("access_logs")
-.select("*")
-.order("created_at", { ascending: false })
-.limit(5000)
-
-  const devices =
-await supabase
-.from("user_devices")
-.select("*")
-
-
-
-if(users.error || logs.error || devices.error){
-alert("Erro ao carregar acessos")
-return
-}
-
-const lista=[]
-
-users.data.forEach(user=>{
-
-const device =
-devices.data.find(
-d => String(d.user_id) === String(user.id)
-)
-  
-const acessos =
-logs.data.filter(
-a=>
-String(a.user_phone)
-===
-String(user.phone)
-)
-
-let ultimo = null
-
-if(acessos.length){
-
-ultimo =
-acessos
-.sort(
-(a,b)=>
-new Date(b.created_at)
--
-new Date(a.created_at)
-)[0]
-.created_at
-
-}
-
-let status="⚫ Nunca entrou"
-
-if(ultimo){
-
-const dias = Math.floor(
-(
-new Date()
--
-new Date(ultimo)
-)
-/
-86400000
-)
-
-if(dias<=7){
-
-status=
-"🟢 Ativo"
-
-}
-
-else if(dias<=30){
-
-status=
-"🟡 Sumido"
-
-}
-
-else{
-
-status=
-"🔴 Inativo"
-
-}
-
-}
-
-let notificacao = "⚪ Nunca configurou"
-
-if(device){
-
-  if(device.notifications_enabled === true){
-    notificacao = "🔔 Ativa"
+    if (!error) {
+      alert("Removido!")
+      showUsers()
+    } else {
+      alert("Erro ao remover")
+    }
   }
 
-  else if(device.notifications_enabled === false){
-    notificacao = "🔕 Desativada"
+  window.showAccess = async () => {
+    const users = await supabase
+      .from("users")
+      .select("*")
+
+    const logs = await supabase
+      .from("access_logs")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(5000)
+
+    const devices = await supabase
+      .from("user_devices")
+      .select("*")
+
+    if (users.error || logs.error || devices.error) {
+      alert("Erro ao carregar acessos")
+      return
+    }
+
+    const lista = []
+
+    users.data.forEach(user => {
+      const device = devices.data.find(
+        d => String(d.user_id) === String(user.id)
+      )
+
+      const acessos = logs.data.filter(
+        a => String(a.user_phone) === String(user.phone)
+      )
+
+      let ultimo = null
+
+      if (acessos.length) {
+        ultimo = acessos
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0]
+          .created_at
+      }
+
+      let status = "⚫ Nunca entrou"
+
+      if (ultimo) {
+        const dias = Math.floor((new Date() - new Date(ultimo)) / 86400000)
+
+        if (dias <= 7) {
+          status = "🟢 Ativo"
+        } else if (dias <= 30) {
+          status = "🟡 Sumido"
+        } else {
+          status = "🔴 Inativo"
+        }
+      }
+
+      let notificacao = "⚪ Nunca configurou"
+
+      if (device) {
+        if (device.notifications_enabled === true) {
+          notificacao = "🔔 Ativa"
+        } else if (device.notifications_enabled === false) {
+          notificacao = "🔕 Desativada"
+        } else if (device.status === "active") {
+          notificacao = "🔔 Ativa"
+        }
+      }
+
+      lista.push({
+        nome: user.name,
+        senha: user.phone,
+        acessos: acessos.length,
+        ultimo,
+        status,
+        notificacao
+      })
+    })
+
+    area.innerHTML = `
+      <h2>Acessos</h2>
+
+      <input
+        id="searchAccess"
+        placeholder="Buscar nome ou senha"
+        style="padding:8px; width:100%; margin-bottom:20px;"
+      />
+
+      <div id="accessList"></div>
+    `
+
+    function render(listaFinal) {
+      const div = document.getElementById("accessList")
+      div.innerHTML = ""
+
+      listaFinal.forEach(user => {
+        div.innerHTML += `
+          <div style="padding:12px; border-bottom:1px solid #333;">
+            <strong>${user.nome} (${user.senha})</strong>
+            <br>
+            👀 ${user.acessos} acessos
+            <br>
+            🕒 ${user.ultimo ? new Date(user.ultimo).toLocaleString() : "Nunca"}
+            <br>
+            📌 ${user.status}
+            <br>
+            🔔 ${user.notificacao}
+          </div>
+        `
+      })
+    }
+
+    render(lista)
+
+    document.getElementById("searchAccess").oninput = (e) => {
+      const termo = e.target.value.toLowerCase()
+
+      render(
+        lista.filter(u => {
+          return (
+            u.nome.toLowerCase().includes(termo) ||
+            String(u.senha).includes(termo) ||
+            u.status.toLowerCase().includes(termo) ||
+            u.notificacao.toLowerCase().includes(termo)
+          )
+        })
+      )
+    }
   }
 
-  else if(device.status === "active"){
-    notificacao = "🔔 Ativa"
+  /* ---------------- ESCADA DA CONSTÂNCIA NO ADMIN ---------------- */
+
+  window.showEscada = async () => {
+    area.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+        <h2 style="margin:0;">🪜 Escada da Constância (Quem já marcou)</h2>
+        <button onclick="showEscada()" style="padding:6px 12px; cursor:pointer;">🔄 Atualizar</button>
+      </div>
+      <input
+        id="searchEscada"
+        placeholder="Buscar por nome, degrau (ex: Degrau 2) ou status..."
+        style="padding:8px; width:100%; margin-bottom:16px; box-sizing:border-box;"
+      />
+      <div id="escadaAdminList">Carregando registros...</div>
+    `
+
+    const [{ data: escadas, error: errEscada }, { data: usuarios, error: errUsers }] = await Promise.all([
+      supabase
+        .from("escada_constancia")
+        .select("*")
+        .not("ultimo_checkin", "is", null)
+        .order("ultimo_checkin", { ascending: true }),
+      supabase
+        .from("users")
+        .select("id, name, phone")
+    ])
+
+    const listDiv = document.getElementById("escadaAdminList")
+
+    if (errEscada || errUsers) {
+      listDiv.innerHTML = "<p style='color:#f87171;'>Erro ao carregar dados da Escada.</p>"
+      return
+    }
+
+    if (!escadas || escadas.length === 0) {
+      listDiv.innerHTML = "<p>Nenhuma aluna iniciou o check-in da Escada ainda.</p>"
+      return
+    }
+
+    const hoje = new Date()
+    hoje.setHours(0, 0, 0, 0)
+
+    const registrosFormatados = escadas.map((reg, idx) => {
+      const user = usuarios.find(u => String(u.id) === String(reg.user_id)) || { name: "Aluna removida", phone: "" }
+      const [ano, mes, dia] = reg.ultimo_checkin.split("-")
+      const dataUltima = new Date(`${ano}-${mes}-${dia}T00:00:00`)
+      const diasSemMarcar = Math.floor((hoje - dataUltima) / 86400000)
+
+      let statusTexto = ""
+      let statusCor = "#334155"
+
+      if (diasSemMarcar <= 0) {
+        statusTexto = "✅ Marcou hoje"
+        statusCor = "#16a34a"
+      } else if (diasSemMarcar === 1) {
+        statusTexto = "🟡 Última: ontem"
+        statusCor = "#ca8a04"
+      } else {
+        statusTexto = `🚨 ${diasSemMarcar} dias sem marcar`
+        statusCor = "#dc2626"
+      }
+
+      return {
+        idx,
+        nome: user.name,
+        senha: user.phone,
+        nivel: reg.nivel_atual,
+        diasValidos: reg.dias_validos_ciclo,
+        tSem1: reg.treinos_semana_1,
+        tSem2: reg.treinos_semana_2,
+        ultimaDataBR: `${dia}/${mes}/${ano}`,
+        diasSemMarcar,
+        statusTexto,
+        statusCor,
+        historico: Array.isArray(reg.historico_checkins) ? [...reg.historico_checkins].reverse() : []
+      }
+    })
+
+    function renderEscadaList(lista) {
+      if (!lista.length) {
+        listDiv.innerHTML = "<p>Nenhum registro encontrado para essa busca.</p>"
+        return
+      }
+
+      listDiv.innerHTML = lista.map(item => {
+        const historicoHtml = item.historico.length
+          ? item.historico.slice(0, 14).map(h => {
+              const [ha, hm, hd] = h.data.split("-")
+              return `
+                <div style="display:flex; justify-content:space-between; padding:6px 10px; background:#0b1623; border-radius:6px; font-size:12px; margin-top:4px;">
+                  <span><strong>${hd}/${hm}/${ha}</strong> • ${h.refeicoes}/4 refeições ${h.treino ? "• 💪 Treinou" : ""}</span>
+                  <span style="color:${h.valido ? "#4ade80" : "#94a3b8"}; font-weight:bold;">
+                    ${h.valido ? "✅ Meta batida" : "Parcial"}
+                  </span>
+                </div>
+              `
+            }).join("")
+          : "<p style='font-size:12px; color:#94a3b8; margin:6px 0 0;'>Sem detalhes registrados.</p>"
+
+        return `
+          <div style="background:#132338; border-left:5px solid ${item.statusCor}; padding:14px; border-radius:10px; margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div>
+                <strong style="font-size:16px;">${item.nome}</strong>
+                <span style="color:#94a3b8; font-size:13px;">(${item.senha})</span>
+                <span style="background:#ff1493; color:#fff; font-size:11px; font-weight:bold; padding:2px 8px; border-radius:999px; margin-left:6px;">
+                  Degrau ${item.nivel}/6
+                </span>
+                <div style="font-size:13px; color:#cbd5e1; margin-top:6px;">
+                  📅 Última marcação: <strong>${item.ultimaDataBR}</strong> • 
+                  🎯 Ciclo: <strong>${item.diasValidos}/10 dias válidos</strong> • 
+                  💪 Treinos: Sem 1 (${item.tSem1}) | Sem 2 (${item.tSem2})
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="background:${item.statusCor}; color:#fff; padding:4px 9px; border-radius:6px; font-size:12px; font-weight:bold;">
+                  ${item.statusTexto}
+                </span>
+                <button
+                  onclick="const el = document.getElementById('hist-escada-${item.idx}'); el.style.display = el.style.display === 'none' ? 'block' : 'none';"
+                  style="padding:6px 10px; cursor:pointer; background:#1e3a5f; color:white; border:1px solid #3b82f6; border-radius:6px; font-size:12px;"
+                >
+                  📋 Ver histórico (${item.historico.length})
+                </button>
+              </div>
+            </div>
+
+            <div id="hist-escada-${item.idx}" style="display:none; margin-top:10px; padding-top:8px; border-top:1px solid #263c5a;">
+              ${historicoHtml}
+            </div>
+          </div>
+        `
+      }).join("")
+    }
+
+    renderEscadaList(registrosFormatados)
+
+    document.getElementById("searchEscada").oninput = (e) => {
+      const termo = e.target.value.toLowerCase()
+      renderEscadaList(
+        registrosFormatados.filter(item =>
+          item.nome.toLowerCase().includes(termo) ||
+          String(item.senha).includes(termo) ||
+          `degrau ${item.nivel}`.includes(termo) ||
+          item.statusTexto.toLowerCase().includes(termo)
+        )
+      )
+    }
   }
 
-}
-
-lista.push({
-
-nome:
-user.name,
-
-senha:
-user.phone,
-
-acessos:
-acessos.length,
-
-ultimo,
-
-status,
-
-notificacao
-
-})
-
-})
-
-area.innerHTML=`
-
-<h2>Acessos</h2>
-
-<input
-id="searchAccess"
-placeholder="
-Buscar nome ou senha
-"
-style="
-padding:8px;
-width:100%;
-margin-bottom:20px;
-"
-/>
-
-<div id="accessList"></div>
-
-`
-
-function render(listaFinal){
-
-const div =
-document
-.getElementById(
-"accessList"
-)
-
-div.innerHTML=""
-
-listaFinal.forEach(user=>{
-
-div.innerHTML+=`
-
-<div
-style="
-padding:12px;
-border-bottom:
-1px solid #333;
-"
-
->
-
-<strong>
-
-${user.nome}
-(
-${user.senha}
-)
-
-</strong>
-
-<br>
-
-👀
-${user.acessos}
-acessos
-
-<br>
-
-🕒
-
-${
-user.ultimo
-?
-
-new Date(
-user.ultimo
-)
-.toLocaleString()
-
-:
-
-"Nunca"
-
-}
-
-<br>
-
-📌
-${user.status}
-
-<br>
-
-🔔
-${user.notificacao}
-
-</div>
-
-`
-
-})
-
-}
-
-render(lista)
-
-document
-.getElementById(
-"searchAccess"
-)
-.oninput=(e)=>{
-
-const termo =
-e.target.value
-.toLowerCase()
-
-render(
-
-lista.filter(u=>{
-
-const busca =
-termo.toLowerCase()
-
-return(
-
-u.nome
-.toLowerCase()
-.includes(busca)
-
-||
-
-String(
-u.senha
-)
-.includes(busca)
-
-||
-
-u.status
-.toLowerCase()
-.includes(busca)
-
-||
-
-u.notificacao
-.toLowerCase()
-.includes(busca)
-
-)
-
-})
-
-)
-
-}
-
-}
   window.saveItem = async (type) => {
     const input = document.getElementById("input-" + type)
 
